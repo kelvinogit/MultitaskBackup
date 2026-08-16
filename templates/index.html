@@ -1,0 +1,353 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cerne — Plataforma Unificada de Gestão Acadêmica</title>
+<meta name="description" content="Cerne reúne ContábilHub, AgroGest e Administra+ em um único núcleo acadêmico: disciplinas, atividades, projetos e dashboard em um só lugar.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+<header class="navbar">
+  <div class="nav-inner">
+    <a href="#top" class="brand" aria-label="Cerne — página inicial">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="26" height="26">
+          <line class="link" x1="20" y1="20" x2="20" y2="7"></line>
+          <line class="link" x1="20" y1="20" x2="8" y2="28"></line>
+          <line class="link" x1="20" y1="20" x2="32" y2="28"></line>
+          <circle class="node" cx="20" cy="7" r="2.6"></circle>
+          <circle class="node" cx="8" cy="28" r="2.6"></circle>
+          <circle class="node" cx="32" cy="28" r="2.6"></circle>
+          <circle class="node node-core" cx="20" cy="20" r="4.4"></circle>
+        </svg>
+      </span>
+      <span class="brand-name">Cerne</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Navegação principal">
+      <a href="#recursos">Recursos</a>
+      <a href="#areas">Áreas</a>
+      <a href="#sobre">Sobre</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button type="button" class="btn btn-ghost" data-open-auth="login">Entrar</button>
+      <button type="button" class="btn btn-primary" data-open-auth="signup">Criar conta</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <p class="eyebrow">Núcleo acadêmico unificado</p>
+        <h1 class="hero-title">Sua vida acadêmica, organizada em um único núcleo.</h1>
+        <p class="hero-sub">Cerne reúne disciplinas, atividades, projetos e indicadores de Ciências Contábeis, Engenharia Agronômica e Administração em um mesmo ambiente — sem perder o que torna cada curso único.</p>
+
+        <div class="hero-actions">
+          <button type="button" class="btn btn-primary btn-lg" data-open-auth="signup">Começar agora</button>
+          <button type="button" class="btn btn-text" data-open-auth="login">Já tenho uma conta →</button>
+        </div>
+
+        <ul class="hero-stats" aria-label="Áreas atendidas pela plataforma">
+          <li><span class="stat-dot dot-brass" aria-hidden="true"></span>ContábilHub</li>
+          <li><span class="stat-dot dot-moss" aria-hidden="true"></span>AgroGest</li>
+          <li><span class="stat-dot dot-steel" aria-hidden="true"></span>Administra+</li>
+        </ul>
+      </div>
+
+      <div class="hero-graphic" aria-hidden="true">
+        <svg class="hub-diagram" viewBox="0 0 360 360">
+          <circle class="hub-ring" cx="180" cy="180" r="140"></circle>
+
+          <line class="hub-link hub-link-1" x1="180" y1="180" x2="180" y2="62"></line>
+          <line class="hub-link hub-link-2" x1="180" y1="180" x2="66" y2="252"></line>
+          <line class="hub-link hub-link-3" x1="180" y1="180" x2="294" y2="252"></line>
+
+          <g class="hub-node hub-node-brass">
+            <circle cx="180" cy="62" r="30"></circle>
+          </g>
+          <g class="hub-node hub-node-moss">
+            <circle cx="66" cy="252" r="30"></circle>
+          </g>
+          <g class="hub-node hub-node-steel">
+            <circle cx="294" cy="252" r="30"></circle>
+          </g>
+
+          <circle class="hub-core" cx="180" cy="180" r="34"></circle>
+
+          <text class="hub-label hub-label-core" x="180" y="185">Núcleo</text>
+          <text class="hub-label" x="180" y="66">Contábil</text>
+          <text class="hub-label" x="66" y="256">Agro</text>
+          <text class="hub-label" x="294" y="256">Admin</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="recursos">
+    <div class="section-inner">
+      <p class="eyebrow">O que fica no núcleo</p>
+      <h2 class="section-title">Um núcleo comum para toda a rotina acadêmica</h2>
+      <p class="section-sub">Essas ferramentas funcionam do mesmo jeito para qualquer área — o que muda é o que cada estudante constrói em cima delas.</p>
+
+      <div class="feature-grid">
+        <article class="feature-card">
+          <span class="feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2"></rect><line x1="3.5" y1="9" x2="20.5" y2="9"></line><line x1="7.5" y1="4.5" x2="7.5" y2="2.5"></line><line x1="16.5" y1="4.5" x2="16.5" y2="2.5"></line></svg>
+          </span>
+          <h3>Disciplinas</h3>
+          <p>Professores, semestres e descrições organizados em um único cadastro.</p>
+        </article>
+
+        <article class="feature-card">
+          <span class="feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M5 12.5l4 4 10-10"></path></svg>
+          </span>
+          <h3>Atividades</h3>
+          <p>Prazos, prioridades e status calculados automaticamente — sem planilha paralela.</p>
+        </article>
+
+        <article class="feature-card">
+          <span class="feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"></circle><circle cx="17" cy="8" r="3"></circle><path d="M2.5 20c0-3 2.5-5.5 5.5-5.5S13.5 17 13.5 20"></path><path d="M12.7 14.8c1-.9 2.3-1.4 4.3-1.4 3 0 5.5 2.5 5.5 5.5"></path></svg>
+          </span>
+          <h3>Projetos em grupo</h3>
+          <p>Integrantes, tarefas individuais e progresso do time visíveis para todos.</p>
+        </article>
+
+        <article class="feature-card">
+          <span class="feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="9" rx="1.2"></rect><rect x="13.5" y="3.5" width="7" height="5" rx="1.2"></rect><rect x="13.5" y="11" width="7" height="9.5" rx="1.2"></rect><rect x="3.5" y="15" width="7" height="5.5" rx="1.2"></rect></svg>
+          </span>
+          <h3>Dashboard</h3>
+          <p>Pendências, andamento e atrasos, mais os indicadores específicos da sua área.</p>
+        </article>
+
+        <article class="feature-card">
+          <span class="feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 2.5l2.6 5.6 6.1.6-4.6 4.1 1.3 6-5.4-3.1-5.4 3.1 1.3-6-4.6-4.1 6.1-.6z"></path></svg>
+          </span>
+          <h3>Organização acadêmica</h3>
+          <p>Um ambiente único substitui três logins, três interfaces e três rotinas diferentes.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- AREAS -->
+  <section class="areas" id="areas">
+    <div class="section-inner">
+      <p class="eyebrow">O que muda por área</p>
+      <h2 class="section-title">Três áreas, uma só plataforma</h2>
+      <p class="section-sub">Cada curso mantém um módulo com identidade própria, conectado ao mesmo núcleo de dados e à mesma conta.</p>
+
+      <div class="area-grid">
+        <article class="area-card area-brass">
+          <div class="area-card-head">
+            <span class="area-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 19h16"></path><path d="M6 19V9l6-4 6 4v10"></path><path d="M10 19v-5h4v5"></path></svg>
+            </span>
+            <span class="area-tag">Ciências Contábeis</span>
+          </div>
+          <h3>ContábilHub</h3>
+          <p>Desafios contábeis com pontuação, para revisar teoria antes das provas.</p>
+        </article>
+
+        <article class="area-card area-moss">
+          <div class="area-card-head">
+            <span class="area-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 21c-4-1.5-6-5-6-8.5C6 8 9 4.5 12 3c3 1.5 6 5 6 9.5 0 3.5-2 7-6 8.5z"></path><path d="M12 21V10"></path></svg>
+            </span>
+            <span class="area-tag">Engenharia Agronômica</span>
+          </div>
+          <h3>AgroGest</h3>
+          <p>Experimentos e diário de campo, com registro de fotos e avaliações periódicas.</p>
+        </article>
+
+        <article class="area-card area-steel">
+          <div class="area-card-head">
+            <span class="area-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="3.5" y="12" width="4" height="8"></rect><rect x="10" y="7" width="4" height="13"></rect><rect x="16.5" y="3.5" width="4" height="16.5"></rect></svg>
+            </span>
+            <span class="area-tag">Administração</span>
+          </div>
+          <h3>Administra+</h3>
+          <p>Indicadores e KPIs de projetos e atividades, em gráficos claros e diretos.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BAND -->
+  <section class="cta-band" id="sobre">
+    <div class="section-inner cta-inner">
+      <h2>Um só cadastro. Um só ambiente. Três áreas.</h2>
+      <p>Comece pelo núcleo — sua área é escolhida logo depois de criar sua conta.</p>
+      <button type="button" class="btn btn-primary btn-lg" data-open-auth="signup">Criar conta gratuita</button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <a href="#top" class="brand brand-footer" aria-label="Cerne — página inicial">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="20" height="20">
+          <line class="link" x1="20" y1="20" x2="20" y2="7"></line>
+          <line class="link" x1="20" y1="20" x2="8" y2="28"></line>
+          <line class="link" x1="20" y1="20" x2="32" y2="28"></line>
+          <circle class="node" cx="20" cy="7" r="2.6"></circle>
+          <circle class="node" cx="8" cy="28" r="2.6"></circle>
+          <circle class="node" cx="32" cy="28" r="2.6"></circle>
+          <circle class="node node-core" cx="20" cy="20" r="4.4"></circle>
+        </svg>
+      </span>
+      <span class="brand-name">Cerne</span>
+    </a>
+    <p class="footer-note">Protótipo de front-end — projeto acadêmico de gestão universitária.</p>
+  </div>
+</footer>
+
+<!-- AUTH OVERLAY -->
+<div class="auth-overlay" id="authOverlay" hidden>
+  <aside class="auth-drawer" id="authDrawer" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+    <button type="button" class="auth-close" id="authClose" aria-label="Fechar">
+      <svg viewBox="0 0 24 24"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg>
+    </button>
+
+    <div class="auth-tabs" role="tablist" aria-label="Acesso à plataforma">
+      <button type="button" class="auth-tab" id="tabLogin" role="tab" data-tab="login">Entrar</button>
+      <button type="button" class="auth-tab" id="tabSignup" role="tab" data-tab="signup">Criar conta</button>
+      <span class="auth-tab-indicator" id="tabIndicator" aria-hidden="true"></span>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="auth-panel" id="panelLogin" role="tabpanel">
+      <h2 id="authTitle" class="auth-title">Bem-vindo de volta</h2>
+      <p class="auth-sub">Entre com sua conta Cerne.</p>
+
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="loginEmail">E-mail</label>
+          <input type="email" id="loginEmail" name="email" autocomplete="email" required>
+          <span class="field-error" id="loginEmailError" role="alert"></span>
+        </div>
+
+        <div class="field">
+          <label for="loginSenha">Senha</label>
+          <div class="input-with-action">
+            <input type="password" id="loginSenha" name="senha" autocomplete="current-password" required>
+            <button type="button" class="input-action" data-toggle-password="loginSenha" aria-label="Mostrar senha">
+              <svg class="icon-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
+          <span class="field-error" id="loginSenhaError" role="alert"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+        <p class="auth-switch">Novo por aqui? <button type="button" class="link-btn" data-switch-tab="signup">Criar conta</button></p>
+      </form>
+    </div>
+
+    <!-- SIGNUP -->
+    <div class="auth-panel" id="panelSignup" role="tabpanel" hidden>
+      <h2 class="auth-title">Criar sua conta</h2>
+      <p class="auth-sub">Leva menos de um minuto. Você escolhe sua área agora.</p>
+
+      <form id="signupForm" novalidate>
+        <div class="field">
+          <label for="suNome">Nome completo</label>
+          <input type="text" id="suNome" name="nome" autocomplete="name" required>
+          <span class="field-error" id="suNomeError" role="alert"></span>
+        </div>
+
+        <div class="field">
+          <label for="suEmail">E-mail</label>
+          <input type="email" id="suEmail" name="email" autocomplete="email" required>
+          <span class="field-error" id="suEmailError" role="alert"></span>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="suSenha">Senha</label>
+            <div class="input-with-action">
+              <input type="password" id="suSenha" name="senha" autocomplete="new-password" required minlength="8">
+              <button type="button" class="input-action" data-toggle-password="suSenha" aria-label="Mostrar senha">
+                <svg class="icon-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
+            <span class="field-error" id="suSenhaError" role="alert"></span>
+          </div>
+
+          <div class="field">
+            <label for="suConfirmar">Confirmar senha</label>
+            <div class="input-with-action">
+              <input type="password" id="suConfirmar" name="confirmar" autocomplete="new-password" required>
+              <button type="button" class="input-action" data-toggle-password="suConfirmar" aria-label="Mostrar senha">
+                <svg class="icon-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
+            <span class="field-error" id="suConfirmarError" role="alert"></span>
+          </div>
+        </div>
+
+        <fieldset class="field area-select" id="areaSelect">
+          <legend>Área de estudo</legend>
+          <div class="area-options" role="radiogroup" aria-label="Área de estudo">
+            <button type="button" class="area-option" data-area="contabil" role="radio" aria-checked="false">
+              <span class="area-option-dot dot-brass" aria-hidden="true"></span>
+              Ciências Contábeis
+            </button>
+            <button type="button" class="area-option" data-area="agro" role="radio" aria-checked="false">
+              <span class="area-option-dot dot-moss" aria-hidden="true"></span>
+              Engenharia Agronômica
+            </button>
+            <button type="button" class="area-option" data-area="administracao" role="radio" aria-checked="false">
+              <span class="area-option-dot dot-steel" aria-hidden="true"></span>
+              Administração
+            </button>
+          </div>
+          <span class="field-error" id="areaError" role="alert"></span>
+        </fieldset>
+
+        <label class="checkbox-field">
+          <input type="checkbox" id="suTermos" name="termos" required>
+          <span class="checkbox-box" aria-hidden="true"></span>
+          <span class="checkbox-label">Li e aceito os <a href="#" tabindex="-1">termos de uso</a>.</span>
+        </label>
+        <span class="field-error" id="suTermosError" role="alert"></span>
+
+        <button type="submit" class="btn btn-primary btn-block">Criar conta</button>
+        <p class="auth-switch">Já tem conta? <button type="button" class="link-btn" data-switch-tab="login">Entrar</button></p>
+      </form>
+
+      <div class="auth-success" id="signupSuccess" hidden>
+        <span class="success-check" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M5 12.5l4 4 10-10"></path></svg>
+        </span>
+        <h3>Conta criada</h3>
+        <p id="successMessage">Tudo pronto. Sua área foi registrada e o próximo passo é o dashboard.</p>
+        <button type="button" class="btn btn-secondary" id="successClose">Voltar ao início</button>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script src="{% static 'js/index.js' %}"></script>
+</body>
+</html>
