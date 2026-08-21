@@ -62,9 +62,9 @@
         </div>
 
         <ul class="hero-stats" aria-label="Áreas atendidas pela plataforma">
-          <li><span class="stat-dot dot-brass" aria-hidden="true"></span>ContábilHub</li>
-          <li><span class="stat-dot dot-moss" aria-hidden="true"></span>AgroGest</li>
-          <li><span class="stat-dot dot-steel" aria-hidden="true"></span>Administra+</li>
+          {% for item in curso %}
+              <li><span class="stat-dot dot-brass" aria-hidden="true">{{ curso.nome }}</span></li>
+          {% endfor %}
         </ul>
       </div>
 
@@ -89,6 +89,7 @@
           <circle class="hub-core" cx="180" cy="180" r="34"></circle>
 
           <text class="hub-label hub-label-core" x="180" y="185">Núcleo</text>
+          
           <text class="hub-label" x="180" y="66">Contábil</text>
           <text class="hub-label" x="66" y="256">Agro</text>
           <text class="hub-label" x="294" y="256">Admin</text>
