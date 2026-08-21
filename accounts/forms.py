@@ -42,7 +42,7 @@ class SignupForm(forms.ModelForm):
 
         return user 
 
-class LoginForm(forms.Form):
+class EmailLoginForm(forms.Form):
      email = forms.EmailField()
      senha = forms.CharField()
 
