@@ -21,7 +21,8 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_active', True)
         return self.create_user(email, nome, password, **extra_fields)
 
-class User(AbstractUser, PermissionsMixin):
+class User(AbstractUser):
+    username = None
     email = models.EmailField(unique=True)
     nome = models.CharField(max_length=200)
     curso =  models.ForeignKey(
@@ -33,7 +34,7 @@ class User(AbstractUser, PermissionsMixin):
     )
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    date_joined = models.DataTimeField(auto_now_add=True)
+    date_joined = models.DateTimeField(auto_now_add=True)
 
     objects = UserManager()
 

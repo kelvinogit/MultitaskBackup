@@ -23,6 +23,8 @@ env = environ.Env()
 environ.Env.read_env(BASE_DIR / ".env")
 
 
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
@@ -48,6 +50,7 @@ INSTALLED_APPS = [
     'agronomico',
     'contabeis',
     'core',
+    'accounts'
 ]
 
 MIDDLEWARE = [
@@ -105,6 +108,12 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+AUTH_USER_MODEL = 'accounts.User'
+LOGIN_URL = '/'
+LOGIN_REDIRECT_URL = '/index/'
+LOGOUT_REDIRECT_URL = '/'
+
 
 
 # Internationalization
