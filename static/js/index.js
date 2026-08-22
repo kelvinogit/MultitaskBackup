@@ -149,11 +149,17 @@
      ========================================================= */
 
   areaOptions.forEach((option) => {
-    option.addEventListener('click', () => selectArea(option.dataset.area));
+    option.addEventListener('click', () => {
+      const nome = option.textContent.trim();
+      selectArea(option.dataset.area, nome);
+    });
   });
 
-  function selectArea(area) {
+  let selectAreaNome = null;
+
+  function selectArea(area, nome) {
     selectedArea = area;
+    selectAreaNome = nome;
     areaOptions.forEach((opt) => {
       opt.setAttribute('aria-checked', String(opt.dataset.area === area));
     });
@@ -323,13 +329,13 @@
     }, 800);
   });
 
-  function areaLabel(area) {
-    const labels = {
-      contabil: 'ContábilHub',
-      agro: 'AgroGest',
-      administracao: 'Administra+',
-    };
-    return labels[area] || '';
+  function showSignupSucess(nome){
+    signupForm.hidden = true;
+    signupSuccess.hidden = false;
+    const firstName = nome.split(' ')[0];
+    const sucessMessage = document.getElementById('sucessMessage');
+    sucessMessage.textContent = 'Bem-vindo(a), ${firstname}. Sua área (${selectedAreaNome}) foi registrada com sucesso BB';
+
   }
 
   function showSignupSuccess(nome) {
@@ -349,6 +355,7 @@
     signupForm.hidden = false;
     signupSuccess.hidden = true;
     selectedArea = null;
+    selectedAreaNome = null;
     areaOptions.forEach((opt) => opt.setAttribute('aria-checked', 'false'));
 
     document.querySelectorAll('.field').forEach((field) => field.classList.remove('has-error'));

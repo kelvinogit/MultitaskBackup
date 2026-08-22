@@ -62,8 +62,11 @@
         </div>
 
         <ul class="hero-stats" aria-label="Áreas atendidas pela plataforma">
-          {% for item in curso %}
-              <li><span class="stat-dot dot-brass" aria-hidden="true">{{ item.nome }}</span></li>
+          {% for curso in cursos %}
+              <li>
+                  <span class="stat-dot {% cycle 'dot-brass' 'dot-moss' 'dot-steel' %}" aria-hidden="true"></span>
+                  {{ curso.nome }}
+              </li>
           {% endfor %}
         </ul>
       </div>
@@ -309,14 +312,18 @@
 
         <fieldset class="field area-select" id="areaSelect">
           <legend>Área de estudo</legend>
-          {% for item in curso %}
-          <div class="area-options" role="radiogroup" aria-label="Área de estudo">
-            <button type="button" class="area-option" data-area="contabil" role="radio" aria-checked="false">
-              <span class="area-option-dot dot-brass" aria-hidden="true"></span>
-              {{ item.nome }}
+          <div class="area-options" role="radiogroup" aria-label="Área de estudo"></div>
+          
+          {% for curso in cursos %}
+
+            <button type="button" class="area-option" data-area="{{ curso.id }}" role="radio" aria-checked="false">
+              <span class="area-option-dot {% cycle 'dot-brass' 'dot-moss' 'dot-steel' %}" aria-hidden="true"></span>
+              {{ curso.nome }}
             </button>
+
           {% endfor %}
-          </div>
+          
+        </div>
           <span class="field-error" id="areaError" role="alert"></span>
         </fieldset>
 

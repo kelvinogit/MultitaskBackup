@@ -1,9 +1,25 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from .forms import SignupForm, EmailLoginForm
+from django.core.cache import cache 
+import json
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
 
 # Create your views here.
+
+
+def check_rate_limit(request, key_prefix, limit=5, window=300):
+    ip = request.META.get('REMOTE_ADDR')
+    key = f'{key_prefix}:{ip}'
+    attempts = cache.get(key, 0)
+    if attempts >= limit:
+        return False
+    cache.set(key, attempts + 1, timeout=window)
+    return True
+
+
 
 def signup_view (request):
     if request.method == 'POST':
@@ -44,3 +60,5 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('index.html')
+
+
