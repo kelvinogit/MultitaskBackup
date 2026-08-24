@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="{% static 'css/index.css' %}">
 </head>
 <body>
+  {% csrf_token %}
 
 <a class="skip-link" href="#main">Pular para o conteúdo</a>
 
@@ -312,7 +313,7 @@
 
         <fieldset class="field area-select" id="areaSelect">
           <legend>Área de estudo</legend>
-          <div class="area-options" role="radiogroup" aria-label="Área de estudo"></div>
+          <div class="area-options" role="radiogroup" aria-label="Área de estudo">
           
           {% for curso in cursos %}
 
@@ -322,8 +323,7 @@
             </button>
 
           {% endfor %}
-          
-        </div>
+          </div>
           <span class="field-error" id="areaError" role="alert"></span>
         </fieldset>
 

@@ -1,6 +1,6 @@
 /* =========================================================
    CERNE — script.js
-   Controla apenas a interface: nenhuma requisição é feita.
+   UI + comunicação com o backend Django via fetch().
    ========================================================= */
 
 (function () {
@@ -25,8 +25,32 @@
   const areaSelect = document.getElementById('areaSelect');
   const areaOptions = Array.from(document.querySelectorAll('.area-option'));
   let selectedArea = null;
+  let selectedAreaNome = null; // nome consistente em todo o arquivo
 
   let lastFocusedEl = null;
+
+  /* =========================================================
+     0. Utilitários de comunicação com o Django (fetch + CSRF)
+     ========================================================= */
+
+  function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? decodeURIComponent(match[2]) : null;
+  }
+  const CSRF_TOKEN = getCookie('csrftoken');
+
+  async function postJSON(url, payload) {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': CSRF_TOKEN,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+    const data = await response.json().catch(() => ({ ok: false, errors: {} }));
+    return { status: response.status, data };
+  }
 
   /* =========================================================
      1. Abrir / fechar o drawer
@@ -35,7 +59,6 @@
   function openAuth(mode) {
     lastFocusedEl = document.activeElement;
     overlay.hidden = false;
-    // força reflow antes de animar
     requestAnimationFrame(() => overlay.classList.add('is-open'));
     document.body.style.overflow = 'hidden';
     switchTab(mode || 'login');
@@ -148,23 +171,21 @@
      4. Seleção de área (cards estilo radio)
      ========================================================= */
 
+  function selectArea(area, nome) {
+    selectedArea = area;
+    selectedAreaNome = nome;
+    areaOptions.forEach((opt) => {
+      opt.setAttribute('aria-checked', String(opt.dataset.area === area));
+    });
+    clearFieldError(areaSelect, 'areaError');
+  }
+
   areaOptions.forEach((option) => {
     option.addEventListener('click', () => {
       const nome = option.textContent.trim();
       selectArea(option.dataset.area, nome);
     });
   });
-
-  let selectAreaNome = null;
-
-  function selectArea(area, nome) {
-    selectedArea = area;
-    selectAreaNome = nome;
-    areaOptions.forEach((opt) => {
-      opt.setAttribute('aria-checked', String(opt.dataset.area === area));
-    });
-    clearFieldError(areaSelect, 'areaError');
-  }
 
   /* =========================================================
      5. Validação — utilitários
@@ -186,7 +207,6 @@
 
   function shakeDrawer() {
     drawer.classList.remove('is-shaking');
-    // força reflow para permitir reanimação
     void drawer.offsetWidth;
     drawer.classList.add('is-shaking');
   }
@@ -195,7 +215,7 @@
      6. Formulário de login
      ========================================================= */
 
-  loginForm.addEventListener('submit', (event) => {
+  loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     const emailField = document.getElementById('loginEmail').closest('.field');
@@ -226,24 +246,31 @@
       return;
     }
 
-    // Simulação: nenhuma requisição é feita neste protótipo.
     const submitBtn = loginForm.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
     submitBtn.textContent = 'Entrando...';
     submitBtn.disabled = true;
 
-    setTimeout(() => {
-      submitBtn.textContent = originalText;
-      submitBtn.disabled = false;
+    const { data } = await postJSON('/accounts/login/', { email, senha });
+
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+
+    if (data.ok) {
       closeAuth();
-    }, 700);
+      window.location.reload();
+    } else {
+      const msg = (data.errors && data.errors.__all__) ? data.errors.__all__[0] : 'E-mail ou senha inválidos.';
+      setFieldError(senhaField, 'loginSenhaError', msg);
+      shakeDrawer();
+    }
   });
 
   /* =========================================================
      7. Formulário de cadastro
      ========================================================= */
 
-  signupForm.addEventListener('submit', (event) => {
+  signupForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     const nomeField = document.getElementById('suNome').closest('.field');
@@ -257,7 +284,6 @@
     const senha = document.getElementById('suSenha').value;
     const confirmar = document.getElementById('suConfirmar').value;
 
-    // limpa erros anteriores
     [
       [nomeField, 'suNomeError'],
       [emailField, 'suEmailError'],
@@ -316,39 +342,45 @@
       return;
     }
 
-    // Simulação de sucesso — nenhuma requisição real é feita.
     const submitBtn = signupForm.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
     submitBtn.textContent = 'Criando conta...';
     submitBtn.disabled = true;
 
-    setTimeout(() => {
-      submitBtn.textContent = originalText;
-      submitBtn.disabled = false;
+    const { data } = await postJSON('/accounts/signup/', {
+      nome, email, senha, confirmar, curso: selectedArea,
+    });
+
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+
+    if (data.ok) {
       showSignupSuccess(nome);
-    }, 800);
+    } else {
+      const fieldMap = {
+        nome: [nomeField, 'suNomeError'],
+        email: [emailField, 'suEmailError'],
+        senha: [senhaField, 'suSenhaError'],
+        confirmar: [confirmarField, 'suConfirmarError'],
+        curso: [areaSelect, 'areaError'],
+      };
+      Object.entries(data.errors || {}).forEach(([campo, mensagens]) => {
+        const mapped = fieldMap[campo];
+        if (mapped) setFieldError(mapped[0], mapped[1], mensagens[0]);
+      });
+      shakeDrawer();
+    }
   });
-
-  function showSignupSucess(nome){
-    signupForm.hidden = true;
-    signupSuccess.hidden = false;
-    const firstName = nome.split(' ')[0];
-    const sucessMessage = document.getElementById('sucessMessage');
-    sucessMessage.textContent = 'Bem-vindo(a), ${firstname}. Sua área (${selectedAreaNome}) foi registrada com sucesso BB';
-
-  }
 
   function showSignupSuccess(nome) {
     signupForm.hidden = true;
     signupSuccess.hidden = false;
     const firstName = nome.split(' ')[0];
     const successMessage = document.getElementById('successMessage');
-    successMessage.textContent = `Bem-vindo(a), ${firstName}. Sua área (${areaLabel(selectedArea)}) foi registrada — o próximo passo é o dashboard.`;
+    successMessage.textContent = `Bem-vindo(a), ${firstName}. Sua área (${selectedAreaNome}) foi registrada — o próximo passo é o dashboard.`;
   }
 
   function resetSignupPanel() {
-    // Só reseta o formulário depois que a animação de fechar terminou,
-    // para não "piscar" o conteúdo enquanto o drawer ainda está visível.
     if (signupSuccess.hidden) return;
 
     signupForm.reset();

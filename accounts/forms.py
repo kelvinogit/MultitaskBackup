@@ -7,7 +7,7 @@ from core.models import Curso
 User = get_user_model()
 
 class SignupForm(forms.ModelForm):
-    senha = forms.CharField(min_lenght=8)
+    senha = forms.CharField(min_length=8)
     confirmar = forms.CharField()
     curso = forms.ModelChoiceField(queryset=Curso.objects.all(), required=True)
 
@@ -20,7 +20,7 @@ class SignupForm(forms.ModelForm):
         return nome 
 
     def clean_email(self):
-        email = self.changed_data['email'].lower().strip()
+        email = self.cleaned_data['email'].lower().strip()
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError('emails ja cadastrado')
         return email
