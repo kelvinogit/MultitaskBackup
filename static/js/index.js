@@ -39,7 +39,8 @@
   }
   const CSRF_TOKEN = getCookie('csrftoken');
 
-  async function postJSON(url, payload) {
+
+    async function postJSON(url, payload) {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -251,7 +252,7 @@
     submitBtn.textContent = 'Entrando...';
     submitBtn.disabled = true;
 
-    const { data } = await postJSON('/accounts/login/', { email, senha });
+    const { data } = await postJSON(window.urls.login, { email, senha });
 
     submitBtn.textContent = originalText;
     submitBtn.disabled = false;
@@ -347,7 +348,7 @@
     submitBtn.textContent = 'Criando conta...';
     submitBtn.disabled = true;
 
-    const { data } = await postJSON('/accounts/signup/', {
+    const { data } = await postJSON(window.urls.signup, {
       nome, email, senha, confirmar, curso: selectedArea,
     });
 

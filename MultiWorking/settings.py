@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'agronomico',
     'contabeis',
     'core',
-    'accounts'
+    'accounts',
 ]
 
 MIDDLEWARE = [

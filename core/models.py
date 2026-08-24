@@ -5,7 +5,7 @@ from django.db import models
 
 class Curso(models.Model):
     nome = models.CharField(max_length=150, unique=True)
-
+    slug = models.CharField(max_length=150, unique=True)
     class Meta: 
        ordering = ['nome']
 
