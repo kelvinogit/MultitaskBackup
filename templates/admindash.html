@@ -1,0 +1,205 @@
+ {% load static %} 
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Administra+</title>
+<meta name="description" content="Painel de gestão acadêmica do módulo de Administração: atividades, projetos e indicadores de desempenho.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'css/admindash.css' %}">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- =========================================================
+       SIDEBAR — núcleo comum da plataforma (mesma em qualquer área)
+       Django: envolver os <li> num loop se os itens de menu também
+       vierem a depender do curso do usuário.
+       ========================================================= -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="22" height="22">
+          <rect x="4" y="16" width="5" height="12" />
+          <rect x="13.5" y="9" width="5" height="19" />
+          <rect x="23" y="4" width="5" height="24" />
+        </svg>
+      </span>
+      <span class="brand-text">Administra<span class="brand-plus">+</span></span>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Navegação principal">
+      <ul>
+        <li><a href="#" class="nav-link is-active" data-nav="dashboard">
+          <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="9" rx="1"/><rect x="13.5" y="3.5" width="7" height="5" rx="1"/><rect x="13.5" y="11" width="7" height="9.5" rx="1"/><rect x="3.5" y="15" width="7" height="5.5" rx="1"/></svg>
+          Dashboard
+        </a></li>
+        <li><a href="#" class="nav-link" data-nav="atividades">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M5 12.5l4 4 10-10"/></svg>
+          Atividades
+        </a></li>
+        <li><a href="#" class="nav-link" data-nav="projetos">
+          <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="8" r="3"/><path d="M2.5 20c0-3 2.5-5.5 5.5-5.5S13.5 17 13.5 20"/><path d="M12.7 14.8c1-.9 2.3-1.4 4.3-1.4 3 0 5.5 2.5 5.5 5.5"/></svg>
+          Projetos
+        </a></li>
+        <li><a href="#" class="nav-link" data-nav="disciplinas">
+          <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><line x1="3.5" y1="9" x2="20.5" y2="9"/></svg>
+          Disciplinas
+        </a></li>
+        <li><a href="#" class="nav-link" data-nav="indicadores">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 20V10"/><path d="M11 20V4"/><path d="M18 20v-7"/></svg>
+          Indicadores
+        </a></li>
+        <li><a href="#" class="nav-link" data-nav="perfil">
+          <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="8.5" r="3.5"/><path d="M4.5 20c1-4 4-6 7.5-6s6.5 2 7.5 6"/></svg>
+          Perfil
+        </a></li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <span class="sidebar-area-tag">Curso: Administração</span>
+    </div>
+  </aside>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="main">
+
+    <!-- =========================================================
+         CABEÇALHO
+         Django: {{ request.user.nome }} no lugar de "Kelvin";
+         contador de notificações em {{ notificacoes_count }}.
+         ========================================================= -->
+    <header class="topbar">
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      </button>
+
+      <div class="topbar-title">
+        <h1>Dashboard</h1>
+        <p class="topbar-greeting">Olá, <span id="userName">Kelvin</span></p>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" aria-label="Notificações">
+          <svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 4 1.5 5.5 1.5 5.5h-15S6 13 6 9z"/><path d="M10 18a2 2 0 0 0 4 0"/></svg>
+          <span class="icon-btn-dot" aria-hidden="true"></span>
+        </button>
+        <div class="avatar" aria-hidden="true">K</div>
+      </div>
+    </header>
+
+    <main class="content" id="main">
+
+      <!-- =========================================================
+           RESUMO — núcleo comum (status de atividades)
+           Django: substituir os números dentro de [data-count] por
+           {{ pendentes }}, {{ em_andamento }}, {{ concluidas }}, {{ atrasadas }}
+           ========================================================= -->
+      <section class="panel summary" aria-label="Resumo de atividades">
+        <div class="summary-item" data-status="pendentes">
+          <span class="summary-value" data-count="5">05</span>
+          <span class="summary-label">Pendentes</span>
+        </div>
+        <div class="summary-item" data-status="andamento">
+          <span class="summary-value" data-count="3">03</span>
+          <span class="summary-label">Em andamento</span>
+        </div>
+        <div class="summary-item" data-status="concluidas">
+          <span class="summary-value" data-count="12">12</span>
+          <span class="summary-label">Concluídas</span>
+        </div>
+        <div class="summary-item" data-status="atrasadas">
+          <span class="summary-value" data-count="2">02</span>
+          <span class="summary-label">Atrasadas</span>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           INDICADORES / KPIs — diferencial do módulo Administração
+           Django: substituir por {{ taxa_conclusao }}, {{ produtividade }},
+           {{ projetos_andamento }}, {{ atividades_atrasadas }}
+           ========================================================= -->
+      <section class="panel kpis">
+        <h2 class="panel-title">Indicadores de desempenho</h2>
+        <div class="kpi-grid">
+
+          <div class="kpi kpi-ring" style="--ring-value: 60;">
+            <div class="kpi-ring-visual" aria-hidden="true"><span>60%</span></div>
+            <div class="kpi-text">
+              <span class="kpi-number">60%</span>
+              <span class="kpi-label">Taxa de conclusão</span>
+            </div>
+          </div>
+
+          <div class="kpi kpi-ring" style="--ring-value: 78;">
+            <div class="kpi-ring-visual" aria-hidden="true"><span>78%</span></div>
+            <div class="kpi-text">
+              <span class="kpi-number">78%</span>
+              <span class="kpi-label">Produtividade</span>
+            </div>
+          </div>
+
+          <div class="kpi">
+            <span class="kpi-number">3</span>
+            <span class="kpi-label">Projetos em andamento</span>
+          </div>
+
+          <div class="kpi kpi-warn">
+            <span class="kpi-number">2</span>
+            <span class="kpi-label">Atividades atrasadas</span>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =========================================================
+           GRÁFICO — construído em CSS/JS puro a partir dos mesmos
+           dados do resumo (nenhum dado duplicado no HTML)
+           ========================================================= -->
+      <section class="panel">
+        <h2 class="panel-title">Atividades por status</h2>
+        <div class="bar-chart" id="statusChart" role="img" aria-label="Gráfico de atividades por status"></div>
+      </section>
+
+      <div class="grid-two">
+
+        <!-- =========================================================
+             PRÓXIMAS ATIVIDADES
+             Django: {% for atividade in proximas_atividades %} ... {% endfor %}
+             O array "atividades" em script.js corresponde 1:1 ao que
+             a view vai passar no contexto.
+             ========================================================= -->
+        <section class="panel">
+          <h2 class="panel-title">Próximas atividades</h2>
+          <ul class="activity-list" id="activityList">
+            <!-- itens inseridos via JS a partir do array `atividades` -->
+          </ul>
+        </section>
+
+        <!-- =========================================================
+             PROJETOS EM GRUPO
+             Django: {% for projeto in projetos %} ... {% endfor %}
+             ========================================================= -->
+        <section class="panel">
+          <h2 class="panel-title">Projetos em grupo</h2>
+          <div class="project-list" id="projectList">
+            <!-- itens inseridos via JS a partir do array `projetos` -->
+          </div>
+        </section>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<script src="{% static 'js/admindash.js' %}"></script>
+</body>
+</html>

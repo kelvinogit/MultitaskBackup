@@ -27,6 +27,7 @@ def dashboard(request):
     if destino is None:
         # slug não mapeado — cai num dashboard genérico do core em vez de quebrar
         return render(request, 'core/index.html', {'curso': curso})
-    redirect(destino)
+
+    return redirect(destino)
 
 
