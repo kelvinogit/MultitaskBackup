@@ -82,6 +82,12 @@ class Atividade(models.Model):
         from django.utils import timezone
         return self.status != self.Status.CONCLUIDA and self.prazo < timezone.now()
 
+
+        
+
+        
+    
+
     
     
    
