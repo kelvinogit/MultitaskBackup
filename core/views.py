@@ -10,7 +10,7 @@ def index(request):
     }
     return render(request, 'index.html', context)
 
-@autenticacao_obrigatoria
+@autenticacao_obrigatoria()
 def dashboard(request):
     curso = request.user.curso
 
@@ -20,7 +20,7 @@ def dashboard(request):
     destino = {
         'contabil': 'contabeis:dashboard',
         'agro': 'agronomico:dashboard',
-        'administracao': 'administraco:admindash',
+        'admin': 'administraco:admindash',
     }.get(curso.slug)
 
     if destino is None:
