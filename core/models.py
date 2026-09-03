@@ -70,6 +70,7 @@ class Atividade(models.Model):
         on_delete=models.CASCADE,
         related_name='atividades',
     )
+    
 
     class Meta:
         ordering = ['prazo']
@@ -82,7 +83,16 @@ class Atividade(models.Model):
         from django.utils import timezone
         return self.status != self.Status.CONCLUIDA and self.prazo < timezone.now()
 
+    
 
+
+    
+        
+
+
+    
+
+    
         
 
         

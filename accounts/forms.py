@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.forms import AuthenticationForm
 from core.models import Curso
@@ -38,14 +38,38 @@ class SignupForm(forms.ModelForm):
         return cleaned
     
     def save(self, commit=True):
-        user = super().save(commit=True)
-        user.set_password(self.clean_data['senha'])
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['senha'])
         if commit:
              user.save()
         return user 
 
 class EmailLoginForm(forms.Form):
      username = forms.EmailField(label='E-mail')
+     password = forms.CharField(label='Senha', widget=forms.PasswordInput)
+
+     def __init__ (self, request=None, *args, **kwargs):
+          self.request = request
+          self.user_cache = None
+          super().__init__(*args, **kwargs)
+
+     def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get('username')
+        password = cleaned_data.get('password')
+
+        if email and password:
+            self.user_cache = authenticate(
+                self.request, username=email, password=password 
+            )
+        if self.user_cache is None:
+                raise forms.ValidationError('E-mail ou senha inválidos.', code='invalid_login')
+        if not self.user_cache.is_active:
+                raise forms.ValidationError('Esta conta está inativa.', code='inactive')
+        return cleaned_data
+
+     def get_user(self):
+          return self.user_cache
 
 
      

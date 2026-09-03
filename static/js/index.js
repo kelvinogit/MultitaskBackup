@@ -123,7 +123,12 @@
   });
 
   closeBtn.addEventListener('click', closeAuth);
-  successClose.addEventListener('click', closeAuth);
+  successClose.addEventListener('click', () =>
+  {
+    window.location.href = window.urls.dashboard;
+  }
+
+  );
 
   /* =========================================================
      2. Alternar abas Entrar / Criar conta
@@ -259,7 +264,7 @@
 
     if (data.ok) {
       closeAuth();
-      window.location.reload();
+      window.location.href=window.urls.dashboard;
     } else {
       const msg = (data.errors && data.errors.__all__) ? data.errors.__all__[0] : 'E-mail ou senha inválidos.';
       setFieldError(senhaField, 'loginSenhaError', msg);
