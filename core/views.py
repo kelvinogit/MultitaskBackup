@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Curso
+from .models import Curso, Atividade, Projeto, Disciplina
 from django.contrib.auth.decorators import login_required
 from . decorators import autenticacao_obrigatoria
 
@@ -9,6 +9,37 @@ def index(request):
         'cursos': curso
     }
     return render(request, 'index.html', context)
+
+
+
+def get_dashboard_context (usuario):
+    """
+    Calcula a seção fixa do dashboard (contagens por status + próximas
+    atividades) para um usuário. Deve ser chamada por qualquer view de
+    dashboard de área (administraco, contabeis, agronomico) e combinada
+    com o bloco condicional específico daquela área.
+    """
+
+    atividades = Atividade.objects.filter(usuario=usuario)
+    contagem = {
+        'pendentes': atividades.filter(status=Atividade.Status.PENDENTE).count(),
+        'andamento': atividades.filter(status=Atividade.Status.ANDAMENTO).count(),
+        'concluidas': atividades.filter(status=Atividade.Status.CONCLUIDA).count(),
+        'atrasadas': atividades.filter(status=Atividade.Status.ATRASADA).count(),
+    }
+
+    contagem['total'] = sum(contagem.values())
+
+    proximas_atividades = (
+        atividades
+        .exclude(status=Atividade.Status.CONCLUIDA)
+        .order_by('prazo')[:5]
+    )
+
+    return{
+        'contagem_atividades':contagem,
+        'proximas_atividades': proximas_atividades,
+    }
 
 @autenticacao_obrigatoria()
 def dashboard(request):
@@ -28,6 +59,11 @@ def dashboard(request):
         return render(request, 'index.html', {'curso': curso})
 
     return redirect(destino)
+
+# CRUD genérico — Disciplina
+
+
+
 
 
 
