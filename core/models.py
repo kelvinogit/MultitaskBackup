@@ -195,6 +195,11 @@ class Pontuacao(models.Model):
     @classmethod
     def total_do_usuario(cls, usuario):
         total = cls.objects.filter(usuario=usuario.aggregate(total=models.Sum('pontos')))['total']
+        return total or 0
+
+
+
+    
         
 
 
