@@ -1,0 +1,21 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block page_title %}Atividades{% endblock %}
+{% block content %}
+
+    {% if atividades %}
+
+        {% for atividade in atividades %}
+           
+            <h1>{{atividade.titulo}}</h1>
+        
+            {% endfor %}
+    {% else %}
+
+        <p>nenhuma encontrada!</p>
+    
+    {% endif %}
+
+{% endblock %}
+

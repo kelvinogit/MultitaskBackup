@@ -30,7 +30,7 @@
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M3 12h4v8H3v-8zm7-8h4v16h-4V4zm7 5h4v11h-4V9z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
         <span>Dashboard</span>
       </a>
-      <a href="#" class="nav-item {% if request.resolver_match.url_name == 'atividades' %}is-active{% endif %}" data-nav="atividades">
+      <a href="{% url 'core:atividade_list' %}" class="nav-item {% if request.resolver_match.url_name == 'atividades' %}is-active{% endif %}" data-nav="atividades">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
         <span>Atividades</span>
       </a>

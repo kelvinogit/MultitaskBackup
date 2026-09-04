@@ -3,6 +3,38 @@ from .models import Curso, Atividade, Projeto, Disciplina
 from django.contrib.auth.decorators import login_required
 from . decorators import autenticacao_obrigatoria
 
+
+
+AREA_TEMPLATE_PREFIX = {
+    'admin': 'admin',
+    'contabil': 'contabeis',
+    'agro': 'agronomico',
+}
+
+
+def get_template(usuario, view_name):
+    """
+    Retorna a lista de candidatos a template para uma view genérica do
+    core, na ordem: template específico da área do usuário -> template
+    genérico do core (fallback, usado enquanto a área ainda não tem
+    tela própria).
+
+    Ex.: get_template(usuario_do_agro, 'atividade_list')
+         -> ['agronomico/atividade_list.html', 'core/atividade_list.html']
+    """
+
+
+    curso = getattr(usuario, 'curso', None)
+    slug = getattr(curso, 'slug', None)
+    prefixo = AREA_TEMPLATE_PREFIX.get(slug)
+
+
+    candidatos=[]
+    if prefixo:
+        candidatos.append(f'{prefixo}/{view_name}.html')
+    candidatos.append(f'core/{view_name}.html')
+    return candidatos
+
 def index(request):
     curso = Curso.objects.all()
     context = {
@@ -60,7 +92,26 @@ def dashboard(request):
 
     return redirect(destino)
 
-# CRUD genérico — Disciplina
+
+# Atividades ---- CRUD e LIST
+
+@login_required
+def atividades_list(request):
+    atividades = Atividade.objects.filter(usuario=request.user).select_related('disciplina')
+
+    for atividade in atividades:
+        atividade.sincronizar_status_atraso()
+
+    context ={
+        'atividades':atividades,
+    }   
+    return render(request, get_template(request.user, 'atividades_list'), context)
+
+    
+
+
+
+
 
 
 
