@@ -1,6 +1,7 @@
 /* =========================================================
-   Dashboard – Administração
-   Tokens
+   Admin – Base
+   Tokens, reset e shell (sidebar + header) compartilhados
+   por todas as telas do módulo Administração.
    ========================================================= */
 :root{
   --green-900: #0f3327;
@@ -145,7 +146,7 @@ ul{ list-style: none; margin: 0; padding: 0; }
 }
 
 /* =========================================================
-   Content area
+   Content area (header comum a todas as telas)
    ========================================================= */
 .content{
   flex: 1;
@@ -196,55 +197,7 @@ ul{ list-style: none; margin: 0; padding: 0; }
 }
 
 /* =========================================================
-   KPI row
-   ========================================================= */
-.kpi-row{
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
-.kpi-card{
-  background: var(--card);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
-  padding: 18px 18px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.kpi-dot{
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.kpi-dot--pending{ background: var(--status-pending); }
-.kpi-dot--progress{ background: var(--status-progress); }
-.kpi-dot--done{ background: var(--status-done); }
-.kpi-dot--late{ background: var(--status-late); }
-
-.kpi-text{
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.kpi-label{
-  font-size: 0.78rem;
-  color: var(--ink-600);
-}
-
-.kpi-value{
-  font-size: 1.55rem;
-  font-weight: 700;
-  line-height: 1;
-}
-
-/* =========================================================
-   Panels (shared)
+   Panel base (reutilizado por qualquer tela com cards)
    ========================================================= */
 .panel{
   background: var(--card);
@@ -260,204 +213,8 @@ ul{ list-style: none; margin: 0; padding: 0; }
 }
 
 /* =========================================================
-   Middle row
+   Responsive — shell
    ========================================================= */
-.mid-row{
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.prazos-list{
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin-bottom: 14px;
-}
-
-.prazo-item{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.prazo-info{
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.prazo-name{
-  font-size: 0.86rem;
-  font-weight: 600;
-}
-
-.prazo-date{
-  font-size: 0.76rem;
-  color: var(--ink-400);
-}
-
-.tag{
-  flex-shrink: 0;
-  font-size: 0.7rem;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 999px;
-  white-space: nowrap;
-}
-.tag--indicadores{ background: #e6f0ff; color: #2f5fd9; }
-.tag--disciplina{ background: #fdeee0; color: #c8631a; }
-.tag--projeto{ background: #eae6fb; color: #6c47c6; }
-
-.panel-link{
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--green-accent);
-}
-.panel-link:hover{ text-decoration: underline; }
-
-/* Resumo (donut) panel */
-.resumo-body{
-  display: flex;
-  align-items: center;
-  gap: 22px;
-}
-
-.resumo-chart{
-  position: relative;
-  width: 150px;
-  height: 150px;
-  flex-shrink: 0;
-}
-
-.resumo-chart-center{
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.resumo-chart-value{
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-.resumo-chart-label{
-  font-size: 0.72rem;
-  color: var(--ink-400);
-}
-
-.resumo-legend{
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  font-size: 0.82rem;
-  color: var(--ink-600);
-}
-
-.resumo-legend li{
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.resumo-legend strong{
-  margin-left: auto;
-  color: var(--ink-900);
-  font-weight: 700;
-}
-
-.legend-dot{
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-/* =========================================================
-   Bottom row
-   ========================================================= */
-.bottom-row{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.pontuacao-body{
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.pontuacao-value{
-  font-size: 2rem;
-  font-weight: 700;
-}
-
-.pontuacao-label{
-  font-size: 0.85rem;
-  color: var(--ink-600);
-}
-
-.pontuacao-nivel{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding-top: 14px;
-  border-top: 1px solid var(--line);
-}
-
-.nivel-icon{
-  font-size: 1.3rem;
-}
-
-.nivel-caption{
-  display: block;
-  font-size: 0.72rem;
-  color: var(--ink-400);
-}
-
-.nivel-value{
-  display: block;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #b8860b;
-}
-
-.destaque-body{
-  display: flex;
-  gap: 28px;
-}
-
-.destaque-stat{
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.destaque-value{
-  font-size: 1.8rem;
-  font-weight: 700;
-}
-
-.destaque-label{
-  font-size: 0.78rem;
-  color: var(--ink-600);
-}
-
-/* =========================================================
-   Responsive
-   ========================================================= */
-@media (max-width: 1080px){
-  .kpi-row{ grid-template-columns: repeat(2, 1fr); }
-  .mid-row, .bottom-row{ grid-template-columns: 1fr; }
-}
-
 @media (max-width: 760px){
   .app-shell{ flex-direction: column; }
   .sidebar{
@@ -473,7 +230,6 @@ ul{ list-style: none; margin: 0; padding: 0; }
   .sidebar-logout span{ display: none; }
   .sidebar-brand-name{ display: none; }
   .content{ padding: 20px 16px 32px; }
-  .kpi-row{ grid-template-columns: 1fr 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce){

@@ -5,4 +5,5 @@ app_name = 'administraco'
 
 urlpatterns = [
     path('admindash/', views.admin_dashboard, name="admindash"),
+    
 ]

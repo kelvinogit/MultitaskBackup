@@ -1,0 +1,129 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}Dashboard – Administração{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin/admindash.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- KPI summary row -->
+<section class="kpi-row" aria-label="Resumo de atividades">
+
+  <article class="kpi-card">
+        <span class="kpi-dot kpi-dot--pending"></span>
+        <div class="kpi-text">
+          <span class="kpi-label">Atividades Pendentes</span>
+          <span class="kpi-value" data-count="12">12</span>
+        </div>
+      </article>
+      <article class="kpi-card">
+        <span class="kpi-dot kpi-dot--progress"></span>
+        <div class="kpi-text">
+          <span class="kpi-label">Em Andamento</span>
+          <span class="kpi-value" data-count="8">8</span>
+        </div>
+      </article>
+      <article class="kpi-card">
+        <span class="kpi-dot kpi-dot--done"></span>
+        <div class="kpi-text">
+          <span class="kpi-label">Concluídas</span>
+          <span class="kpi-value" data-count="24">24</span>
+        </div>
+      </article>
+      <article class="kpi-card">
+        <span class="kpi-dot kpi-dot--late"></span>
+        <div class="kpi-text">
+          <span class="kpi-label">Atrasadas</span>
+          <span class="kpi-value" data-count="3">3</span>
+        </div>
+      </article>
+    </section>
+
+<section class="mid-row">
+  <article class="panel panel--prazos">
+        <h2 class="panel-title">Próximos Prazos</h2>
+        <ul class="prazos-list">
+          <li class="prazo-item">
+            <div class="prazo-info">
+              <span class="prazo-name">Análise de Indicadores</span>
+              <span class="prazo-date">23/06/2025 &middot; 3 dias</span>
+            </div>
+            <span class="tag tag--indicadores">Indicadores &amp; KPIs</span>
+          </li>
+          <li class="prazo-item">
+            <div class="prazo-info">
+              <span class="prazo-name">Relatório Financeiro</span>
+              <span class="prazo-date">25/06/2025 &middot; 5 dias</span>
+            </div>
+            <span class="tag tag--disciplina">Disciplina</span>
+          </li>
+          <li class="prazo-item">
+            <div class="prazo-info">
+              <span class="prazo-name">Apresentação do Projeto</span>
+              <span class="prazo-date">30/06/2025 &middot; 10 dias</span>
+            </div>
+            <span class="tag tag--projeto">Projeto</span>
+          </li>
+        </ul>
+        <a href="#" class="panel-link">Ver todas as atividades</a>
+      </article>
+
+      <article class="panel panel--resumo">
+        <h2 class="panel-title">Resumo de Atividades</h2>
+        <div class="resumo-body">
+          <div class="resumo-chart">
+            <canvas id="resumoChart" width="150" height="150"></canvas>
+            <div class="resumo-chart-center">
+              <span class="resumo-chart-value" id="resumoTotalValue">47</span>
+              <span class="resumo-chart-label">Total</span>
+            </div>
+          </div>
+          <ul class="resumo-legend">
+            <li><span class="legend-dot" style="background:#f5a524"></span>Pendentes <strong>12</strong></li>
+            <li><span class="legend-dot" style="background:#8b5cf6"></span>Em andamento <strong>8</strong></li>
+            <li><span class="legend-dot" style="background:#22a06b"></span>Concluídas <strong>24</strong></li>
+            <li><span class="legend-dot" style="background:#e5484d"></span>Atrasadas <strong>3</strong></li>
+          </ul>
+        </div>
+      </article>
+</section>
+
+<section class="bottom-row">
+   <article class="panel panel--pontuacao">
+        <h2 class="panel-title">Pontuação Atual</h2>
+        <div class="pontuacao-body">
+          <span class="pontuacao-value">1.250</span>
+          <span class="pontuacao-label">pontos</span>
+        </div>
+        <div class="pontuacao-nivel">
+          <span class="nivel-icon" aria-hidden="true">🏆</span>
+          <div>
+            <span class="nivel-caption">Nível</span>
+            <span class="nivel-value">Ouro</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel panel--destaque">
+        <h2 class="panel-title">Indicadores em Destaque</h2>
+        <div class="destaque-body">
+          <div class="destaque-stat">
+            <span class="destaque-value">5</span>
+            <span class="destaque-label">KPIs cadastrados</span>
+          </div>
+          <div class="destaque-stat">
+            <span class="destaque-value">3</span>
+            <span class="destaque-label">Atualizados este mês</span>
+          </div>
+        </div>
+      </article>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="{% static 'js/admin/admindash.js' %}"></script>
+{% endblock %}

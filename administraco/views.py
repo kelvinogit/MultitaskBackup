@@ -8,4 +8,4 @@ from core.decorators import autenticacao_obrigatoria
 @autenticacao_obrigatoria()
 def admin_dashboard(request):
     curso = request.user.curso
-    return render(request, 'admindash.html', {'curso':curso})
+    return render(request, 'admin/admindash.html', {'curso':curso})
