@@ -16,28 +16,28 @@
         <span class="kpi-dot kpi-dot--pending"></span>
         <div class="kpi-text">
           <span class="kpi-label">Atividades Pendentes</span>
-          <span class="kpi-value" data-count="12">12</span>
+          <span class="kpi-value" data-count="{{ contagem.pendentes }}">{{ contagem.pendentes }}</span>
         </div>
       </article>
       <article class="kpi-card">
         <span class="kpi-dot kpi-dot--progress"></span>
         <div class="kpi-text">
           <span class="kpi-label">Em Andamento</span>
-          <span class="kpi-value" data-count="8">8</span>
+          <span class="kpi-value" data-count="{{ contagem.andamento }}">{{ contagem.andamento }}</span>
         </div>
       </article>
       <article class="kpi-card">
         <span class="kpi-dot kpi-dot--done"></span>
         <div class="kpi-text">
           <span class="kpi-label">Concluídas</span>
-          <span class="kpi-value" data-count="24">24</span>
+          <span class="kpi-value" data-count="{{ contagem.concluidas }}">{{ contagem.concluidas }}</span>
         </div>
       </article>
       <article class="kpi-card">
         <span class="kpi-dot kpi-dot--late"></span>
         <div class="kpi-text">
           <span class="kpi-label">Atrasadas</span>
-          <span class="kpi-value" data-count="3">3</span>
+          <span class="kpi-value" data-count="{{ contagem.atrasadas }}">{{ contagem.atrasadas }}</span>
         </div>
       </article>
     </section>
@@ -46,29 +46,23 @@
   <article class="panel panel--prazos">
         <h2 class="panel-title">Próximos Prazos</h2>
         <ul class="prazos-list">
+          {% for atividade in proximas_atividades %}
           <li class="prazo-item">
             <div class="prazo-info">
-              <span class="prazo-name">Análise de Indicadores</span>
-              <span class="prazo-date">23/06/2025 &middot; 3 dias</span>
+              <span class="prazo-name">{{ atividade.titulo }}</span>
+              <span class="prazo-date">{{ atividade.prazo|date:"d/m/Y" }}</span>
             </div>
-            <span class="tag tag--indicadores">Indicadores &amp; KPIs</span>
+            <span class="tag tag--disciplina">{{ atividade.disciplina.nome }}</span>
           </li>
+          {% empty %}
           <li class="prazo-item">
             <div class="prazo-info">
-              <span class="prazo-name">Relatório Financeiro</span>
-              <span class="prazo-date">25/06/2025 &middot; 5 dias</span>
+              <span class="prazo-name">Nenhuma atividade pendente</span>
             </div>
-            <span class="tag tag--disciplina">Disciplina</span>
           </li>
-          <li class="prazo-item">
-            <div class="prazo-info">
-              <span class="prazo-name">Apresentação do Projeto</span>
-              <span class="prazo-date">30/06/2025 &middot; 10 dias</span>
-            </div>
-            <span class="tag tag--projeto">Projeto</span>
-          </li>
+          {% endfor %}
         </ul>
-        <a href="#" class="panel-link">Ver todas as atividades</a>
+        <a href="{% url 'core:atividade_list' %}" class="panel-link">Ver todas as atividades</a>
       </article>
 
       <article class="panel panel--resumo">
@@ -77,15 +71,15 @@
           <div class="resumo-chart">
             <canvas id="resumoChart" width="150" height="150"></canvas>
             <div class="resumo-chart-center">
-              <span class="resumo-chart-value" id="resumoTotalValue">47</span>
+              <span class="resumo-chart-value" id="resumoTotalValue">{{ contagem.total }}</span>
               <span class="resumo-chart-label">Total</span>
             </div>
           </div>
           <ul class="resumo-legend">
-            <li><span class="legend-dot" style="background:#f5a524"></span>Pendentes <strong>12</strong></li>
-            <li><span class="legend-dot" style="background:#8b5cf6"></span>Em andamento <strong>8</strong></li>
-            <li><span class="legend-dot" style="background:#22a06b"></span>Concluídas <strong>24</strong></li>
-            <li><span class="legend-dot" style="background:#e5484d"></span>Atrasadas <strong>3</strong></li>
+            <li><span class="legend-dot" style="background:#f5a524"></span>Pendentes <strong>{{ contagem.pendentes }}</strong></li>
+            <li><span class="legend-dot" style="background:#8b5cf6"></span>Em andamento <strong>{{ contagem.andamento }}</strong></li>
+            <li><span class="legend-dot" style="background:#22a06b"></span>Concluídas <strong>{{ contagem.concluidas }}</strong></li>
+            <li><span class="legend-dot" style="background:#e5484d"></span>Atrasadas <strong>{{ contagem.atrasadas }}</strong></li>
           </ul>
         </div>
       </article>
@@ -95,14 +89,19 @@
    <article class="panel panel--pontuacao">
         <h2 class="panel-title">Pontuação Atual</h2>
         <div class="pontuacao-body">
-          <span class="pontuacao-value">1.250</span>
+          <span class="pontuacao-value">{{ pontuacao_total }}</span>
           <span class="pontuacao-label">pontos</span>
         </div>
         <div class="pontuacao-nivel">
           <span class="nivel-icon" aria-hidden="true">🏆</span>
           <div>
             <span class="nivel-caption">Nível</span>
-            <span class="nivel-value">Ouro</span>
+            <span class="nivel-value">
+              {% if pontuacao_total >= 500 %}Ouro
+              {% elif pontuacao_total >= 200 %}Prata
+              {% else %}Bronze
+              {% endif %}
+            </span>
           </div>
         </div>
       </article>
@@ -111,16 +110,18 @@
         <h2 class="panel-title">Indicadores em Destaque</h2>
         <div class="destaque-body">
           <div class="destaque-stat">
-            <span class="destaque-value">5</span>
-            <span class="destaque-label">KPIs cadastrados</span>
+            <span class="destaque-value">{{ taxa_conclusao }}%</span>
+            <span class="destaque-label">Taxa de conclusão</span>
           </div>
           <div class="destaque-stat">
-            <span class="destaque-value">3</span>
-            <span class="destaque-label">Atualizados este mês</span>
+            <span class="destaque-value">{{ projetos_ativos_count }}</span>
+            <span class="destaque-label">Projetos ativos</span>
           </div>
         </div>
       </article>
 </section>
+
+{{ contagem|json_script:"resumo-data" }}
 {% endblock %}
 
 {% block extra_js %}

@@ -107,6 +107,20 @@ def atividades_list(request):
     }   
     return render(request, get_template(request.user, 'atividades_list'), context)
 
+
+@login_required
+def projetos_list(request):
+    projetos = (
+        Projeto.objects
+        .filter(integrantes=request.user)
+        .distinct()
+        .order_by('prazo')
+    )
+ 
+    context = {
+        'projetos': projetos,
+    }
+    return render(request, get_template(request.user, 'projetos_list'), context)
     
 
 

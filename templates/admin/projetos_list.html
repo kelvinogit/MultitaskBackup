@@ -1,0 +1,33 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block page_title %}Projetos{% endblock %}
+{% block page_context %}Trabalhos em grupo{% endblock %}
+
+{% block content %}
+<section class="panel">
+  <h2 class="panel-title">Meus Projetos</h2>
+
+  {% if projetos %}
+    <ul style="display:flex; flex-direction:column; gap:16px; list-style:none; padding:0; margin:0;">
+      {% for projeto in projetos %}
+      <li style="border-bottom:1px solid var(--line); padding-bottom:14px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+          <strong>{{ projeto.nome }}</strong>
+          <span style="font-size:0.78rem; color:var(--ink-600);">{{ projeto.get_status_display }}</span>
+        </div>
+        <div style="font-size:0.82rem; color:var(--ink-400); margin-bottom:8px;">
+          {% if projeto.prazo %}Prazo: {{ projeto.prazo|date:"d/m/Y" }}{% else %}Sem prazo definido{% endif %}
+        </div>
+        <div style="background:var(--line); border-radius:999px; height:6px; overflow:hidden;">
+          <div style="background:var(--green-accent); height:100%; width:{{ projeto.progresso }}%;"></div>
+        </div>
+        <div style="font-size:0.75rem; color:var(--ink-400); margin-top:4px;">{{ projeto.progresso }}% concluído</div>
+      </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Você ainda não participa de nenhum projeto.</p>
+  {% endif %}
+</section>
+{% endblock %}

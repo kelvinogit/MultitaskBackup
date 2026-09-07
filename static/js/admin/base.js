@@ -7,7 +7,37 @@
 document.addEventListener("DOMContentLoaded", () => {
   initSidebarNavigation();
   initAvatarButton();
+  initLogout();
 });
+
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
+  return match ? decodeURIComponent(match[2]) : null;
+}
+
+/* -------------------------------------------------------------
+ * Logout: accounts:logout responde com JSON (não redireciona),
+ * então interceptamos o clique, chamamos via fetch com o token
+ * CSRF e só então navegamos pra fora do painel.
+ * ----------------------------------------------------------- */
+function initLogout() {
+  const logoutLink = document.querySelector(".sidebar-logout");
+  if (!logoutLink) return;
+
+  logoutLink.addEventListener("click", async (event) => {
+    event.preventDefault();
+    const destino = logoutLink.href;
+
+    try {
+      await fetch(destino, {
+        method: "POST",
+        headers: { "X-CSRFToken": getCookie("csrftoken") },
+      });
+    } finally {
+      window.location.href = "/";
+    }
+  });
+}
 
 /* -------------------------------------------------------------
  * Navegação lateral: marca o item clicado como ativo.
