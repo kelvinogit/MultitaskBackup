@@ -1,0 +1,73 @@
+{% extends 'admin/base.html' %}
+
+{% load static %}
+
+{% block page_title %}Nova Atividade{% endblock %}
+
+{% block page_context %}Cadastro de atividades{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/admin/atividade_form.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="panel activity-panel">
+
+    <h2 class="panel-title">Nova Atividade</h2>
+
+    {% if not form.fields.disciplina.queryset.exists %}
+
+        <p class="activity-empty-message">
+            Você ainda não tem nenhuma disciplina cadastrada.
+            <a href="{% url 'core:disciplina_create' %}">
+                Cadastre uma disciplina primeiro
+            </a>.
+        </p>
+
+    {% endif %}
+
+
+    <form method="post" class="activity-form">
+
+        {% csrf_token %}
+
+        {% for field in form %}
+
+            <div class="activity-form-field {% if field.errors %}has-error{% endif %}">
+
+                <label for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+
+                {{ field }}
+
+                {% if field.errors %}
+                    <span class="activity-field-error">
+                        {{ field.errors|join:", " }}
+                    </span>
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+
+
+        <div class="activity-form-actions">
+
+            <button
+                type="submit"
+                class="activity-form-submit">
+                Salvar
+            </button>
+
+        </div>
+
+    </form>
+
+</section>
+
+{% endblock %}
+{% block extra_js %}
+  <script src="{% static 'js/admin/atividade_form.js' %}"></script>
+{% endblock %}

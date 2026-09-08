@@ -6,7 +6,10 @@
 
 {% block content %}
 <section class="panel">
-  <h2 class="panel-title">Meus Projetos</h2>
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+    <h2 class="panel-title" style="margin:0;">Meus Projetos</h2>
+    <a href="{% url 'core:projeto_create' %}" class="btn" style="background:var(--green-accent); color:#fff; padding:8px 16px; border-radius:8px; font-size:0.85rem; font-weight:600;">+ Novo projeto</a>
+  </div>
 
   {% if projetos %}
     <ul style="display:flex; flex-direction:column; gap:16px; list-style:none; padding:0; margin:0;">
@@ -31,3 +34,5 @@
   {% endif %}
 </section>
 {% endblock %}
+ 
+

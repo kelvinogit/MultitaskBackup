@@ -9,7 +9,10 @@ class DisciplinaForm(forms.ModelForm):
 class AtividadesForm(forms.ModelForm):
     class Meta:
         model = Atividade
-        fields = ['nome', 'professor', 'semestre', 'descricao']
+        fields = ['titulo', 'descricao', 'disciplina', 'tipo', 'prazo', 'prioridade', 'status', 'observacoes']
+        widgets = {
+            'prazo': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        }
 
     def __init__(self, *args, usuario=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -24,7 +27,3 @@ class ProjetoForm(forms.ModelForm):
         widgets = {
             'prazo': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
-
-
-        
-    

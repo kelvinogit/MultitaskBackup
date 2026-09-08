@@ -34,7 +34,7 @@
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h9" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
         <span>Atividades</span>
       </a>
-      <a href="#" class="nav-item {% if request.resolver_match.url_name == 'disciplinas' %}is-active{% endif %}" data-nav="disciplinas">
+      <a href="{% url 'core:disciplina_list' %}" class="nav-item {% if request.resolver_match.url_name == 'disciplina_list' or request.resolver_match.url_name == 'disciplina_create' %}is-active{% endif %}" data-nav="disciplinas">
         <svg class="nav-icon" viewBox="0 0 24 24" fill="none"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4H6.5A2.5 2.5 0 0 0 4 6.5v13z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
         <span>Disciplinas</span>
       </a>

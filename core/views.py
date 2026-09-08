@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from .models import Curso, Atividade, Projeto, Disciplina
+from .models import Curso, Atividade, Projeto, Disciplina, ParticipacaoProjeto
 from django.contrib.auth.decorators import login_required
 from . decorators import autenticacao_obrigatoria
+from .forms import DisciplinaForm, AtividadesForm, ProjetoForm
 
 
 
@@ -109,6 +110,24 @@ def atividades_list(request):
 
 
 @login_required
+def atividade_create(request):
+    if request.method == 'POST':
+        form = AtividadesForm(request.POST, usuario=request.user)
+        if form.is_valid():
+            atividade = form.save(commit=False)
+            atividade.usuario = request.user
+            atividade.save()
+            return redirect('core:atividade_list')
+    else:
+        form = AtividadesForm(usuario=request.user)
+
+    context = {
+        'form': form,
+    }
+    return render(request, get_template(request.user, 'atividade_form'), context)
+
+
+@login_required
 def projetos_list(request):
     projetos = (
         Projeto.objects
@@ -121,15 +140,52 @@ def projetos_list(request):
         'projetos': projetos,
     }
     return render(request, get_template(request.user, 'projetos_list'), context)
-    
 
 
+@login_required
+def projeto_create(request):
+    if request.method == 'POST':
+        form = ProjetoForm(request.POST)
+        if form.is_valid():
+            projeto = form.save(commit=False)
+            projeto.responsavel = request.user
+            projeto.save()
+            ParticipacaoProjeto.objects.create(projeto=projeto, usuario=request.user)
+            return redirect('core:projeto_list')
+    else:
+        form = ProjetoForm()
+
+    context = {
+        'form': form,
+    }
+    return render(request, get_template(request.user, 'projeto_form'), context)
 
 
+# Disciplinas ---- List e Create
+
+@login_required
+def disciplinas_list(request):
+    disciplinas = Disciplina.objects.filter(usuario=request.user)
+
+    context = {
+        'disciplinas': disciplinas,
+    }
+    return render(request, get_template(request.user, 'disciplinas_list'), context)
 
 
+@login_required
+def disciplina_create(request):
+    if request.method == 'POST':
+        form = DisciplinaForm(request.POST)
+        if form.is_valid():
+            disciplina = form.save(commit=False)
+            disciplina.usuario = request.user
+            disciplina.save()
+            return redirect('core:disciplina_list')
+    else:
+        form = DisciplinaForm()
 
-
-
-
-
+    context = {
+        'form': form,
+    }
+    return render(request, get_template(request.user, 'disciplina_form'), context)

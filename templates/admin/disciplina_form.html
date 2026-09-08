@@ -1,0 +1,59 @@
+{% extends 'admin/base.html' %}
+
+{% load static %}
+
+{% block page_title %}Nova Disciplina{% endblock %}
+
+{% block page_context %}Cadastro de disciplinas{% endblock %}
+
+{% block extra_css %}
+ <link rel="stylesheet" href="{% static 'css/admin/disciplina_form.css' %}">
+{% endblock %}
+{% block content %}
+
+<section class="panel discipline-panel">
+
+    <h2 class="panel-title">Nova Disciplina</h2>
+
+    <form method="post" class="discipline-form">
+
+        {% csrf_token %}
+
+        {% for field in form %}
+
+            <div class="discipline-form-field {% if field.errors %}has-error{% endif %}">
+
+                <label for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+
+                {{ field }}
+
+                {% if field.errors %}
+                    <span class="discipline-field-error">
+                        {{ field.errors|join:", " }}
+                    </span>
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+
+        <div class="discipline-form-actions">
+
+            <button
+                type="submit"
+                class="discipline-form-submit">
+                Salvar
+            </button>
+
+        </div>
+
+    </form>
+
+</section>
+
+{% endblock %}
+{% block extra_js %}
+  <script src="{% static 'js/admin/disciplina_form.js' %}"></script>
+{% endblock %}
