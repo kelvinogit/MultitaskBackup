@@ -1,33 +1,69 @@
-
-
 {% extends 'admin/base.html' %}
+
 {% load static %}
- 
+
 {% block page_title %}Novo Projeto{% endblock %}
+
 {% block page_context %}Trabalhos em grupo{% endblock %}
- 
-{% block content %}
-<section class="panel" style="max-width:560px;">
-  <h2 class="panel-title">Novo Projeto</h2>
-  <p style="font-size:0.82rem; color:var(--ink-600); margin-bottom:16px;">
-    Você será cadastrado automaticamente como responsável e integrante. Outros integrantes podem ser adicionados depois.
-  </p>
- 
-  <form method="post" style="display:flex; flex-direction:column; gap:14px;">
-    {% csrf_token %}
- 
-    {% for field in form %}
-    <div>
-      <label for="{{ field.id_for_label }}" style="display:block; font-size:0.84rem; font-weight:600; margin-bottom:5px;">{{ field.label }}</label>
-      {{ field }}
-      {% if field.errors %}
-        <span style="color:var(--status-late); font-size:0.78rem;">{{ field.errors|join:", " }}</span>
-      {% endif %}
-    </div>
-    {% endfor %}
- 
-    <button type="submit" style="background:var(--green-accent); color:#fff; border:none; padding:10px 18px; border-radius:8px; font-weight:600; cursor:pointer; align-self:flex-start;">Salvar</button>
-  </form>
-</section>
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/admin/projeto_form.css' %}">
 {% endblock %}
- 
+
+{% block content %}
+
+<section class="panel project-panel">
+
+    <h2 class="panel-title">Novo Projeto</h2>
+
+    <p class="project-hint">
+        Você será cadastrado automaticamente como responsável e integrante. Outros integrantes podem ser adicionados depois.
+    </p>
+
+    <form method="post" class="project-form">
+
+        {% csrf_token %}
+
+        {% for field in form %}
+
+            <div class="project-form-field {% if field.name == 'progresso' %}has-progress{% endif %} {% if field.errors %}has-error{% endif %}">
+
+                <label for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                </label>
+
+                {{ field }}
+
+                {% if field.name == 'progresso' %}
+                    <span class="project-progress-suffix">%</span>
+                {% endif %}
+
+                {% if field.errors %}
+                    <span class="project-field-error">
+                        {{ field.errors|join:", " }}
+                    </span>
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+
+
+        <div class="project-form-actions">
+
+            <button
+                type="submit"
+                class="project-form-submit">
+                Salvar
+            </button>
+
+        </div>
+
+    </form>
+
+</section>
+
+{% endblock %}
+{% block extra_js %}
+  <script src="{% static 'js/admin/projeto_form.js' %}"></script>
+{% endblock %}

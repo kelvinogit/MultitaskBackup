@@ -1,0 +1,158 @@
+/* =========================================================
+   Projetos – Listagem
+   Estilos específicos da tela de listagem de projetos.
+   Utiliza os tokens definidos em base.css.
+   ========================================================= */
+
+.project-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.project-list-header .panel-title {
+  margin: 0;
+}
+
+.project-list-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--green-accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 9px 16px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+}
+.project-list-add:hover { background: var(--green-700); box-shadow: 0 4px 12px rgba(15, 51, 39, 0.14); }
+.project-list-add:active { transform: translateY(1px); }
+.project-list-add:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(47, 122, 83, 0.18); }
+
+/* ---------- Filtros ---------- */
+.project-filters {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.project-filter-chip {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink-600);
+  border-radius: 999px;
+  padding: 6px 13px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.project-filter-chip:hover { border-color: #cbd5d0; }
+.project-filter-chip.is-active {
+  background: var(--green-900);
+  border-color: var(--green-900);
+  color: #fff;
+}
+
+/* ---------- Lista ---------- */
+.project-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.project-item {
+  padding: 16px 6px;
+  border-bottom: 1px solid var(--line);
+  transition: background 0.15s ease, opacity 0.25s ease, transform 0.25s ease;
+}
+.project-item:last-child { border-bottom: none; }
+.project-item:hover { background: var(--paper); border-radius: var(--radius-sm); }
+.project-item.is-hidden { display: none; }
+
+.project-item-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  gap: 12px;
+}
+
+.project-item-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink-900);
+}
+
+.project-item-deadline {
+  font-size: 0.8rem;
+  color: var(--ink-400);
+  margin-bottom: 10px;
+}
+
+/* ---------- Tag de status ---------- */
+.project-status-tag {
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 11px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.project-status-tag--planejamento { background: rgba(138, 151, 145, 0.18); color: var(--ink-600); }
+.project-status-tag--andamento    { background: rgba(139, 92, 246, 0.16); color: #6c47c6; }
+.project-status-tag--concluido    { background: rgba(34, 160, 107, 0.16); color: #17794f; }
+.project-status-tag--atrasado     { background: rgba(229, 72, 77, 0.16); color: #b5262b; }
+
+/* ---------- Barra de progresso ---------- */
+.project-progress-track {
+  width: 100%;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.project-progress-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: var(--green-accent);
+  transition: width 0.6s ease;
+}
+
+.project-progress-label {
+  font-size: 0.75rem;
+  color: var(--ink-400);
+  margin-top: 5px;
+  text-align: right;
+}
+
+/* ---------- Estado vazio ---------- */
+.project-empty {
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--ink-600);
+  font-size: 0.88rem;
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 640px) {
+  .project-item-head { flex-direction: column; align-items: flex-start; gap: 6px; }
+}
+
+/* ---------- Acessibilidade ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .project-item, .project-list-add, .project-filter-chip, .project-progress-fill {
+    transition: none;
+  }
+}

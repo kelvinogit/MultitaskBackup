@@ -4,30 +4,42 @@
 {% block page_title %}Disciplinas{% endblock %}
 {% block page_context %}Cadastro de disciplinas{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin/disciplinas_list.css' %}">
+{% endblock %}
+
 {% block content %}
 <section class="panel">
-  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-    <h2 class="panel-title" style="margin:0;">Minhas Disciplinas</h2>
-    <a href="{% url 'core:disciplina_create' %}" class="btn" style="background:var(--green-accent); color:#fff; padding:8px 16px; border-radius:8px; font-size:0.85rem; font-weight:600;">+ Nova disciplina</a>
+  <div class="discipline-list-header">
+    <h2 class="panel-title">Minhas Disciplinas</h2>
+    <a href="{% url 'core:disciplina_create' %}" class="discipline-list-add">+ Nova disciplina</a>
   </div>
 
   {% if disciplinas %}
-    <ul style="display:flex; flex-direction:column; gap:14px; list-style:none; padding:0; margin:0;">
+    <input type="text" class="discipline-search" placeholder="Buscar por nome ou professor...">
+
+    <ul class="discipline-list">
       {% for disciplina in disciplinas %}
-      <li style="border-bottom:1px solid var(--line); padding-bottom:12px;">
-        <strong>{{ disciplina.nome }}</strong>
-        <div style="font-size:0.82rem; color:var(--ink-600); margin-top:2px;">
+      <li class="discipline-item" data-search="{{ disciplina.nome|lower }} {{ disciplina.professor|lower }}">
+        <div class="discipline-item-name">{{ disciplina.nome }}</div>
+        <div class="discipline-item-meta">
           {% if disciplina.professor %}{{ disciplina.professor }}{% else %}Sem professor cadastrado{% endif %}
           {% if disciplina.semestre %} &middot; {{ disciplina.semestre }}{% endif %}
         </div>
         {% if disciplina.descricao %}
-        <p style="font-size:0.82rem; color:var(--ink-400); margin-top:6px;">{{ disciplina.descricao }}</p>
+        <p class="discipline-item-desc">{{ disciplina.descricao }}</p>
         {% endif %}
       </li>
       {% endfor %}
     </ul>
+
+    <p class="discipline-empty discipline-empty-dynamic" style="display:none;">Nenhuma disciplina encontrada com esse termo.</p>
   {% else %}
-    <p>Você ainda não cadastrou nenhuma disciplina.</p>
+    <p class="discipline-empty">Você ainda não cadastrou nenhuma disciplina.</p>
   {% endif %}
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/admin/disciplinas_list.js' %}"></script>
 {% endblock %}

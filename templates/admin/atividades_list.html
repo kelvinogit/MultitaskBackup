@@ -1,40 +1,51 @@
-
-
 {% extends 'admin/base.html' %}
 {% load static %}
- 
+
 {% block page_title %}Atividades{% endblock %}
 {% block page_context %}Prazos e entregas{% endblock %}
- 
+
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/admin/admindash.css' %}">
+<link rel="stylesheet" href="{% static 'css/admin/atividades_list.css' %}">
 {% endblock %}
- 
+
 {% block content %}
 <section class="panel">
-  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-    <h2 class="panel-title" style="margin:0;">Minhas Atividades</h2>
-    <a href="{% url 'core:atividade_create' %}" class="btn" style="background:var(--green-accent); color:#fff; padding:8px 16px; border-radius:8px; font-size:0.85rem; font-weight:600;">+ Nova atividade</a>
+  <div class="activity-list-header">
+    <h2 class="panel-title">Minhas Atividades</h2>
+    <a href="{% url 'core:atividade_create' %}" class="activity-list-add">+ Nova atividade</a>
   </div>
- 
+
   {% if atividades %}
-    <ul style="display:flex; flex-direction:column; gap:14px; list-style:none; padding:0; margin:0;">
+    <div class="activity-toolbar">
+      <input type="text" class="activity-search" placeholder="Buscar por título ou disciplina...">
+      <div class="activity-filters">
+        <button type="button" class="activity-filter-chip is-active" data-status="todas">Todas</button>
+        <button type="button" class="activity-filter-chip" data-status="pendente">Pendentes</button>
+        <button type="button" class="activity-filter-chip" data-status="andamento">Em andamento</button>
+        <button type="button" class="activity-filter-chip" data-status="concluida">Concluídas</button>
+        <button type="button" class="activity-filter-chip" data-status="atrasada">Atrasadas</button>
+      </div>
+    </div>
+
+    <ul class="activity-list">
       {% for atividade in atividades %}
-      <li style="display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); padding-bottom:12px;">
+      <li class="activity-item" data-status="{{ atividade.status }}" data-search="{{ atividade.titulo|lower }} {{ atividade.disciplina.nome|lower }}">
         <div>
-          <strong>{{ atividade.titulo }}</strong>
-          <div style="font-size:0.82rem; color:var(--ink-600); margin-top:2px;">
-            {{ atividade.disciplina.nome }} &middot; {{ atividade.prazo|date:"d/m/Y H:i" }}
-          </div>
+          <span class="activity-item-title">{{ atividade.titulo }}</span>
+          <div class="activity-item-meta">{{ atividade.disciplina.nome }} &middot; {{ atividade.prazo|date:"d/m/Y H:i" }}</div>
         </div>
-        <span class="tag tag--disciplina">{{ atividade.get_status_display }}</span>
+        <span class="activity-status-tag activity-status-tag--{{ atividade.status }}">{{ atividade.get_status_display }}</span>
       </li>
       {% endfor %}
     </ul>
+
+    <p class="activity-empty activity-empty-dynamic" style="display:none;">Nenhuma atividade encontrada com esse filtro.</p>
   {% else %}
-    <p>Nenhuma atividade encontrada.</p>
+    <p class="activity-empty">Nenhuma atividade cadastrada ainda.</p>
   {% endif %}
 </section>
 {% endblock %}
- 
- 
+
+{% block extra_js %}
+<script src="{% static 'js/admin/atividades_list.js' %}"></script>
+{% endblock %}

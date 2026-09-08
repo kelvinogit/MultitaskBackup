@@ -1,0 +1,317 @@
+/* =========================================================
+   Projetos – Formulário
+   Estilos específicos da tela de cadastro de projetos.
+   Utiliza os tokens definidos em base.css.
+   ========================================================= */
+
+
+/* =========================================================
+   Painel
+   ========================================================= */
+
+.project-panel {
+  max-width: 560px;
+}
+
+
+/* =========================================================
+   Aviso (responsável automático)
+   ========================================================= */
+
+.project-hint {
+  font-size: 0.86rem;
+  color: var(--ink-600);
+  line-height: 1.5;
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: #f4f6f5;
+  border: 1px solid var(--line);
+}
+
+
+/* =========================================================
+   Formulário
+   ========================================================= */
+
+.project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.project-form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.project-form-field label {
+  display: block;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--ink-900);
+  margin-bottom: 6px;
+}
+
+
+/* =========================================================
+   Inputs, selects e textarea
+   ========================================================= */
+
+.project-form-field input,
+.project-form-field select,
+.project-form-field textarea {
+  width: 100%;
+
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+
+  background: #fff;
+  color: var(--ink-900);
+
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+
+  padding: 10px 12px;
+
+  outline: none;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+
+.project-form-field input::placeholder,
+.project-form-field textarea::placeholder {
+  color: var(--ink-400);
+}
+
+
+/* =========================================================
+   Hover
+   ========================================================= */
+
+.project-form-field input:hover,
+.project-form-field select:hover,
+.project-form-field textarea:hover {
+  border-color: #cbd5d0;
+}
+
+
+/* =========================================================
+   Foco
+   ========================================================= */
+
+.project-form-field input:focus,
+.project-form-field select:focus,
+.project-form-field textarea:focus {
+  border-color: var(--green-accent);
+
+  box-shadow:
+    0 0 0 3px rgba(47, 122, 83, 0.12);
+}
+
+
+/* =========================================================
+   Textarea
+   ========================================================= */
+
+.project-form-field textarea {
+  min-height: 100px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   Select
+   ========================================================= */
+
+.project-form-field select {
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   Progresso (input number com sufixo %)
+   ========================================================= */
+
+.project-form-field.has-progress {
+  position: relative;
+}
+
+.project-form-field.has-progress input {
+  padding-right: 34px;
+}
+
+.project-progress-suffix {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  font-size: 0.82rem;
+  color: var(--ink-400);
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   Erros
+   ========================================================= */
+
+.project-field-error {
+  display: block;
+
+  margin-top: 5px;
+
+  color: var(--status-late);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.project-form-field.has-error input,
+.project-form-field.has-error select,
+.project-form-field.has-error textarea {
+  border-color: var(--status-late);
+}
+
+.project-form-field.has-error input:focus,
+.project-form-field.has-error select:focus,
+.project-form-field.has-error textarea:focus {
+  box-shadow:
+    0 0 0 3px rgba(229, 72, 77, 0.10);
+}
+
+
+/* =========================================================
+   Ações
+   ========================================================= */
+
+.project-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-top: 4px;
+}
+
+
+/* =========================================================
+   Botão salvar
+   ========================================================= */
+
+.project-form-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  background: var(--green-accent);
+  color: #fff;
+
+  border: none;
+  border-radius: var(--radius-sm);
+
+  padding: 10px 18px;
+
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    transform 0.1s ease,
+    box-shadow 0.15s ease;
+}
+
+.project-form-submit:hover {
+  background: var(--green-700);
+
+  box-shadow:
+    0 4px 12px rgba(15, 51, 39, 0.14);
+}
+
+.project-form-submit:active {
+  transform: translateY(1px);
+}
+
+.project-form-submit:focus-visible {
+  outline: none;
+
+  box-shadow:
+    0 0 0 3px rgba(47, 122, 83, 0.18);
+}
+
+.project-form-submit:disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   Spinner do botão
+   ========================================================= */
+
+.project-button-spinner {
+    width: 14px;
+    height: 14px;
+
+    margin-right: 8px;
+
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #fff;
+
+    border-radius: 50%;
+
+    animation: project-spin 0.7s linear infinite;
+}
+
+@keyframes project-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* =========================================================
+   Responsividade
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .project-panel {
+    max-width: none;
+  }
+
+  .project-form {
+    gap: 14px;
+  }
+
+  .project-form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .project-form-submit {
+    width: 100%;
+  }
+
+}
+
+
+/* =========================================================
+   Acessibilidade
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .project-form-field input,
+  .project-form-field select,
+  .project-form-field textarea,
+  .project-form-submit {
+    transition: none;
+  }
+
+}

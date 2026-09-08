@@ -4,35 +4,51 @@
 {% block page_title %}Projetos{% endblock %}
 {% block page_context %}Trabalhos em grupo{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin/projetos_list.css' %}">
+{% endblock %}
+
 {% block content %}
 <section class="panel">
-  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-    <h2 class="panel-title" style="margin:0;">Meus Projetos</h2>
-    <a href="{% url 'core:projeto_create' %}" class="btn" style="background:var(--green-accent); color:#fff; padding:8px 16px; border-radius:8px; font-size:0.85rem; font-weight:600;">+ Novo projeto</a>
+  <div class="project-list-header">
+    <h2 class="panel-title">Meus Projetos</h2>
+    <a href="{% url 'core:projeto_create' %}" class="project-list-add">+ Novo projeto</a>
   </div>
 
   {% if projetos %}
-    <ul style="display:flex; flex-direction:column; gap:16px; list-style:none; padding:0; margin:0;">
+    <div class="project-filters">
+      <button type="button" class="project-filter-chip is-active" data-status="todos">Todos</button>
+      <button type="button" class="project-filter-chip" data-status="planejamento">Planejamento</button>
+      <button type="button" class="project-filter-chip" data-status="andamento">Em andamento</button>
+      <button type="button" class="project-filter-chip" data-status="concluido">Concluídos</button>
+      <button type="button" class="project-filter-chip" data-status="atrasado">Atrasados</button>
+    </div>
+
+    <ul class="project-list">
       {% for projeto in projetos %}
-      <li style="border-bottom:1px solid var(--line); padding-bottom:14px;">
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
-          <strong>{{ projeto.nome }}</strong>
-          <span style="font-size:0.78rem; color:var(--ink-600);">{{ projeto.get_status_display }}</span>
+      <li class="project-item" data-status="{{ projeto.status }}">
+        <div class="project-item-head">
+          <span class="project-item-name">{{ projeto.nome }}</span>
+          <span class="project-status-tag project-status-tag--{{ projeto.status }}">{{ projeto.get_status_display }}</span>
         </div>
-        <div style="font-size:0.82rem; color:var(--ink-400); margin-bottom:8px;">
+        <div class="project-item-deadline">
           {% if projeto.prazo %}Prazo: {{ projeto.prazo|date:"d/m/Y" }}{% else %}Sem prazo definido{% endif %}
         </div>
-        <div style="background:var(--line); border-radius:999px; height:6px; overflow:hidden;">
-          <div style="background:var(--green-accent); height:100%; width:{{ projeto.progresso }}%;"></div>
+        <div class="project-progress-track">
+          <div class="project-progress-fill" data-progress="{{ projeto.progresso }}"></div>
         </div>
-        <div style="font-size:0.75rem; color:var(--ink-400); margin-top:4px;">{{ projeto.progresso }}% concluído</div>
+        <div class="project-progress-label">{{ projeto.progresso }}% concluído</div>
       </li>
       {% endfor %}
     </ul>
+
+    <p class="project-empty project-empty-dynamic" style="display:none;">Nenhum projeto encontrado com esse filtro.</p>
   {% else %}
-    <p>Você ainda não participa de nenhum projeto.</p>
+    <p class="project-empty">Você ainda não participa de nenhum projeto.</p>
   {% endif %}
 </section>
 {% endblock %}
- 
 
+{% block extra_js %}
+<script src="{% static 'js/admin/projetos_list.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,106 @@
+/* =========================================================
+   Disciplinas – Listagem
+   Estilos específicos da tela de listagem de disciplinas.
+   Utiliza os tokens definidos em base.css.
+   ========================================================= */
+
+.discipline-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.discipline-list-header .panel-title {
+  margin: 0;
+}
+
+.discipline-list-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--green-accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 9px 16px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+}
+.discipline-list-add:hover { background: var(--green-700); box-shadow: 0 4px 12px rgba(15, 51, 39, 0.14); }
+.discipline-list-add:active { transform: translateY(1px); }
+.discipline-list-add:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(47, 122, 83, 0.18); }
+
+/* ---------- Busca ---------- */
+.discipline-search {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  color: var(--ink-900);
+  background: #fff;
+  outline: none;
+  margin-bottom: 16px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.discipline-search::placeholder { color: var(--ink-400); }
+.discipline-search:focus { border-color: var(--green-accent); box-shadow: 0 0 0 3px rgba(47, 122, 83, 0.12); }
+
+/* ---------- Lista ---------- */
+.discipline-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.discipline-item {
+  padding: 14px 6px;
+  border-bottom: 1px solid var(--line);
+  transition: background 0.15s ease, opacity 0.25s ease, transform 0.25s ease;
+}
+.discipline-item:last-child { border-bottom: none; }
+.discipline-item:hover { background: var(--paper); border-radius: var(--radius-sm); }
+.discipline-item.is-hidden { display: none; }
+
+.discipline-item-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--ink-900);
+}
+
+.discipline-item-meta {
+  font-size: 0.8rem;
+  color: var(--ink-600);
+  margin-top: 3px;
+}
+
+.discipline-item-desc {
+  font-size: 0.8rem;
+  color: var(--ink-400);
+  margin-top: 6px;
+  max-width: 62ch;
+  line-height: 1.5;
+}
+
+/* ---------- Estado vazio ---------- */
+.discipline-empty {
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--ink-600);
+  font-size: 0.88rem;
+}
+
+/* ---------- Acessibilidade ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .discipline-item, .discipline-list-add, .discipline-search {
+    transition: none;
+  }
+}
