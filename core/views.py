@@ -192,6 +192,29 @@ def atividade_update(request, pk):
 
 @login_required
 @require_POST
+def atividade_finalizar(request, pk):
+    """
+    Finaliza uma atividade do usuário autenticado sem exigir o envio de
+    todos os campos do formulário de edição.
+    """
+    atividade = get_object_or_404(Atividade, pk=pk, usuario=request.user)
+
+    if atividade.status != Atividade.Status.CONCLUIDA:
+        atividade.status = Atividade.Status.CONCLUIDA
+        atividade.save(update_fields=['status'])
+
+    return JsonResponse({
+        'ok': True,
+        'atividade': {
+            'id': atividade.pk,
+            'status': atividade.status,
+            'status_display': atividade.get_status_display(),
+        },
+    })
+
+
+@login_required
+@require_POST
 def atividade_delete(request, pk):
     atividade = get_object_or_404(Atividade, pk=pk, usuario=request.user)
     atividade.delete()

@@ -30,6 +30,7 @@
     <ul class="activity-list"
         data-detail-url-base="{% url 'core:atividade_detail' pk=0 %}"
         data-update-url-base="{% url 'core:atividade_update' pk=0 %}"
+        data-finalize-url-base="{% url 'core:atividade_finalizar' pk=0 %}"
         data-delete-url-base="{% url 'core:atividade_delete' pk=0 %}">
       {% for atividade in atividades %}
       <li class="activity-item" data-id="{{ atividade.pk }}" data-status="{{ atividade.status }}" data-search="{{ atividade.titulo|lower }} {{ atividade.disciplina.nome|lower }}" tabindex="0" role="button" aria-haspopup="dialog">
@@ -37,7 +38,12 @@
           <span class="activity-item-title">{{ atividade.titulo }}</span>
           <div class="activity-item-meta">{{ atividade.disciplina.nome }} &middot; <span class="activity-item-prazo">{{ atividade.prazo|date:"d/m/Y H:i" }}</span></div>
         </div>
-        <span class="activity-status-tag activity-status-tag--{{ atividade.status }}">{{ atividade.get_status_display }}</span>
+        <div class="activity-item-status-actions">
+          <span class="activity-status-tag activity-status-tag--{{ atividade.status }}">{{ atividade.get_status_display }}</span>
+          {% if atividade.status != 'concluida' %}
+            <button type="button" class="activity-finalize-button" data-finalize-activity aria-label="Finalizar atividade {{ atividade.titulo }}">Finalizar</button>
+          {% endif %}
+        </div>
       </li>
       {% endfor %}
     </ul>
@@ -89,7 +95,10 @@
 
       <div class="activity-modal-field" id="fieldStatus">
         <label for="modalStatus">Status</label>
-        <select id="modalStatus" name="status"></select>
+        <div class="activity-modal-status-control">
+          <select id="modalStatus" name="status"></select>
+          <button type="button" class="activity-finalize-button" id="activityModalFinalize" hidden>Finalizar</button>
+        </div>
       </div>
 
       <div class="activity-modal-field" id="fieldDescricao">

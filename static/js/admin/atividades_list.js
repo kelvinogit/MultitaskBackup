@@ -81,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const detailUrlBase = list.dataset.detailUrlBase;
     const updateUrlBase = list.dataset.updateUrlBase;
+    const finalizeUrlBase = list.dataset.finalizeUrlBase;
     const deleteUrlBase = list.dataset.deleteUrlBase;
 
     const overlay = document.getElementById("activityModalOverlay");
@@ -88,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeBtn = document.getElementById("activityModalClose");
     const form = document.getElementById("activityModalForm");
     const saveBtn = document.getElementById("activityModalSave");
+    const modalFinalizeBtn = document.getElementById("activityModalFinalize");
     const deleteBtn = document.getElementById("activityModalDelete");
     const generalError = document.getElementById("activityModalGeneralError");
 
@@ -156,6 +158,11 @@ document.addEventListener("DOMContentLoaded", () => {
             fillSelect(fieldTipo, data.choices.tipo, data.tipo);
             fillSelect(fieldPrioridade, data.choices.prioridade, data.prioridade);
             fillSelect(fieldStatus, data.choices.status, data.status);
+            if (modalFinalizeBtn) {
+                modalFinalizeBtn.hidden = data.status === "concluida";
+                modalFinalizeBtn.disabled = false;
+                modalFinalizeBtn.textContent = "Finalizar";
+            }
 
             overlay.hidden = false;
             requestAnimationFrame(() => overlay.classList.add("is-open"));
@@ -226,7 +233,88 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    function updateItemStatus(item, activity) {
+        item.dataset.status = activity.status;
+
+        const tag = item.querySelector(".activity-status-tag");
+        tag.className = `activity-status-tag activity-status-tag--${activity.status}`;
+        tag.textContent = activity.status_display;
+    }
+
+    list.querySelectorAll("[data-finalize-activity]").forEach((button) => {
+        button.addEventListener("click", async (event) => {
+            event.stopPropagation();
+
+            const item = button.closest(".activity-item");
+            if (!item || !finalizeUrlBase) return;
+
+            button.disabled = true;
+            const originalText = button.textContent;
+            button.textContent = "Finalizando...";
+
+            try {
+                const response = await fetch(urlFor(finalizeUrlBase, item.dataset.id), {
+                    method: "POST",
+                    headers: { "X-CSRFToken": getCookie("csrftoken") },
+                });
+                const data = await response.json();
+
+                if (!response.ok || !data.ok) {
+                    throw new Error("Falha ao finalizar atividade");
+                }
+
+                updateItemStatus(item, data.atividade);
+                button.remove();
+                applyFilters();
+            } catch (err) {
+                button.disabled = false;
+                button.textContent = originalText;
+                window.alert("Não foi possível finalizar a atividade. Tente novamente.");
+            }
+        });
+    });
+
     if (closeBtn) closeBtn.addEventListener("click", closeModal);
+
+    if (modalFinalizeBtn) {
+        modalFinalizeBtn.addEventListener("click", async () => {
+            if (!currentId || !finalizeUrlBase) return;
+
+            modalFinalizeBtn.disabled = true;
+            const originalText = modalFinalizeBtn.textContent;
+            modalFinalizeBtn.textContent = "Finalizando...";
+
+            try {
+                const response = await fetch(urlFor(finalizeUrlBase, currentId), {
+                    method: "POST",
+                    headers: { "X-CSRFToken": getCookie("csrftoken") },
+                });
+                const data = await response.json();
+
+                if (!response.ok || !data.ok) {
+                    throw new Error("Falha ao finalizar atividade");
+                }
+
+                fieldStatus.value = data.atividade.status;
+                modalFinalizeBtn.disabled = false;
+                modalFinalizeBtn.textContent = originalText;
+                modalFinalizeBtn.hidden = true;
+                const item = list.querySelector(`.activity-item[data-id="${currentId}"]`);
+                if (item) {
+                    updateItemStatus(item, data.atividade);
+                    item.querySelector("[data-finalize-activity]")?.remove();
+                }
+                applyFilters();
+            } catch (err) {
+                modalFinalizeBtn.disabled = false;
+                modalFinalizeBtn.textContent = originalText;
+                if (generalError) {
+                    generalError.hidden = false;
+                    generalError.textContent = "Não foi possível finalizar a atividade. Tente novamente.";
+                }
+            }
+        });
+    }
 
     if (form) {
         form.addEventListener("submit", async (event) => {
@@ -251,12 +339,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (item) {
                         item.querySelector(".activity-item-title").textContent = data.atividade.titulo;
                         item.querySelector(".activity-item-prazo").textContent = data.atividade.prazo_exibicao;
-                        item.dataset.status = data.atividade.status;
                         item.dataset.search = `${data.atividade.titulo.toLowerCase()} ${data.atividade.disciplina_nome.toLowerCase()}`;
-
-                        const tag = item.querySelector(".activity-status-tag");
-                        tag.className = `activity-status-tag activity-status-tag--${data.atividade.status}`;
-                        tag.textContent = data.atividade.status_display;
+                        updateItemStatus(item, data.atividade);
+                        if (data.atividade.status === "concluida") {
+                            item.querySelector("[data-finalize-activity]")?.remove();
+                        }
                     }
                     closeModal();
                     applyFilters();

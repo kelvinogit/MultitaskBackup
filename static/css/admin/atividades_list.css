@@ -133,6 +133,30 @@
 .activity-status-tag--concluida { background: rgba(34, 160, 107, 0.16); color: #17794f; }
 .activity-status-tag--atrasada  { background: rgba(229, 72, 77, 0.16); color: #b5262b; }
 
+.activity-item-status-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.activity-finalize-button {
+  border: 1px solid rgba(34, 160, 107, 0.45);
+  border-radius: 999px;
+  padding: 4px 11px;
+  background: #fff;
+  color: #17794f;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.activity-finalize-button:hover { background: rgba(34, 160, 107, 0.12); border-color: #17794f; }
+.activity-finalize-button:focus-visible { outline: 2px solid var(--green-accent); outline-offset: 2px; }
+.activity-finalize-button:disabled { cursor: not-allowed; opacity: 0.7; }
+
 /* ---------- Estado vazio ---------- */
 .activity-empty {
   text-align: center;
@@ -144,6 +168,7 @@
 /* ---------- Responsivo ---------- */
 @media (max-width: 640px) {
   .activity-item { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .activity-item-status-actions { flex-wrap: wrap; }
   .activity-toolbar { flex-direction: column; align-items: stretch; }
 }
 
@@ -263,6 +288,13 @@
   box-shadow: 0 0 0 3px rgba(47, 122, 83, 0.12);
 }
 
+.activity-modal-status-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.activity-modal-status-control select { flex: 1; }
+
 .activity-modal-field-error {
   display: block;
   margin-top: 4px;
@@ -308,6 +340,7 @@
 @media (max-width: 600px) {
   .activity-modal { padding: 22px 18px 18px; }
   .activity-modal-actions { flex-direction: column-reverse; align-items: stretch; }
+  .activity-modal-status-control { align-items: stretch; flex-direction: column; }
 }
 
 @media (prefers-reduced-motion: reduce) {
