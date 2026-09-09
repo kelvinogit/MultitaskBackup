@@ -1,8 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Curso, Atividade, Projeto, Disciplina, ParticipacaoProjeto
 from django.contrib.auth.decorators import login_required
 from . decorators import autenticacao_obrigatoria
 from .forms import DisciplinaForm, AtividadesForm, ProjetoForm
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.utils import timezone
 
 
 
@@ -125,6 +128,74 @@ def atividade_create(request):
         'form': form,
     }
     return render(request, get_template(request.user, 'atividade_form'), context)
+
+
+@login_required
+def atividade_detail(request, pk):
+    """
+    Retorna os dados de uma atividade em JSON, pra preencher o modal
+    de visualização/edição sem recarregar a página.
+    """
+    atividade = get_object_or_404(Atividade, pk=pk, usuario=request.user)
+
+    prazo_local = timezone.localtime(atividade.prazo) if atividade.prazo else None
+
+    data = {
+        'id': atividade.pk,
+        'titulo': atividade.titulo,
+        'descricao': atividade.descricao,
+        'disciplina_id': atividade.disciplina_id,
+        'tipo': atividade.tipo,
+        'prazo': prazo_local.strftime('%Y-%m-%dT%H:%M') if prazo_local else '',
+        'prioridade': atividade.prioridade,
+        'status': atividade.status,
+        'observacoes': atividade.observacoes,
+        'choices': {
+            'tipo': list(Atividade.Tipo.choices),
+            'prioridade': list(Atividade.Prioridade.choices),
+            'status': list(Atividade.Status.choices),
+        },
+        'disciplinas': list(
+            Disciplina.objects.filter(usuario=request.user).values('id', 'nome')
+        ),
+    }
+    return JsonResponse(data)
+
+
+@login_required
+@require_POST
+def atividade_update(request, pk):
+    """
+    Atualiza uma atividade existente (inclui a troca de status) via JSON,
+    usado pelo formulário dentro do modal.
+    """
+    atividade = get_object_or_404(Atividade, pk=pk, usuario=request.user)
+    form = AtividadesForm(request.POST, instance=atividade, usuario=request.user)
+
+    if form.is_valid():
+        atividade = form.save()
+        prazo_local = timezone.localtime(atividade.prazo) if atividade.prazo else None
+        return JsonResponse({
+            'ok': True,
+            'atividade': {
+                'id': atividade.pk,
+                'titulo': atividade.titulo,
+                'disciplina_nome': atividade.disciplina.nome,
+                'prazo_exibicao': prazo_local.strftime('%d/%m/%Y %H:%M') if prazo_local else '',
+                'status': atividade.status,
+                'status_display': atividade.get_status_display(),
+            },
+        })
+
+    return JsonResponse({'ok': False, 'errors': form.errors}, status=400)
+
+
+@login_required
+@require_POST
+def atividade_delete(request, pk):
+    atividade = get_object_or_404(Atividade, pk=pk, usuario=request.user)
+    atividade.delete()
+    return JsonResponse({'ok': True})
 
 
 @login_required
