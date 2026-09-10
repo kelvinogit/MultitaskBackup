@@ -1,0 +1,50 @@
+{% extends "contabeis/base.html" %}
+{% load static %}
+
+{% block title %}Nova disciplina{% endblock %}
+{% block page_title %}Nova disciplina{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/contabeis/disciplina_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="discipline-form-panel">
+  <div class="form-header">
+    <div>
+      <p class="section-eyebrow">Organização acadêmica</p>
+      <h2>Adicionar disciplina</h2>
+      <p>Informe os dados básicos da disciplina.</p>
+    </div>
+
+    <a href="{% url 'core:disciplina_list' %}" class="back-link">
+      ← Voltar para disciplinas
+    </a>
+  </div>
+
+  <form method="post" class="discipline-form">
+    {% csrf_token %}
+
+    {% for field in form %}
+      <div class="form-field {% if field.errors %}has-error{% endif %}">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+
+        {{ field }}
+
+        {% if field.help_text %}
+          <small class="field-help">{{ field.help_text }}</small>
+        {% endif %}
+
+        {% if field.errors %}
+          <span class="field-error">{{ field.errors|join:", " }}</span>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <div class="form-actions">
+      <a href="{% url 'core:disciplina_list' %}" class="cancel-button">Cancelar</a>
+      <button type="submit" class="submit-button">Salvar disciplina</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

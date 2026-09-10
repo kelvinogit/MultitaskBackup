@@ -1,0 +1,60 @@
+{% extends "contabeis/base.html" %}
+{% load static %}
+
+{% block title %}Nova atividade{% endblock %}
+{% block page_title %}Nova atividade{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/contabeis/atividade_forms.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="activity-form-panel">
+  <div class="form-header">
+    <div>
+      <p class="section-eyebrow">Organização acadêmica</p>
+      <h2>Adicionar atividade</h2>
+      <p>Registre prazos e entregas para manter sua rotina organizada.</p>
+    </div>
+
+    <a href="{% url 'core:atividade_list' %}" class="back-link">
+      ← Voltar para atividades
+    </a>
+  </div>
+
+  {% if not form.fields.disciplina.queryset.exists %}
+    <div class="empty-discipline-notice">
+      <strong>Você ainda não possui disciplinas cadastradas.</strong>
+      <p>
+        Antes de criar uma atividade, cadastre ao menos uma disciplina.
+      </p>
+      <a href="{% url 'core:disciplina_create' %}">Cadastrar disciplina</a>
+    </div>
+  {% else %}
+    <form method="post" class="activity-form">
+      {% csrf_token %}
+
+      {% for field in form %}
+        <div class="form-field {% if field.errors %}has-error{% endif %}">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+
+          {{ field }}
+
+          {% if field.help_text %}
+            <small class="field-help">{{ field.help_text }}</small>
+          {% endif %}
+
+          {% if field.errors %}
+            <span class="field-error">{{ field.errors|join:", " }}</span>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <div class="form-actions">
+        <a href="{% url 'core:atividade_list' %}" class="cancel-button">Cancelar</a>
+        <button type="submit" class="submit-button">Salvar atividade</button>
+      </div>
+    </form>
+  {% endif %}
+</section>
+{% endblock %}

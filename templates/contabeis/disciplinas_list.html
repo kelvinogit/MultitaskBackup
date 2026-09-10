@@ -1,0 +1,61 @@
+{% extends "contabeis/base.html" %}
+{% load static %}
+
+{% block title %}Disciplinas{% endblock %}
+{% block page_title %}Disciplinas{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/contabeis/disciplinas_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="discipline-panel">
+  <div class="discipline-header">
+    <div>
+      <p class="section-eyebrow">Organização acadêmica</p>
+      <h2>Minhas disciplinas</h2>
+      <p>Organize professores, semestre e informações importantes.</p>
+    </div>
+
+    <a href="{% url 'core:disciplina_create' %}" class="new-discipline-button">
+      <span>+</span> Nova disciplina
+    </a>
+  </div>
+
+  {% if disciplinas %}
+    <div class="discipline-grid">
+      {% for disciplina in disciplinas %}
+      <article class="discipline-card">
+        <div class="discipline-card-top">
+          <span class="discipline-mark">D</span>
+
+          {% if disciplina.semestre %}
+            <span class="semester-tag">{{ disciplina.semestre }}</span>
+          {% endif %}
+        </div>
+
+        <h3>{{ disciplina.nome }}</h3>
+
+        {% if disciplina.professor %}
+          <p class="discipline-professor">Prof. {{ disciplina.professor }}</p>
+        {% endif %}
+
+        {% if disciplina.descricao %}
+          <p class="discipline-description">{{ disciplina.descricao }}</p>
+        {% else %}
+          <p class="discipline-description is-empty">
+            Sem descrição cadastrada.
+          </p>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="discipline-empty">
+      <strong>Nenhuma disciplina cadastrada.</strong>
+      <p>Cadastre uma disciplina para poder adicionar atividades.</p>
+      <a href="{% url 'core:disciplina_create' %}">Cadastrar primeira disciplina</a>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

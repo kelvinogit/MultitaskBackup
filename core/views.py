@@ -11,7 +11,7 @@ from django.utils import timezone
 
 AREA_TEMPLATE_PREFIX = {
     'admin': 'admin',
-    'contabil': 'contabeis',
+    'contabeis': 'contabeis',
     'agro': 'agronomico',
 }
 
@@ -85,7 +85,7 @@ def dashboard(request):
         return render(request, 'index.html')
 
     destino = {
-        'contabil': 'contabeis:dashboard',
+        'contabeis': 'contabeis:dashboard',
         'agro': 'agronomico:dashboard',
         'admin': 'administraco:admindash',
     }.get(curso.slug)

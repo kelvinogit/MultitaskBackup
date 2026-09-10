@@ -1,0 +1,381 @@
+.activity-panel {
+  padding: 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+
+.activity-header,
+.activity-toolbar,
+.activity-actions,
+.modal-actions,
+.modal-actions > div {
+  display: flex;
+  align-items: center;
+}
+
+.activity-header {
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 26px;
+}
+
+.section-eyebrow {
+  margin: 0 0 6px;
+  color: var(--teal);
+  font-size: .73rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.activity-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.activity-subtitle {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.new-activity-button,
+.save-button {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 8px;
+  color: #fff;
+  background: var(--teal);
+  font: inherit;
+  font-size: .85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.new-activity-button:hover,
+.save-button:hover {
+  background: var(--navy-soft);
+}
+
+.new-activity-button span {
+  font-size: 1.2rem;
+  line-height: .8;
+}
+
+.activity-toolbar {
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.search-field {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex: 1;
+  min-width: 220px;
+  padding: 0 11px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--muted);
+}
+
+.search-field:focus-within {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(22, 118, 109, .12);
+}
+
+.search-field input {
+  width: 100%;
+  padding: 10px 0;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  font: inherit;
+  font-size: .85rem;
+}
+
+.activity-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.activity-filter-chip,
+.finish-button {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--muted);
+  font: inherit;
+  font-size: .75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.activity-filter-chip {
+  padding: 7px 11px;
+}
+
+.activity-filter-chip.is-active {
+  border-color: var(--navy);
+  color: #fff;
+  background: var(--navy);
+}
+
+.activity-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.activity-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px 10px;
+  border-top: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.activity-item:hover {
+  background: #f7fbfa;
+}
+
+.activity-item:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: -2px;
+}
+
+.activity-item.is-hidden {
+  display: none;
+}
+
+.activity-title {
+  display: block;
+  font-size: .92rem;
+  font-weight: 700;
+}
+
+.activity-meta {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: .78rem;
+}
+
+.activity-actions {
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.activity-status {
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: .71rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.activity-status--pendente {
+  color: #996100;
+  background: #fff2d7;
+}
+
+.activity-status--andamento {
+  color: #5e3bb2;
+  background: #efe9ff;
+}
+
+.activity-status--concluida {
+  color: #176b52;
+  background: #dff5eb;
+}
+
+.activity-status--atrasada {
+  color: #b22d35;
+  background: #ffeaeb;
+}
+
+.finish-button {
+  padding: 5px 10px;
+  color: var(--green);
+  border-color: rgba(35, 130, 106, .4);
+}
+
+.finish-button:hover {
+  background: #effaf5;
+}
+
+.activity-empty {
+  padding: 50px 18px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.activity-empty p {
+  margin: 8px 0 16px;
+}
+
+.activity-empty a {
+  color: var(--teal);
+  font-size: .86rem;
+  font-weight: 700;
+}
+
+.activity-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(18, 51, 60, .48);
+}
+
+.activity-modal-overlay[hidden] {
+  display: none;
+}
+
+.activity-modal {
+  width: min(620px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 28px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 20px 45px rgba(12, 35, 40, .24);
+}
+
+.activity-modal h2 {
+  margin: 0 0 22px;
+  font-size: 1.15rem;
+}
+
+.modal-close {
+  float: right;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--muted);
+  background: #fff;
+  font-size: 1.35rem;
+  cursor: pointer;
+}
+
+.activity-form {
+  display: grid;
+  gap: 14px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: .8rem;
+  font-weight: 700;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  outline: 0;
+  color: var(--text);
+  font: inherit;
+  font-size: .85rem;
+}
+
+.form-field textarea {
+  min-height: 74px;
+  resize: vertical;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(22, 118, 109, .12);
+}
+
+.field-error,
+.modal-error {
+  display: block;
+  margin-top: 5px;
+  color: #b22d35;
+  font-size: .75rem;
+}
+
+.modal-error {
+  padding: 10px;
+  border-radius: 8px;
+  background: #ffeaeb;
+}
+
+.modal-actions {
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.modal-actions > div {
+  gap: 8px;
+}
+
+.delete-button {
+  padding: 9px 12px;
+  border: 1px solid #f0bbc0;
+  border-radius: 8px;
+  color: #b22d35;
+  background: #fff;
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+@media (max-width: 680px) {
+  .activity-panel,
+  .activity-modal {
+    padding: 20px;
+  }
+
+  .activity-header,
+  .activity-item,
+  .modal-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .activity-actions {
+    width: 100%;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}

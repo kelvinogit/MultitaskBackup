@@ -15,11 +15,21 @@ function initResumoChart() {
   const canvas = document.getElementById("resumoChart");
   if (!canvas || typeof Chart === "undefined") return;
 
-  const resumoData = {
-    labels: ["Pendentes", "Em andamento", "Concluídas", "Atrasadas"],
-    values: [12, 8, 24, 3],
-    colors: ["#f5a524", "#8b5cf6", "#22a06b", "#e5484d"],
-  };
+const resumoDataElement = document.getElementById("resumo-data");
+if (!resumoDataElement) return;
+
+const contagem = JSON.parse(resumoDataElement.textContent);
+
+const resumoData = {
+  labels: ["Pendentes", "Em andamento", "Concluídas", "Atrasadas"],
+  values: [
+    contagem.pendentes || 0,
+    contagem.andamento || 0,
+    contagem.concluidas || 0,
+    contagem.atrasadas || 0,
+  ],
+  colors: ["#f5a524", "#8b5cf6", "#22a06b", "#e5484d"],
+};
 
   const total = resumoData.values.reduce((sum, value) => sum + value, 0);
   const totalLabel = document.getElementById("resumoTotalValue");

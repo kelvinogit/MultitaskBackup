@@ -1,0 +1,167 @@
+{% extends "contabeis/base.html" %}
+{% load static %}
+
+{% block title %}Atividades{% endblock %}
+{% block page_title %}Atividades{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/contabeis/atividades_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="activity-panel">
+  <div class="activity-header">
+    <div>
+      <p class="section-eyebrow">Organização acadêmica</p>
+      <h2>Minhas atividades</h2>
+      <p class="activity-subtitle">Acompanhe prazos, entregas e seu progresso.</p>
+    </div>
+
+    <a class="new-activity-button" href="{% url 'core:atividade_create' %}">
+      <span aria-hidden="true">+</span>
+      Nova atividade
+    </a>
+  </div>
+
+  {% if atividades %}
+    <div class="activity-toolbar">
+      <label class="search-field">
+        <span class="sr-only">Buscar atividade</span>
+        <span aria-hidden="true">⌕</span>
+        <input type="search" class="activity-search"
+               placeholder="Buscar por atividade ou disciplina">
+      </label>
+
+      <div class="activity-filters" aria-label="Filtrar por status">
+        <button type="button" class="activity-filter-chip is-active" data-status="todas">Todas</button>
+        <button type="button" class="activity-filter-chip" data-status="pendente">Pendentes</button>
+        <button type="button" class="activity-filter-chip" data-status="andamento">Em andamento</button>
+        <button type="button" class="activity-filter-chip" data-status="concluida">Concluídas</button>
+        <button type="button" class="activity-filter-chip" data-status="atrasada">Atrasadas</button>
+      </div>
+    </div>
+
+    <ul class="activity-list"
+        data-detail-url-base="{% url 'core:atividade_detail' pk=0 %}"
+        data-update-url-base="{% url 'core:atividade_update' pk=0 %}"
+        data-finalize-url-base="{% url 'core:atividade_finalizar' pk=0 %}"
+        data-delete-url-base="{% url 'core:atividade_delete' pk=0 %}">
+      {% for atividade in atividades %}
+      <li class="activity-item"
+          data-id="{{ atividade.pk }}"
+          data-status="{{ atividade.status }}"
+          data-search="{{ atividade.titulo|lower }} {{ atividade.disciplina.nome|lower }}"
+          tabindex="0"
+          role="button"
+          aria-haspopup="dialog">
+
+        <div class="activity-main">
+          <span class="activity-title">{{ atividade.titulo }}</span>
+
+          <div class="activity-meta">
+            <span>{{ atividade.disciplina.nome }}</span>
+            <span aria-hidden="true">•</span>
+            <span>Prazo: <time class="activity-prazo">{{ atividade.prazo|date:"d/m/Y H:i" }}</time></span>
+          </div>
+        </div>
+
+        <div class="activity-actions">
+          <span class="activity-status activity-status--{{ atividade.status }}">
+            {{ atividade.get_status_display }}
+          </span>
+
+          {% if atividade.status != 'concluida' %}
+          <button type="button" class="finish-button" data-finalize-activity>
+            Finalizar
+          </button>
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <p class="activity-empty activity-empty-dynamic" hidden>
+      Nenhuma atividade encontrada para esse filtro.
+    </p>
+  {% else %}
+    <div class="activity-empty">
+      <strong>Nenhuma atividade cadastrada.</strong>
+      <p>Crie sua primeira atividade para organizar seus próximos prazos.</p>
+      <a href="{% url 'core:atividade_create' %}">Cadastrar atividade</a>
+    </div>
+  {% endif %}
+</section>
+
+<div class="activity-modal-overlay" id="activityModalOverlay" hidden>
+  <div class="activity-modal" role="dialog" aria-modal="true"
+       aria-labelledby="activityModalTitle">
+
+    <button type="button" class="modal-close" id="activityModalClose"
+            aria-label="Fechar janela">×</button>
+
+    <h2 id="activityModalTitle">Editar atividade</h2>
+    <p class="modal-error" id="activityModalGeneralError" hidden></p>
+
+    <form id="activityModalForm" class="activity-form">
+      <div class="form-field">
+        <label for="modalTitulo">Título</label>
+        <input id="modalTitulo" name="titulo" required>
+        <span data-error-for="titulo" class="field-error"></span>
+      </div>
+
+      <div class="form-field">
+        <label for="modalDisciplina">Disciplina</label>
+        <select id="modalDisciplina" name="disciplina" required></select>
+        <span data-error-for="disciplina" class="field-error"></span>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="modalTipo">Tipo</label>
+          <select id="modalTipo" name="tipo"></select>
+        </div>
+
+        <div class="form-field">
+          <label for="modalPrioridade">Prioridade</label>
+          <select id="modalPrioridade" name="prioridade"></select>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="modalPrazo">Prazo</label>
+          <input id="modalPrazo" name="prazo" type="datetime-local" required>
+          <span data-error-for="prazo" class="field-error"></span>
+        </div>
+
+        <div class="form-field">
+          <label for="modalStatus">Status</label>
+          <select id="modalStatus" name="status"></select>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="modalDescricao">Descrição</label>
+        <textarea id="modalDescricao" name="descricao"></textarea>
+      </div>
+
+      <div class="form-field">
+        <label for="modalObservacoes">Observações</label>
+        <textarea id="modalObservacoes" name="observacoes"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="delete-button" id="activityModalDelete">Excluir</button>
+        <div>
+          <button type="button" class="finish-button" id="activityModalFinalize" hidden>Finalizar</button>
+          <button type="submit" class="save-button" id="activityModalSave">Salvar alterações</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/contabeis/atividades_list.js' %}"></script>
+{% endblock %}

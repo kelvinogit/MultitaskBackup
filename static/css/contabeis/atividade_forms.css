@@ -1,0 +1,179 @@
+.activity-form-panel {
+  max-width: 780px;
+  padding: 30px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-eyebrow {
+  margin: 0 0 6px;
+  color: var(--teal);
+  font-size: .73rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.form-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.form-header p:not(.section-eyebrow) {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.back-link {
+  align-self: flex-start;
+  color: var(--teal);
+  font-size: .84rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.activity-form {
+  display: grid;
+  gap: 18px;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--text);
+  font-size: .83rem;
+  font-weight: 700;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  width: 100%;
+  padding: 10px 11px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  outline: 0;
+  color: var(--text);
+  background: #fff;
+  font: inherit;
+  font-size: .87rem;
+}
+
+.form-field textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(22, 118, 109, .12);
+}
+
+.form-field.has-error input,
+.form-field.has-error select,
+.form-field.has-error textarea {
+  border-color: #b22d35;
+}
+
+.field-help,
+.field-error {
+  display: block;
+  margin-top: 6px;
+  font-size: .76rem;
+}
+
+.field-help {
+  color: var(--muted);
+}
+
+.field-error {
+  color: #b22d35;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.cancel-button,
+.submit-button {
+  padding: 10px 15px;
+  border-radius: 8px;
+  font: inherit;
+  font-size: .84rem;
+  font-weight: 700;
+}
+
+.cancel-button {
+  border: 1px solid var(--border);
+  color: var(--muted);
+  background: #fff;
+}
+
+.submit-button {
+  border: 0;
+  color: #fff;
+  background: var(--teal);
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background: var(--navy-soft);
+}
+
+.empty-discipline-notice {
+  padding: 22px;
+  border: 1px solid #e7d49d;
+  border-radius: 10px;
+  color: #6d5519;
+  background: #fff9e8;
+}
+
+.empty-discipline-notice p {
+  margin: 8px 0 14px;
+  font-size: .88rem;
+}
+
+.empty-discipline-notice a {
+  color: var(--teal);
+  font-size: .85rem;
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .activity-form-panel {
+    padding: 22px;
+  }
+
+  .form-header {
+    flex-direction: column;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .cancel-button,
+  .submit-button {
+    width: 100%;
+    text-align: center;
+  }
+}

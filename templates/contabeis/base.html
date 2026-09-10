@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}ContábilHub{% endblock %} | Cerne</title>
+
+  <link rel="stylesheet" href="{% static 'css/contabeis/base.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+  <aside class="sidebar" data-sidebar>
+    <div class="sidebar-header">
+      <a class="brand" href="{% url 'core:dashboard' %}" aria-label="Cerne ContábilHub">
+        <span class="brand-icon" aria-hidden="true">C</span>
+        <span>
+          <strong>Cerne</strong>
+          <small>ContábilHub</small>
+        </span>
+      </a>
+
+      <button class="icon-button sidebar-close" type="button"
+              data-sidebar-close aria-label="Fechar menu">
+        ×
+      </button>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Navegação principal">
+      <a href="{% url 'core:dashboard' %}"
+         class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}is-active{% endif %}">
+        <span class="nav-icon">⌂</span>
+        Dashboard
+      </a>
+
+      <a href="{% url 'core:atividade_list' %}"
+         class="nav-item {% if request.resolver_match.url_name == 'atividade_list' %}is-active{% endif %}">
+        <span class="nav-icon">✓</span>
+        Atividades
+      </a>
+
+      <a href="{% url 'core:disciplina_list' %}"
+         class="nav-item {% if request.resolver_match.url_name == 'disciplina_list' %}is-active{% endif %}">
+        <span class="nav-icon">▤</span>
+        Disciplinas
+      </a>
+
+      <a href="{% url 'core:projeto_list' %}"
+         class="nav-item {% if request.resolver_match.url_name == 'projeto_list' %}is-active{% endif %}">
+        <span class="nav-icon">◫</span>
+        Projetos
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <span class="avatar">{{ request.user.nome|default:request.user.email|slice:":1"|upper }}</span>
+        <div>
+          <strong>{{ request.user.nome|default:request.user.email }}</strong>
+          <small>Ciências Contábeis</small>
+        </div>
+      </div>
+
+      <a class="logout-link" href="{% url 'accounts:logout' %}">Sair da conta</a>
+    </div>
+  </aside>
+
+  <div class="sidebar-backdrop" data-sidebar-backdrop></div>
+
+  <main class="app-main">
+    <header class="topbar">
+      <button class="icon-button menu-button" type="button"
+              data-sidebar-open aria-label="Abrir menu">
+        ☰
+      </button>
+
+      <div>
+        <p class="topbar-eyebrow">Ciências Contábeis</p>
+        <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+      </div>
+    </header>
+
+    <section id="conteudo" class="content">
+      {% block content %}{% endblock %}
+    </section>
+  </main>
+
+  <script src="{% static 'js/contabeis/base.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

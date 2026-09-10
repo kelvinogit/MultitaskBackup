@@ -34,7 +34,8 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['caterer-superman-maturely.ngrok-free.dev','127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://caterer-superman-maturely.ngrok-free.dev',]
 
 
 # Application definition
