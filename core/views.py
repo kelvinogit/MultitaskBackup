@@ -291,3 +291,29 @@ def disciplina_delete(request, pk):
     disciplina = get_object_or_404(Disciplina, pk=pk, usuario=request.user)
     disciplina.delete()
     return JsonResponse({'ok': True})
+
+
+@login_required
+@require_POST
+def disciplina_update(request, pk):
+    """
+    Atualiza uma DISCIPLINA  existente (inclui a troca de status) via JSON,
+    usado pelo formulário dentro do modal.
+    """
+    disciplina = get_object_or_404(Disciplina, pk=pk, usuario=request.user)
+    form = DisciplinaForm(request.POST, instance=disciplina, usuario=request.user)
+
+    if form.is_valid():
+        disciplina = form.save()
+        return JsonResponse({
+            'ok': True,
+            'disciplina': {
+                'id': disciplina.pk,
+                'nome': disciplina.nome,
+                'semestre': disciplina.semestre,
+                'professor':disciplina.professor
+            },
+        })
+
+    return JsonResponse({'ok': False, 'errors': form.errors}, status=400)
+

@@ -29,6 +29,7 @@
         {% if disciplina.descricao %}
         <p class="discipline-item-desc">{{ disciplina.descricao }}</p>
         {% endif %}
+        <button class="buttonExcluir">Excluir</button>
       </li>
       {% endfor %}
     </ul>
@@ -38,6 +39,10 @@
     <p class="discipline-empty">Você ainda não cadastrou nenhuma disciplina.</p>
   {% endif %}
 </section>
+
+
+
+
 {% endblock %}
 
 {% block extra_js %}
