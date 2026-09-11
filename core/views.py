@@ -283,3 +283,11 @@ def disciplina_create(request):
         'form': form,
     }
     return render(request, get_template(request.user, 'disciplina_form'), context)
+
+
+@login_required
+@require_POST
+def disciplina_delete(request, pk):
+    disciplina = get_object_or_404(Disciplina, pk=pk, usuario=request.user)
+    disciplina.delete()
+    return JsonResponse({'ok': True})
