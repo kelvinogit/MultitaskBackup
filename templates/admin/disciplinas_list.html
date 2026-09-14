@@ -21,6 +21,7 @@
     <ul class="discipline-list">
       {% for disciplina in disciplinas %}
       <li class="discipline-item" data-search="{{ disciplina.nome|lower }} {{ disciplina.professor|lower }}">
+      <div class="discipline-content">
         <div class="discipline-item-name">{{ disciplina.nome }}</div>
         <div class="discipline-item-meta">
           {% if disciplina.professor %}{{ disciplina.professor }}{% else %}Sem professor cadastrado{% endif %}
@@ -29,19 +30,47 @@
         {% if disciplina.descricao %}
         <p class="discipline-item-desc">{{ disciplina.descricao }}</p>
         {% endif %}
-        <button class="buttonExcluir">Excluir</button>
+        </div>
+          <button type="button" class="discipline-delete" data-delete-url="{% url 'core:disciplina_delete' pk=disciplina.id %}">Excluir</button>
+          <button type="button" class="discipline-edit" 
+          data-update-url="{% url 'core:disciplina_update' pk=disciplina.id %}"
+          data-nome="{{ disciplina.nome }}"
+          data-professor="{{ disciplina.professor }}"
+          data-semestre="{{ disciplina.semestre }}"
+          data-descricao="{{ disciplina.descricao}}">
+          Editar
+        </button>
       </li>
       {% endfor %}
     </ul>
+
+    <div id ="disciplineModal" hidden>
+      <form id="disciplineForm">
+          <label for="disciplinaNome"> Nome da disciplina</label>
+          <input id="disciplinaNome" name="nome" placeholder="Ex.: Matemática..." required>
+
+          <label for="disciplinaProfessor"> Professor</label>
+          <input id="disciplinaProfessor" name="professor" placeholder="Ex.: Jorosbaldo...">
+
+          <label for="disciplinaSemestre"> Semestre ('Ano.Semestres')</label>
+          <input id="disciplinaSemestre" name="semestre" placeholder="Ex.: 2026.3...">
+
+          <label for="disciplinaDescricao">Descrição da Matéria</label>
+          <textarea id="disciplinaDescricao" name="descricao" placeholder="Esta disciplina é do balacobaco..."></textarea> 
+
+          <p id="disciplineError" hidden></p>
+          <button type="submit">Salvar</button>
+          <button type="button" id="closeDisciplineModal">Cancelar</button>
+      </form>
+
+    </div>
+    
 
     <p class="discipline-empty discipline-empty-dynamic" style="display:none;">Nenhuma disciplina encontrada com esse termo.</p>
   {% else %}
     <p class="discipline-empty">Você ainda não cadastrou nenhuma disciplina.</p>
   {% endif %}
 </section>
-
-
-
 
 {% endblock %}
 

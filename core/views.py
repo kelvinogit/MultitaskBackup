@@ -290,6 +290,7 @@ def disciplina_create(request):
 def disciplina_delete(request, pk):
     disciplina = get_object_or_404(Disciplina, pk=pk, usuario=request.user)
     disciplina.delete()
+
     return JsonResponse({'ok': True})
 
 
@@ -301,7 +302,7 @@ def disciplina_update(request, pk):
     usado pelo formulário dentro do modal.
     """
     disciplina = get_object_or_404(Disciplina, pk=pk, usuario=request.user)
-    form = DisciplinaForm(request.POST, instance=disciplina, usuario=request.user)
+    form = DisciplinaForm(request.POST, instance=disciplina)
 
     if form.is_valid():
         disciplina = form.save()
@@ -311,9 +312,13 @@ def disciplina_update(request, pk):
                 'id': disciplina.pk,
                 'nome': disciplina.nome,
                 'semestre': disciplina.semestre,
-                'professor':disciplina.professor
+                'professor':disciplina.professor,
+                'descricao':disciplina.descricao,
             },
         })
 
     return JsonResponse({'ok': False, 'errors': form.errors}, status=400)
+
+
+
 

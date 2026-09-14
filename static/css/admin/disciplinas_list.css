@@ -104,3 +104,234 @@
     transition: none;
   }
 }
+
+
+
+/* =====================================================
+   Botão excluir disciplina
+   ===================================================== */
+
+/* ---------- Botão excluir ---------- */
+
+.discipline-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.discipline-item-name,
+.discipline-item-meta,
+.discipline-item-desc {
+  /* Mantém o conteúdo da disciplina agrupado à esquerda */
+}
+
+.discipline-delete {
+  flex-shrink: 0;
+  margin-left: auto;
+
+  background: transparent;
+  color: var(--ink-400);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+
+  padding: 4px 9px;
+
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.discipline-delete:hover {
+  background: #fff5f5;
+  color: #b42318;
+  border-color: #e5b5b2;
+}
+
+.discipline-delete:active {
+  background: #fce8e6;
+}
+
+.discipline-delete:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(180, 35, 24, 0.12);
+}
+
+/* =====================================================
+   Botão editar
+   ===================================================== */
+
+
+   .discipline-edit {
+  flex-shrink: 0;
+  background: var(--green-accent);
+  color: #fff;
+  border: 1px solid var(--green-accent);
+  border-radius: var(--radius-sm);
+  padding: 5px 10px;
+
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.1s ease,
+    box-shadow 0.15s ease;
+}
+
+.discipline-edit:hover {
+  background: var(--green-700);
+  border-color: var(--green-700);
+  box-shadow: 0 3px 10px rgba(15, 51, 39, 0.16);
+}
+
+.discipline-edit:active {
+  transform: translateY(1px);
+}
+
+.discipline-edit:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(47, 122, 83, 0.2);
+}
+
+
+/* =====================================================
+   Modal de edição
+   ===================================================== */
+
+#disciplineModal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+
+  background: rgba(15, 51, 39, 0.42);
+  backdrop-filter: blur(3px);
+}
+
+#disciplineModal[hidden] {
+  display: none;
+}
+
+#disciplineForm {
+  width: min(100%, 500px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  box-shadow: 0 20px 50px rgba(15, 51, 39, 0.2);
+}
+
+#disciplineForm input,
+#disciplineForm textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+
+  background: #fff;
+  color: var(--ink-900);
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  outline: none;
+
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+#disciplineForm textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+#disciplineForm input:focus,
+#disciplineForm textarea:focus {
+  border-color: var(--green-accent);
+  box-shadow: 0 0 0 3px rgba(47, 122, 83, 0.12);
+}
+
+#disciplineForm input::placeholder,
+#disciplineForm textarea::placeholder {
+  color: var(--ink-400);
+}
+
+#disciplineError {
+  margin: 0;
+  padding: 9px 10px;
+  border-radius: var(--radius-sm);
+  background: #fff5f5;
+  color: #b42318;
+  font-size: 0.8rem;
+}
+
+#disciplineForm button[type="submit"] {
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+
+  background: var(--green-accent);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+#disciplineForm button[type="submit"]:hover {
+  background: var(--green-700);
+}
+
+#disciplineForm button[type="submit"]:active {
+  transform: translateY(1px);
+}
+
+#closeDisciplineModal {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 9px 14px;
+
+  background: transparent;
+  color: var(--ink-600);
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+#closeDisciplineModal:hover {
+  background: var(--paper);
+  color: var(--ink-900);
+}
+
+@media (max-width: 520px) {
+  #disciplineModal {
+    align-items: flex-end;
+    padding: 12px;
+  }
+
+  #disciplineForm {
+    padding: 20px;
+  }
+}
+

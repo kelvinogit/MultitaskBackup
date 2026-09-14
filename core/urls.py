@@ -18,5 +18,11 @@ urlpatterns = [
     path('projetos/novo/', views.projeto_create, name='projeto_create'),
     path('disciplinas/', views.disciplinas_list, name='disciplina_list'),
     path('disciplinas/nova/', views.disciplina_create, name='disciplina_create'),
+    path('disciplinas/<int:pk>/excluir', views.disciplina_delete, name='disciplina_delete'),
+    path('disciplinas/<int:pk>/editar/', views.disciplina_update, name='disciplina_update'),
+
     
 ]
+
+
+
