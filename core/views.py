@@ -256,6 +256,8 @@ def projeto_create(request):
         'form': form,
     }
     return render(request, get_template(request.user, 'projeto_form'), context)
+
+
 @login_required
 @require_POST
 def projeto_update(request, pk):
@@ -268,6 +270,8 @@ def projeto_update(request, pk):
 
     projeto = form.save()
     progresso = Projeto.definir_progresso(projeto)
+
+    projeto.save(update_fields=["progresso"])
 
     return JsonResponse(
         {

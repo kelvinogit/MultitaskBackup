@@ -142,11 +142,11 @@ class Projeto(models.Model):
     feitos = models.CharField(max_length=500, blank=True)
 
     def definir_progresso(self):
-       if self.Status == self.Status.PLANEJAMENTO:
+       if self.status == self.Status.PLANEJAMENTO:
         self.progresso = 20
-       elif self.Status == self.Status.ANDAMENTO:
+       elif self.status == self.Status.ANDAMENTO:
         self.progresso = 60
-       elif self.Status == self.Status.CONCLUIDO:
+       elif self.status == self.Status.CONCLUIDO:
         self.progresso = 100 
        return self.progresso
 
