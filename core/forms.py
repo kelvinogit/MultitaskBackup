@@ -23,7 +23,7 @@ class AtividadesForm(forms.ModelForm):
 class ProjetoForm(forms.ModelForm):
     class Meta:
         model = Projeto
-        fields = ['nome', 'descricao', 'prazo', 'status', 'progresso']
+        fields = ['nome', 'descricao', 'prazo', 'status', 'feitos']
         widgets = {
             'prazo': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }

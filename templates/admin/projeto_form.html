@@ -21,45 +21,30 @@
     </p>
 
     <form method="post" class="project-form">
+  {% csrf_token %}
 
-        {% csrf_token %}
+  {% for field in form %}
+    <div class="project-form-field {% if field.errors %}has-error{% endif %}">
+      <label for="{{ field.id_for_label }}">
+        {{ field.label }}
+      </label>
 
-        {% for field in form %}
+      {{ field }}
 
-            <div class="project-form-field {% if field.name == 'progresso' %}has-progress{% endif %} {% if field.errors %}has-error{% endif %}">
+      {% if field.errors %}
+        <span class="project-field-error">
+          {{ field.errors|join:", " }}
+        </span>
+      {% endif %}
+    </div>
+  {% endfor %}
 
-                <label for="{{ field.id_for_label }}">
-                    {{ field.label }}
-                </label>
-
-                {{ field }}
-
-                {% if field.name == 'progresso' %}
-                    <span class="project-progress-suffix">%</span>
-                {% endif %}
-
-                {% if field.errors %}
-                    <span class="project-field-error">
-                        {{ field.errors|join:", " }}
-                    </span>
-                {% endif %}
-
-            </div>
-
-        {% endfor %}
-
-
-        <div class="project-form-actions">
-
-            <button
-                type="submit"
-                class="project-form-submit">
-                Salvar
-            </button>
-
-        </div>
-
-    </form>
+  <div class="project-form-actions">
+    <button type="submit" class="project-form-submit">
+      Salvar
+    </button>
+  </div>
+</form>
 
 </section>
 

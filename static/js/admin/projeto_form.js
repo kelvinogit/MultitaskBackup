@@ -81,31 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* =====================================================
-       Progresso: mantém o valor entre 0 e 100
-       ===================================================== */
-
-    const progressoField = form.querySelector(
-        "input[name='progresso']"
-    );
-
-    if (progressoField) {
-
-        progressoField.addEventListener("blur", () => {
-
-            let valor = parseInt(progressoField.value, 10);
-
-            if (Number.isNaN(valor)) return;
-
-            if (valor < 0) valor = 0;
-            if (valor > 100) valor = 100;
-
-            progressoField.value = valor;
-            updateField(progressoField);
-
-        });
-
-    }
 
 
     /* =====================================================

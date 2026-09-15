@@ -29,7 +29,18 @@
       <li class="project-item" data-status="{{ projeto.status }}">
         <div class="project-item-head">
           <span class="project-item-name">{{ projeto.nome }}</span>
-          <span class="project-status-tag project-status-tag--{{ projeto.status }}">{{ projeto.get_status_display }}</span>
+
+          <div class="project-item-actions">
+            <span class="project-status-tag project-status-tag--{{ projeto.status }}">{{ projeto.get_status_display }}</span>
+          <button type="button"
+          class="project-edit-button"
+          data-update-id="{{ projeto.id }}"
+          data-update-url="{% url 'core:projeto_update' projeto.id %}"
+          data-nome="{{ projeto.nome }}"
+          data-status="{{ projeto.status }}"
+          data-feitos="{{ projeto.feitos }}"
+          data-descricao="{{ projeto.descricao }}">Editar</button>
+          </div>
         </div>
         <div class="project-item-deadline">
           {% if projeto.prazo %}Prazo: {{ projeto.prazo|date:"d/m/Y" }}{% else %}Sem prazo definido{% endif %}
@@ -41,6 +52,45 @@
       </li>
       {% endfor %}
     </ul>
+
+
+    <div class="project-modal" id="project-edit-modal" hidden>
+        <div class="project-modal-backdrop" data-close-modal></div>
+        
+        <div class="project-modal-content" role="dialog" aria-modal="true" aria-labelledby="project-modal-title">
+          <button type="button" class="project-modal-close" data-close-modal aria-label="Fechar">
+            X
+          </button>     
+          
+          <h2 id="project-modal-title">Editar Projeto</h2>
+
+          <form id="project-edit-form">
+            {% csrf_token %}
+
+            <label for="edit-project-name"> Novo nome do Projeto</label>
+            <input id="edit-project-name" name="nome" type="text" placeholder="Ex. Crias...">
+
+            <label for="edit-project-status">Status Atual</label>
+            <select id="edit-project-status" name="status" required>
+              {% for value, label in status_choices %}
+                <option value="{{ value }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+
+            <label for="edit-project-feitos">Feitos do Projeto</label>
+            <textarea id="edit-project-feitos" name="feitos" placeholder="Ex. Hoje fiz alguma coisa..."></textarea>
+            
+            <label for="edit-project-description">Nova Descricao</label>
+            <textarea id="edit-project-description" name="descricao" placeholder="Ex. Minha nova descricao..."></textarea>
+
+            <p class="project-modal_error" id="project-modal-error" hidden></p>
+
+            <button type="submit" class="project-form-submit">
+              Salvar Alterações
+            </button>
+          </form>
+        </div>
+    </div>
 
     <p class="project-empty project-empty-dynamic" style="display:none;">Nenhum projeto encontrado com esse filtro.</p>
   {% else %}

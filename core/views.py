@@ -232,6 +232,8 @@ def projetos_list(request):
  
     context = {
         'projetos': projetos,
+        'status_choices':Projeto.Status.choices,
+
     }
     return render(request, get_template(request.user, 'projetos_list'), context)
 
@@ -240,6 +242,7 @@ def projetos_list(request):
 def projeto_create(request):
     if request.method == 'POST':
         form = ProjetoForm(request.POST)
+        
         if form.is_valid():
             projeto = form.save(commit=False)
             projeto.responsavel = request.user
@@ -253,6 +256,39 @@ def projeto_create(request):
         'form': form,
     }
     return render(request, get_template(request.user, 'projeto_form'), context)
+@login_required
+@require_POST
+def projeto_update(request, pk):
+    projeto = get_object_or_404(Projeto, pk=pk)
+    form = ProjetoForm(request.POST, instance=projeto)
+
+    if not form.is_valid():
+        return JsonResponse({
+                'ok': False, "erros":form.errors})
+
+    projeto = form.save()
+    progresso = Projeto.definir_progresso(projeto)
+
+    return JsonResponse(
+        {
+            "ok": True,
+            "projeto":{
+                "id":projeto.id,
+                "nome":projeto.nome,
+                "feitos":projeto.feitos,
+                "descricao":projeto.descricao,
+                "status": projeto.status,
+                "status_display": projeto.get_status_display(),
+                "progresso":progresso,
+            },
+        }
+    )
+
+
+
+
+    
+    
 
 
 # Disciplinas ---- List e Create

@@ -124,8 +124,7 @@ class Projeto(models.Model):
     status = models.CharField(max_length=15, choices=Status.choices, default=Status.PLANEJAMENTO)
     progresso = models.PositiveSmallIntegerField(
         default=0,
-        validators=[MinValueValidator(0), MinValueValidator(100)],
-        help_text='Percentual de progresso (0 a 100)',
+        editable=False,
 
     )
 
@@ -140,10 +139,23 @@ class Projeto(models.Model):
         through="ParticipacaoProjeto",
         related_name='projetos',
     )
+    feitos = models.CharField(max_length=500, blank=True)
+
+    def definir_progresso(self):
+       if self.Status == self.Status.PLANEJAMENTO:
+        self.progresso = 20
+       elif self.Status == self.Status.ANDAMENTO:
+        self.progresso = 60
+       elif self.Status == self.Status.CONCLUIDO:
+        self.progresso = 100 
+       return self.progresso
+
     @property
     def esta_atrasado(self):
         from django.utils import timezone
         return self.status != self.Status.CONCLUIDO and self.prazo and self.prazo < timezone.now()
+
+    
 
 
 
