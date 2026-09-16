@@ -288,8 +288,14 @@ def projeto_update(request, pk):
         }
     )
 
+@login_required
+def painel_projeto(request):
+    projeto = Projeto.objects.filter(responsavel=request.user)
 
+    return render(request, get_template(request.user, 'projeto_painel'))
 
+    # a fazer ainda
+    
 
     
     
@@ -358,6 +364,11 @@ def disciplina_update(request, pk):
         })
 
     return JsonResponse({'ok': False, 'errors': form.errors}, status=400)
+
+
+
+
+
 
 
 
