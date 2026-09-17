@@ -1,0 +1,287 @@
+/* ==========================================================
+   Painel de Projetos — tema verde & branco
+   Cores pensadas para conforto visual (sem branco puro / preto puro)
+   ========================================================== */
+
+:root {
+    --pp-verde-900: #163d2b;
+    --pp-verde-700: #1f6b45;
+    --pp-verde-600: #2c8558;
+    --pp-verde-500: #3aa06c;
+    --pp-verde-100: #e3f3e8;
+    --pp-verde-50:  #f2f9f4;
+
+    --pp-branco:    #ffffff;
+    --pp-fundo:     #f7faf8;   /* off-white, mais confortável que #fff puro */
+    --pp-texto:     #274035;
+    --pp-texto-suave: #6b8478;
+
+    --pp-amarelo:   #b8860b;
+    --pp-amarelo-bg:#fbf1dc;
+    --pp-vermelho:  #b23a3a;
+    --pp-vermelho-bg:#fbe6e6;
+
+    --pp-sombra: 0 4px 16px rgba(22, 61, 43, 0.08);
+    --pp-sombra-hover: 0 10px 28px rgba(22, 61, 43, 0.14);
+    --pp-raio: 16px;
+}
+
+.painel-projetos {
+    background: var(--pp-fundo);
+    padding: 32px 24px 48px;
+    border-radius: 20px;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--pp-texto);
+    position: relative;
+}
+
+.painel-projetos__header {
+    margin-bottom: 24px;
+}
+
+.painel-projetos__titulo {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--pp-verde-900);
+    margin: 0 0 4px;
+}
+
+.painel-projetos__subtitulo {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--pp-texto-suave);
+}
+
+/* ---------- Área com scroll horizontal ---------- */
+
+.painel-projetos__scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    cursor: grab;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--pp-verde-500) transparent;
+    padding-bottom: 12px;
+}
+
+.painel-projetos__scroll.arrastando {
+    cursor: grabbing;
+    scroll-behavior: auto;
+}
+
+.painel-projetos__scroll::-webkit-scrollbar {
+    height: 8px;
+}
+
+.painel-projetos__scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.painel-projetos__scroll::-webkit-scrollbar-thumb {
+    background: var(--pp-verde-100);
+    border-radius: 8px;
+}
+
+.painel-projetos__scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--pp-verde-500);
+}
+
+.painel-projetos__trilho {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(260px, 1fr);
+    gap: 20px;
+    width: 100%;
+    scroll-snap-type: x proximity;
+}
+
+/* ---------- Card ---------- */
+
+.card-projeto {
+    background: var(--pp-branco);
+    border: 1px solid var(--pp-verde-100);
+    border-radius: var(--pp-raio);
+    padding: 20px;
+    box-shadow: var(--pp-sombra);
+    scroll-snap-align: start;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    user-select: none;
+}
+
+.card-projeto:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--pp-sombra-hover);
+}
+
+.card-projeto__topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.card-projeto__nome {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--pp-verde-900);
+    margin: 0;
+    line-height: 1.3;
+}
+
+.card-projeto__descricao {
+    font-size: 0.88rem;
+    color: var(--pp-texto-suave);
+    line-height: 1.5;
+    margin: 0 0 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ---------- Status badge ---------- */
+
+.card-projeto__status {
+    flex-shrink: 0;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--pp-verde-100);
+    color: var(--pp-verde-700);
+    white-space: nowrap;
+}
+
+.card-projeto__status--concluído,
+.card-projeto__status--concluido,
+.card-projeto__status--finalizado {
+    background: var(--pp-verde-100);
+    color: var(--pp-verde-700);
+}
+
+.card-projeto__status--em.andamento,
+.card-projeto__status--ativo,
+.card-projeto__status--andamento {
+    background: var(--pp-amarelo-bg);
+    color: var(--pp-amarelo);
+}
+
+.card-projeto__status--atrasado,
+.card-projeto__status--cancelado,
+.card-projeto__status--pausado {
+    background: var(--pp-vermelho-bg);
+    color: var(--pp-vermelho);
+}
+
+/* ---------- Prazo ---------- */
+
+.card-projeto__prazo {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: var(--pp-texto-suave);
+    margin-bottom: 18px;
+}
+
+.card-projeto__icone {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: var(--pp-verde-500);
+}
+
+/* ---------- Progresso ---------- */
+
+.card-projeto__progresso-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--pp-texto-suave);
+    margin-bottom: 6px;
+}
+
+.card-projeto__barra {
+    width: 100%;
+    height: 8px;
+    background: var(--pp-verde-50);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.card-projeto__barra-preenchida {
+    height: 100%;
+    background: linear-gradient(90deg, var(--pp-verde-500), var(--pp-verde-700));
+    border-radius: 999px;
+    transition: width 0.6s ease;
+}
+
+/* ---------- Estado vazio ---------- */
+
+.painel-projetos__vazio {
+    padding: 40px;
+    color: var(--pp-texto-suave);
+    font-size: 0.95rem;
+}
+
+/* ---------- Setas de navegação ---------- */
+
+.painel-projetos__nav {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.painel-projetos__seta {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--pp-verde-100);
+    background: var(--pp-branco);
+    color: var(--pp-verde-700);
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--pp-sombra);
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.painel-projetos__seta:hover {
+    background: var(--pp-verde-500);
+    color: var(--pp-branco);
+    transform: scale(1.05);
+}
+
+.painel-projetos__seta:active {
+    transform: scale(0.95);
+}
+
+/* ---------- Responsivo ---------- */
+
+@media (max-width: 768px) {
+    .painel-projetos {
+        padding: 24px 16px 36px;
+    }
+
+    .painel-projetos__trilho {
+        grid-auto-columns: minmax(240px, 1fr);
+    }
+
+    .painel-projetos__nav {
+        display: none; /* em telas pequenas, o gesto de arrastar/swipe já basta */
+    }
+}
+
+@media (max-width: 480px) {
+    .painel-projetos__trilho {
+        grid-auto-columns: minmax(78vw, 1fr);
+    }
+}

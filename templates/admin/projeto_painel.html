@@ -1,14 +1,75 @@
+
+
 {% extends 'admin/base.html' %}
 {% load static %}
-
+ 
 {% block page_title %}Painel de Projetos{% endblock %}
-{% block page_context %}Painel de Projetos{% endblock %} 
-{% block extra_css %}<link rel="stylesheet" href="{% static 'css/admin/projeto_painel.css' %}">{% endblock %}
-
-{% block content %}
-
+{% block page_context %}Painel de Projetos{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin/projeto_painel.css' %}">
 {% endblock %}
+ 
+{% block content %}
+<div class="painel-projetos">
+ 
+    <div class="painel-projetos__header">
+        <h1 class="painel-projetos__titulo">Painel de Projetos</h1>
+        <p class="painel-projetos__subtitulo">Arraste para o lado para ver mais projetos</p>
+    </div>
+ 
+    <div class="painel-projetos__scroll" id="painel-scroll">
+        <div class="painel-projetos__trilho">
+ 
+            {% for proj in projeto %}
+            <div class="card-projeto">
+ 
+                <div class="card-projeto__topo">
+                    <h2 class="card-projeto__nome">{{ proj.nome }}</h2>
+                    <span class="card-projeto__status card-projeto__status--{{ proj.status|lower }}">
+                        {{ proj.status }}
+                    </span>
+                </div>
+ 
+                <p class="card-projeto__descricao">{{ proj.descricao }}</p>
+ 
+                <div class="card-projeto__prazo">
+                    <svg viewBox="0 0 24 24" class="card-projeto__icone" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2"/>
+                        <path d="M16 2v4M8 2v4M3 10h18"/>
+                    </svg>
+                    <span>{{ proj.prazo }}</span>
+                </div>
+ 
+                <div class="card-projeto__progresso">
+                    <div class="card-projeto__progresso-info">
+                        <span>Progresso</span>
+                        <span>{{ proj.progresso }}%</span>
+                    </div>
+                    <div class="card-projeto__barra">
+                        <div class="card-projeto__barra-preenchida" style="width: {{ proj.progresso }}%;"></div>
+                    </div>
+                </div>
+ 
+            </div>
+            {% empty %}
+            <div class="painel-projetos__vazio">
+                <p>Nenhum projeto cadastrado por aqui.</p>
+            </div>
+            {% endfor %}
+ 
+        </div>
+    </div>
+ 
+    <div class="painel-projetos__nav">
+        <button type="button" class="painel-projetos__seta painel-projetos__seta--esquerda" id="seta-esquerda" aria-label="Anterior">‹</button>
+        <button type="button" class="painel-projetos__seta painel-projetos__seta--direita" id="seta-direita" aria-label="Próximo">›</button>
+    </div>
+ 
+</div>
+{% endblock %}
+ 
 {% block extra_js %}
 <script src="{% static 'js/admin/projeto_painel.js' %}"></script>
 {% endblock %}
-
+ 

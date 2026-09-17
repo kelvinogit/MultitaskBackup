@@ -291,8 +291,9 @@ def projeto_update(request, pk):
 @login_required
 def painel_projeto(request):
     projeto = Projeto.objects.filter(responsavel=request.user)
+    context = {'projeto':projeto}
 
-    return render(request, get_template(request.user, 'projeto_painel'))
+    return render(request, get_template(request.user, 'projeto_painel'), context) 
 
     # a fazer ainda
     
