@@ -1,0 +1,330 @@
+
+/* =========================================================
+   FORMULÁRIO DE PARTICIPANTES
+   ========================================================= */
+
+.integrante-form {
+    width: 100%;
+    min-height: 100%;
+
+    padding: 30px;
+
+    box-sizing: border-box;
+
+    background: #f7f9f8;
+}
+
+
+/* =========================================================
+   CABEÇALHO
+   ========================================================= */
+
+.integrante-form__header {
+    margin-bottom: 25px;
+}
+
+.integrante-form__titulo {
+    margin: 0 0 6px;
+
+    color: #263b2e;
+
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.integrante-form__subtitulo {
+    margin: 0;
+
+    color: #718077;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   CARD DO FORMULÁRIO
+   ========================================================= */
+
+.integrante-form__card {
+    width: min(650px, 100%);
+
+    padding: 28px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 1px solid #e4ebe6;
+    border-radius: 14px;
+
+    box-shadow: 0 4px 14px rgba(39, 67, 50, 0.06);
+}
+
+
+/* =========================================================
+   FORMULÁRIO
+   ========================================================= */
+
+.integrante-form__form {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 22px;
+}
+
+
+/* =========================================================
+   CAMPOS
+   ========================================================= */
+
+.form-field {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.form-field__label {
+    color: #263b2e;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   INPUTS E SELECT
+   ========================================================= */
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+    width: 100%;
+
+    min-height: 44px;
+
+    padding: 10px 13px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #d8e4dc;
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #263b2e;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+    border-color: #315b43;
+
+    box-shadow: 0 0 0 3px rgba(49, 91, 67, 0.10);
+}
+
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+    color: #a0aaa4;
+}
+
+
+/* =========================================================
+   SELECT DE PROJETO
+   ========================================================= */
+
+.form-field select {
+    cursor: pointer;
+
+    appearance: auto;
+}
+
+
+/* =========================================================
+   TEXTO DE AJUDA
+   ========================================================= */
+
+.form-field__ajuda {
+    color: #718077;
+
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   ERROS
+   ========================================================= */
+
+.form-field__erro {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+    color: #a13d3d;
+
+    font-size: 12px;
+}
+
+
+.integrante-form__erros {
+    padding: 12px 14px;
+
+    border: 1px solid #e6baba;
+    border-radius: 8px;
+
+    background: #fff4f4;
+
+    color: #a13d3d;
+
+    font-size: 13px;
+}
+
+
+.integrante-form__erros p {
+    margin: 0;
+}
+
+
+.form-field input:has(+ .form-field__erro),
+.form-field select:has(+ .form-field__erro),
+.form-field textarea:has(+ .form-field__erro) {
+    border-color: #c75a5a;
+}
+
+
+/* =========================================================
+   AÇÕES
+   ========================================================= */
+
+.integrante-form__acoes {
+    display: flex;
+
+    justify-content: center;
+
+    margin-top: 5px;
+
+    padding-top: 8px;
+
+    border-top: 1px solid #edf1ee;
+}
+
+
+/* =========================================================
+   BOTÃO
+   ========================================================= */
+
+.add_participantes_button {
+    display: block;
+
+    min-width: 210px;
+
+    padding: 11px 22px;
+
+    border: 1px solid #315b43;
+    border-radius: 8px;
+
+    background: #315b43;
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.add_participantes_button:hover {
+    background: #264a35;
+
+    border-color: #264a35;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 5px 12px rgba(49, 91, 67, 0.20);
+}
+
+
+.add_participantes_button:active {
+    transform: translateY(0);
+
+    box-shadow: none;
+}
+
+
+.add_participantes_button:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   RESPONSIVO
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .integrante-form {
+        padding: 20px;
+    }
+
+    .integrante-form__titulo {
+        font-size: 24px;
+    }
+
+    .integrante-form__card {
+        padding: 22px;
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .integrante-form {
+        padding: 15px;
+    }
+
+    .integrante-form__titulo {
+        font-size: 22px;
+    }
+
+    .integrante-form__card {
+        padding: 18px;
+    }
+
+    .add_participantes_button {
+        width: 100%;
+    }
+
+}

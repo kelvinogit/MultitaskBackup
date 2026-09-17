@@ -1,5 +1,5 @@
 from django import forms
-from .models import Disciplina, Atividade, Projeto
+from .models import Disciplina, Atividade, Projeto, ParticipacaoProjeto
 
 class DisciplinaForm(forms.ModelForm):
     class Meta:
@@ -27,3 +27,12 @@ class ProjetoForm(forms.ModelForm):
         widgets = {
             'prazo': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         }
+class ParticipacaoProjetoForm(forms.ModelForm):
+    class Meta:
+        model = ParticipacaoProjeto
+        fields =['usuario','tarefa', 'projeto']
+
+    def __init__(self, *args, usuario=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if usuario is not None:
+            self.fields['projeto'].queryset = Projeto.objects.filter(responsavel=usuario)

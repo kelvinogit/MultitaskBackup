@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Curso, Atividade, Projeto, Disciplina, ParticipacaoProjeto
 from django.contrib.auth.decorators import login_required
 from . decorators import autenticacao_obrigatoria
-from .forms import DisciplinaForm, AtividadesForm, ProjetoForm
+from .forms import DisciplinaForm, AtividadesForm, ProjetoForm, ParticipacaoProjetoForm
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.utils import timezone
@@ -225,7 +225,7 @@ def atividade_delete(request, pk):
 def projetos_list(request):
     projetos = (
         Projeto.objects
-        .filter(integrantes=request.user)
+        .filter(responsavel=request.user)
         .distinct()
         .order_by('prazo')
     )
@@ -247,7 +247,6 @@ def projeto_create(request):
             projeto = form.save(commit=False)
             projeto.responsavel = request.user
             projeto.save()
-            ParticipacaoProjeto.objects.create(projeto=projeto, usuario=request.user)
             return redirect('core:projeto_list')
     else:
         form = ProjetoForm()
@@ -291,11 +290,26 @@ def projeto_update(request, pk):
 @login_required
 def painel_projeto(request):
     projeto = Projeto.objects.filter(responsavel=request.user)
-    context = {'projeto':projeto}
+    integrantes = ParticipacaoProjeto.objects.filter(projeto__in=projeto)
+    context = {'projeto':projeto,
+               'integrantes':integrantes}
 
     return render(request, get_template(request.user, 'projeto_painel'), context) 
 
-    # a fazer ainda
+@login_required
+def projeto_add_integrante(request):
+    form = ParticipacaoProjetoForm(request.POST)
+
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return redirect('core:projeto_add_integrante')
+    else:
+        form = ParticipacaoProjetoForm()
+
+    context = {
+        'form':form
+    }
+    return render(request, get_template(request.user, 'projeto_integrante_form'), context)
     
 
     

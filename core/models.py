@@ -134,11 +134,6 @@ class Projeto(models.Model):
         related_name='projetos_criados',
     )
 
-    integrantes = models.ManyToManyField(
-        'accounts.User',
-        through="ParticipacaoProjeto",
-        related_name='projetos',
-    )
     feitos = models.CharField(max_length=500, blank=True)
 
     def definir_progresso(self):
@@ -155,6 +150,9 @@ class Projeto(models.Model):
         from django.utils import timezone
         return self.status != self.Status.CONCLUIDO and self.prazo and self.prazo < timezone.now()
 
+    def __str__(self):
+        return self.nome
+
     
 
 
@@ -170,11 +168,7 @@ class ParticipacaoProjeto(models.Model):
          related_name='participacoes',
      )
 
-     usuario = models.ForeignKey(
-         'accounts.User',
-         on_delete=models.CASCADE,
-         related_name='participacoes_projeto', 
-     )
+     usuario = models.CharField(max_length=100)
      tarefa = models.CharField(max_length=255, blank=True)
      concluida = models.BooleanField(default=True)
 

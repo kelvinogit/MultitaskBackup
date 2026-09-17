@@ -1,0 +1,178 @@
+
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block page_title %}Participantes{% endblock %}
+{% block page_context %}Adicionar participantes{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/admin/projeto_integrante_form.css' %}"
+>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="integrante-form">
+
+    <!-- CABEÇALHO -->
+    <div class="integrante-form__header">
+
+        <div>
+            <h1 class="integrante-form__titulo">
+                Adicionar participante
+            </h1>
+
+            <p class="integrante-form__subtitulo">
+                Cadastre um participante e associe-o a um projeto.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- FORMULÁRIO -->
+    <div class="integrante-form__card">
+
+        <form
+            method="POST"
+            class="integrante-form__form"
+            id="participante-form"
+        >
+
+            {% csrf_token %}
+
+
+            <!-- ERROS GERAIS -->
+            {% if form.non_field_errors %}
+
+                <div class="integrante-form__erros">
+
+                    {% for error in form.non_field_errors %}
+
+                        <p>{{ error }}</p>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- USUÁRIO -->
+            <div class="form-field">
+
+                <label
+                    for="{{ form.usuario.id_for_label }}"
+                    class="form-field__label"
+                >
+                    Usuário
+                </label>
+
+                {{ form.usuario }}
+
+                {% if form.usuario.errors %}
+
+                    <div class="form-field__erro">
+
+                        {% for error in form.usuario.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- TAREFA -->
+            <div class="form-field">
+
+                <label
+                    for="{{ form.tarefa.id_for_label }}"
+                    class="form-field__label"
+                >
+                    Tarefa
+                </label>
+
+                {{ form.tarefa }}
+
+                {% if form.tarefa.errors %}
+
+                    <div class="form-field__erro">
+
+                        {% for error in form.tarefa.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- PROJETO -->
+            <div class="form-field">
+
+                <label
+                    for="{{ form.projeto.id_for_label }}"
+                    class="form-field__label"
+                >
+                    Projeto
+                </label>
+
+                {{ form.projeto }}
+
+                <span class="form-field__ajuda">
+                    Selecione o projeto ao qual este participante pertence.
+                </span>
+
+                {% if form.projeto.errors %}
+
+                    <div class="form-field__erro">
+
+                        {% for error in form.projeto.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- BOTÃO -->
+            <div class="integrante-form__acoes">
+
+                <button
+                    type="submit"
+                    class="add_participantes_button"
+                    id="add-participante-button"
+                >
+                    adicionar no carai
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script
+    src="{% static 'js/admin/projeto_integrante_form.js' %}"
+></script>
+
+{% endblock %}
+

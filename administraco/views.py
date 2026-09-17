@@ -30,7 +30,7 @@ def admin_dashboard(request):
             else 0
         ),
         'projetos_ativos_count': (
-            Projeto.objects.filter(integrantes=request.user)
+            Projeto.objects.filter(responsavel=request.user)
             .exclude(status=Projeto.Status.CONCLUIDO)
             .distinct()
             .count()
