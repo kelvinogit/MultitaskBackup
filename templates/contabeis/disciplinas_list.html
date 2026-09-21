@@ -30,7 +30,7 @@
           <span class="discipline-mark">D</span>
 
           {% if disciplina.semestre %}
-            <span class="semester-tag">{{ disciplina.semestre }}</span>
+            <span class="semester-tag">{{ disciplina.semestre }} Semestre</span>
           {% endif %}
         </div>
 
@@ -47,6 +47,15 @@
             Sem descrição cadastrada.
           </p>
         {% endif %}
+        <button
+            type="button"
+            class="discipline-delete-btn"
+            data-delete-disciplina
+            data-delete-url="{% url 'core:disciplina_delete' disciplina.pk %}"
+            data-nome="{{ disciplina.nome }}"
+          >
+            Excluir
+        </button>
       </article>
       {% endfor %}
     </div>
@@ -58,4 +67,8 @@
     </div>
   {% endif %}
 </section>
+{% endblock %}
+
+{% block extra_js %} 
+  <script src="{% static 'js/contabeis/disciplina_list.js' %}"></script>
 {% endblock %}

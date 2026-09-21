@@ -156,3 +156,67 @@
     flex-direction: column;
   }
 }
+
+/* Botão de excluir disciplina */
+
+.discipline-delete-btn {
+    --delete-color: #b42318;
+    --delete-bg-hover: #fef3f2;
+    --delete-border: #fda29b;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    align-self: flex-start;
+
+    margin-top: 1rem;
+    padding: 0.45rem 0.9rem;
+
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--delete-color);
+
+    background: transparent;
+    border: 1px solid var(--delete-border);
+    border-radius: 8px;
+    cursor: pointer;
+
+    transition: background-color 0.15s ease, border-color 0.15s ease,
+        color 0.15s ease;
+}
+
+.discipline-delete-btn:hover {
+    background: var(--delete-bg-hover);
+    border-color: var(--delete-color);
+}
+
+.discipline-delete-btn:active {
+    background: #fee4e2;
+}
+
+.discipline-delete-btn:focus-visible {
+    outline: 2px solid var(--delete-color);
+    outline-offset: 2px;
+}
+
+.discipline-delete-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Saída suave do card ao excluir */
+.discipline-card.is-removing {
+    opacity: 0;
+    transform: scale(0.97);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .discipline-delete-btn,
+    .discipline-card.is-removing {
+        transition: none;
+    }
+}

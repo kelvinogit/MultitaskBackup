@@ -1,16 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
     function getCookie(name) {
-  const match = document.cookie.match(
-    new RegExp("(^| )" + name + "=([^;]+)")
-  );
+        const match = document.cookie.match(
+            new RegExp("(^| )" + name + "=([^;]+)")
+        );
 
-  return match ? decodeURIComponent(match[2]) : null;
-}   
-    
-    
+        return match ? decodeURIComponent(match[2]) : null;
+    }
+
     const list = document.querySelector(".activity-list");
-
-    
 
     if (!list) return;
 
@@ -132,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function clearErrors() {
-       form.querySelectorAll(".field-error").forEach((el) => {
+        form.querySelectorAll(".field-error").forEach((el) => {
             el.textContent = "";
         });
         form.querySelectorAll(".form-field").forEach((el) => {
@@ -142,6 +139,12 @@ document.addEventListener("DOMContentLoaded", () => {
             generalError.hidden = true;
             generalError.textContent = "";
         }
+    }
+
+    function showGeneralError(message) {
+        if (!generalError) return;
+        generalError.hidden = false;
+        generalError.textContent = message;
     }
 
     async function openModal(id) {
@@ -183,6 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             setTimeout(() => fieldTitulo.focus(), 200);
         } catch (err) {
+            console.error("Erro ao abrir modal:", err);
             currentId = null;
         }
     }
@@ -245,14 +249,22 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function updateItemStatus(item, activity) {
-    item.dataset.status = activity.status;
+        if (!activity || !activity.status) return;
 
-    const tag = item.querySelector(".activity-status");
-    if (!tag) return;
+        item.dataset.status = activity.status;
 
-    tag.className = `activity-status activity-status--${activity.status}`;
-    tag.textContent = activity.status_display;
-}
+        const tag = item.querySelector(".activity-status");
+        if (!tag) return;
+
+        tag.className = `activity-status activity-status--${activity.status}`;
+        if (activity.status_display) {
+            tag.textContent = activity.status_display;
+        }
+    }
+
+    /* =====================================================
+       Finalizar direto pela lista
+       ===================================================== */
 
     list.querySelectorAll("[data-finalize-activity]").forEach((button) => {
         button.addEventListener("click", async (event) => {
@@ -280,6 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 button.remove();
                 applyFilters();
             } catch (err) {
+                console.error("Erro ao finalizar atividade:", err);
                 button.disabled = false;
                 button.textContent = originalText;
                 window.alert("Não foi possível finalizar a atividade. Tente novamente.");
@@ -288,6 +301,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     if (closeBtn) closeBtn.addEventListener("click", closeModal);
+
+    /* =====================================================
+       Finalizar pelo modal
+       ===================================================== */
 
     if (modalFinalizeBtn) {
         modalFinalizeBtn.addEventListener("click", async () => {
@@ -319,15 +336,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 applyFilters();
             } catch (err) {
+                console.error("Erro ao finalizar atividade pelo modal:", err);
                 modalFinalizeBtn.disabled = false;
                 modalFinalizeBtn.textContent = originalText;
-                if (generalError) {
-                    generalError.hidden = false;
-                    generalError.textContent = "Não foi possível finalizar a atividade. Tente novamente.";
-                }
+                showGeneralError("Não foi possível finalizar a atividade. Tente novamente.");
             }
         });
     }
+
+    /* =====================================================
+       Salvar alterações (CORRIGIDO)
+       A parte de rede fica separada da atualização visual,
+       assim uma falha no DOM não vira "erro ao salvar".
+       ===================================================== */
 
     if (form) {
         form.addEventListener("submit", async (event) => {
@@ -339,51 +360,76 @@ document.addEventListener("DOMContentLoaded", () => {
             const originalText = saveBtn.textContent;
             saveBtn.textContent = "Salvando...";
 
+            // 1) Requisição: somente aqui um erro significa "não salvou"
+            let data;
             try {
                 const response = await fetch(urlFor(updateUrlBase, currentId), {
                     method: "POST",
                     headers: { "X-CSRFToken": getCookie("csrftoken") },
                     body: new FormData(form),
                 });
-                const data = await response.json();
+                data = await response.json();
+            } catch (err) {
+                console.error("Erro de rede/JSON ao salvar:", err);
+                showGeneralError("Não foi possível salvar agora. Tente novamente.");
+                saveBtn.disabled = false;
+                saveBtn.textContent = originalText;
+                return;
+            }
 
-                if (data.ok) {
-                    const item = list.querySelector(`.activity-item[data-id="${currentId}"]`);
+            saveBtn.disabled = false;
+            saveBtn.textContent = originalText;
+
+            // 2) Resposta do servidor
+            if (data.ok) {
+                // Já salvou no servidor: falha visual não deve mostrar erro de salvamento
+                try {
+                    const a = data.atividade || {};
+                    const item = list.querySelector(
+                        `.activity-item[data-id="${currentId}"]`
+                    );
+
                     if (item) {
-                        item.querySelector(".activity-title").textContent = data.atividade.titulo;
-                        item.querySelector(".activity-item-prazo").textContent = data.atividade.prazo_exibicao;
-                        item.dataset.search = `${data.atividade.titulo.toLowerCase()} ${data.atividade.disciplina_nome.toLowerCase()}`;
-                        updateItemStatus(item, data.atividade);
-                        if (data.atividade.status === "concluida") {
+                        const titleEl = item.querySelector(".activity-title");
+                        const prazoEl = item.querySelector(".activity-item-prazo");
+
+                        if (titleEl && a.titulo) titleEl.textContent = a.titulo;
+                        if (prazoEl && a.prazo_exibicao) {
+                            prazoEl.textContent = a.prazo_exibicao;
+                        }
+
+                        item.dataset.search =
+                            `${(a.titulo || "").toLowerCase()} ${(a.disciplina_nome || "").toLowerCase()}`.trim();
+
+                        updateItemStatus(item, a);
+
+                        if (a.status === "concluida") {
                             item.querySelector("[data-finalize-activity]")?.remove();
                         }
                     }
-                    closeModal();
-                    applyFilters();
-                } else {
-                    Object.entries(data.errors || {}).forEach(([campo, mensagens]) => {
-                        const errorEl = form.querySelector(`[data-error-for="${campo}"]`);
-                        if (errorEl) {
-                            errorEl.textContent = mensagens[0];
-                            errorEl.closest(".form-field").classList.add("has-error");
-                        }
-                    });
-                    if (generalError) {
-                        generalError.hidden = false;
-                        generalError.textContent = "Confira os campos destacados abaixo.";
+                } catch (err) {
+                    console.error("Salvou, mas falhou ao atualizar a lista:", err);
+                }
+
+                closeModal();
+                applyFilters();
+            } else {
+                Object.entries(data.errors || {}).forEach(([campo, mensagens]) => {
+                    const errorEl = form.querySelector(`[data-error-for="${campo}"]`);
+                    if (errorEl) {
+                        errorEl.textContent = mensagens[0];
+                        const field = errorEl.closest(".form-field");
+                        if (field) field.classList.add("has-error");
                     }
-                }
-            } catch (err) {
-                if (generalError) {
-                    generalError.hidden = false;
-                    generalError.textContent = "Não foi possível salvar agora. Tente novamente.";
-                }
-            } finally {
-                saveBtn.disabled = false;
-                saveBtn.textContent = originalText;
+                });
+                showGeneralError("Confira os campos destacados abaixo.");
             }
         });
     }
+
+    /* =====================================================
+       Excluir
+       ===================================================== */
 
     if (deleteBtn) {
         deleteBtn.addEventListener("click", async () => {
@@ -404,6 +450,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (item) item.remove();
                     closeModal();
                 }
+            } catch (err) {
+                console.error("Erro ao excluir atividade:", err);
+                showGeneralError("Não foi possível excluir agora. Tente novamente.");
             } finally {
                 deleteBtn.disabled = false;
             }

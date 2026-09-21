@@ -1,0 +1,224 @@
+{% extends 'contabeis/base.html' %}
+{% load static l10n %}
+
+{% block title %}Projetos{% endblock %}
+{% block page_title %}Projetos Adicionados{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/contabeis/projeto_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="proj-panel">
+
+    <header class="proj-header">
+        <div>
+            <h2>Carteira de projetos</h2>
+            <p>Acompanhe prazo, situação e andamento de cada projeto.</p>
+        </div>
+
+        <a href="{% url 'core:projeto_create' %}" class="proj-new-btn">
+            <span aria-hidden="true">+</span> Novo projeto
+        </a>
+    </header>
+
+    {% if projetos %}
+
+        <dl class="proj-summary">
+            <div>
+                <dt>Total</dt>
+                <dd data-count="total">{{ projetos|length }}</dd>
+            </div>
+            <div>
+                <dt>Em andamento</dt>
+                <dd data-count="progress">–</dd>
+            </div>
+            <div>
+                <dt>Concluídos</dt>
+                <dd data-count="done">–</dd>
+            </div>
+            <div>
+                <dt>Atrasados</dt>
+                <dd data-count="late">–</dd>
+            </div>
+        </dl>
+
+        <div class="proj-toolbar">
+            <label class="sr-only" for="projSearch">Buscar projeto</label>
+            <input
+                type="search"
+                id="projSearch"
+                class="proj-search"
+                placeholder="Buscar por nome ou descrição"
+                autocomplete="off"
+            >
+
+            <label class="sr-only" for="projStatusFilter">Filtrar por situação</label>
+            <select id="projStatusFilter" class="proj-status-filter">
+                <option value="todos">Todas as situações</option>
+                <option value="progress">Em andamento</option>
+                <option value="pending">Pendentes</option>
+                <option value="done">Concluídos</option>
+                <option value="late">Atrasados</option>
+            </select>
+        </div>
+
+        <div class="proj-table-wrap">
+            <table class="proj-table">
+                <thead>
+                    <tr>
+                        <th scope="col" class="col-name" aria-sort="none">
+                            <button type="button" class="proj-sort" data-sort="nome">Projeto</button>
+                        </th>
+                        <th scope="col" class="col-date" aria-sort="none">
+                            <button type="button" class="proj-sort" data-sort="prazo">Prazo</button>
+                        </th>
+                        <th scope="col" class="col-status">Situação</th>
+                        <th scope="col" class="col-progress" aria-sort="none">
+                            <button type="button" class="proj-sort" data-sort="progresso">Progresso</button>
+                        </th>
+                        <th scope="col" class="col-actions">
+                            <span class="sr-only">Ações</span>
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for projeto in projetos %}
+                    <tr
+                        class="proj-row"
+                        data-id="{{ projeto.pk }}"
+                        data-nome="{{ projeto.nome }}"
+                        data-descricao="{{ projeto.descricao }}"
+                        data-prazo="{{ projeto.prazo|date:'Y-m-d' }}"
+                        data-prazo-input="{{ projeto.prazo|date:'Y-m-d\TH:i' }}"
+                        data-progresso="{{ projeto.progresso|default:0|unlocalize }}"
+                        data-status="{{ projeto.status }}"
+                        data-feitos="{{ projeto.feitos|default_if_none:'' }}"
+                        data-update-url="{% url 'core:projeto_update' pk=projeto.pk %}"
+                        data-delete-url="{% url 'core:projeto_delete' pk=projeto.pk %}"
+                    >
+                        <td class="col-name">
+                            <span class="proj-name">{{ projeto.nome }}</span>
+                            {% if projeto.descricao %}
+                                <span class="proj-desc">{{ projeto.descricao }}</span>
+                            {% endif %}
+                
+                        </td>
+
+                        <td class="col-date" data-label="Prazo">
+                            <span class="proj-date">{{ projeto.prazo|date:"d/m/Y" }}</span>
+                            <span class="proj-deadline"></span>
+                        </td>
+
+                        <td class="col-status" data-label="Situação">
+                            <span class="proj-status">{{ projeto.get_status_display|default:projeto.status }}</span>
+                        </td>
+
+                        <td class="col-progress" data-label="Progresso">
+                            <div class="proj-progress">
+                                <div class="proj-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                    <div class="proj-progress-fill"></div>
+                                </div>
+                                <span class="proj-progress-label">{{ projeto.progresso|default:0|unlocalize }}%</span>
+                            </div>
+                        </td>
+
+                        <td class="col-actions">
+                            <button type="button" class="proj-edit-btn" data-edit-projeto>Editar</button>
+                            <button type="button" class="proj-delete-btn" data-delete-projeto>Excluir</button>
+                        </td>
+
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <p class="proj-empty-dynamic" hidden>
+                Nenhum projeto corresponde à busca ou ao filtro selecionado.
+            </p>
+        </div>
+
+        <footer class="proj-footer">
+            Exibindo <strong data-visible-count>{{ projetos|length }}</strong>
+            de <strong data-total-count>{{ projetos|length }}</strong> projetos
+        </footer>
+
+    {% else %}
+
+        <div class="proj-empty">
+            <strong>Ainda não há projetos cadastrados.</strong>
+            <p>Cadastre um projeto para acompanhar prazo e andamento.</p>
+            <a href="{% url 'core:projeto_create' %}">Criar o primeiro projeto</a>
+        </div>
+
+    {% endif %}
+
+</section>
+
+<div id="projModal" class="proj-modal" hidden>
+    <div class="proj-modal-overlay" data-modal-close></div>
+
+    <div class="proj-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="projModalTitle">
+        <header class="proj-modal-header">
+            <h3 id="projModalTitle">Editar projeto</h3>
+            <button type="button" class="proj-modal-close" data-modal-close aria-label="Fechar">&times;</button>
+        </header>
+
+        <form id="projEditForm" class="proj-modal-form" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="id" id="projEditId">
+
+            <div class="proj-field">
+                <label for="projEditNome">Nome</label>
+                <input type="text" name="nome" id="projEditNome" required maxlength="200">
+                <span class="proj-field-error" data-error-for="nome"></span>
+            </div>
+
+            <div class="proj-field">
+                <label for="projEditDescricao">Descrição</label>
+                <textarea name="descricao" id="projEditDescricao" rows="3"></textarea>
+                <span class="proj-field-error" data-error-for="descricao"></span>
+            </div>
+
+            <div class="proj-field-row">
+                <div class="proj-field">
+                    <label for="projEditPrazo">Prazo</label>
+                    <input type="datetime-local" name="prazo" id="projEditPrazo">
+                    <span class="proj-field-error" data-error-for="prazo"></span>
+                </div>
+
+                <div class="proj-field">
+                    <label for="projEditStatus">Situação</label>
+                    <select name="status" id="projEditStatus">
+                        <option value="planejamento">Planejamento</option>
+                        <option value="andamento">Em andamento</option>
+                        <option value="concluido">Concluído</option>
+                        <option value="atrasado">Atrasado</option>
+                    </select>
+                    <span class="proj-field-error" data-error-for="status"></span>
+                </div>
+            </div>
+
+            <div class="proj-field">
+                <label for="projEditFeitos">Tarefas concluídas</label>
+                <textarea name="feitos" id="projEditFeitos" rows="3"></textarea>
+                <span class="proj-field-error" data-error-for="feitos"></span>
+            </div>
+
+            <p class="proj-modal-error" id="projEditFormError" hidden></p>
+
+            <footer class="proj-modal-footer">
+                <button type="button" class="proj-btn-secondary" data-modal-close>Cancelar</button>
+                <button type="submit" class="proj-btn-primary" id="projEditSubmit">Salvar</button>
+            </footer>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/contabeis/projeto_list.js' %}"></script>
+{% endblock %}
+

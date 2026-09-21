@@ -1,0 +1,100 @@
+{% extends 'contabeis/base.html' %}
+{% load static %}
+
+{% block title %}Projeto Cadastro{% endblock %}
+{% block page_title %}Cadastro de Projetos{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/contabeis/projeto_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="pf-wrap">
+    <div class="pf-card">
+
+        <header class="pf-card-head">
+            <h2>Novo projeto</h2>
+            <p>Informe os dados principais. Você poderá editá-los depois na lista de projetos.</p>
+        </header>
+
+        <form method="post" class="pf-form">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="pf-alert" role="alert">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% elif form.errors %}
+                <div class="pf-alert" role="alert">
+                    <p>Confira os campos destacados abaixo.</p>
+                </div>
+            {% endif %}
+
+            <!-- Nome -->
+            <div class="pf-field pf-field--full{% if form.nome.errors %} has-error{% endif %}">
+                <label for="{{ form.nome.id_for_label }}">
+                    Nome do projeto{% if form.nome.field.required %}<span class="pf-required" aria-hidden="true"> *</span>{% endif %}
+                </label>
+                {{ form.nome }}
+                {% if form.nome.help_text %}<p class="pf-help">{{ form.nome.help_text }}</p>{% endif %}
+                {% for error in form.nome.errors %}<p class="pf-error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <!-- Descrição -->
+            <div class="pf-field pf-field--full{% if form.descricao.errors %} has-error{% endif %}">
+                <label for="{{ form.descricao.id_for_label }}">
+                    Descrição{% if form.descricao.field.required %}<span class="pf-required" aria-hidden="true"> *</span>{% endif %}
+                </label>
+                {{ form.descricao }}
+                <span class="pf-counter" data-counter hidden></span>
+                {% if form.descricao.help_text %}<p class="pf-help">{{ form.descricao.help_text }}</p>{% endif %}
+                {% for error in form.descricao.errors %}<p class="pf-error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <!-- Prazo -->
+            <div class="pf-field{% if form.prazo.errors %} has-error{% endif %}">
+                <label for="{{ form.prazo.id_for_label }}">
+                    Prazo de entrega{% if form.prazo.field.required %}<span class="pf-required" aria-hidden="true"> *</span>{% endif %}
+                </label>
+                {{ form.prazo }}
+                <p class="pf-hint" data-prazo-hint aria-live="polite"></p>
+                {% if form.prazo.help_text %}<p class="pf-help">{{ form.prazo.help_text }}</p>{% endif %}
+                {% for error in form.prazo.errors %}<p class="pf-error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <!-- Status -->
+            <div class="pf-field{% if form.status.errors %} has-error{% endif %}">
+                <label for="{{ form.status.id_for_label }}">
+                    Situação{% if form.status.field.required %}<span class="pf-required" aria-hidden="true"> *</span>{% endif %}
+                </label>
+                {{ form.status }}
+                {% if form.status.help_text %}<p class="pf-help">{{ form.status.help_text }}</p>{% endif %}
+                {% for error in form.status.errors %}<p class="pf-error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <!-- Feitos -->
+            <div class="pf-field pf-field--full{% if form.feitos.errors %} has-error{% endif %}">
+                <label for="{{ form.feitos.id_for_label }}">
+                    {{ form.feitos.label }}{% if form.feitos.field.required %}<span class="pf-required" aria-hidden="true"> *</span>{% endif %}
+                </label>
+                {{ form.feitos }}
+                {% if form.feitos.help_text %}<p class="pf-help">{{ form.feitos.help_text }}</p>{% endif %}
+                {% for error in form.feitos.errors %}<p class="pf-error">{{ error }}</p>{% endfor %}
+            </div>
+
+            <div class="pf-actions">
+                <a href="{% url 'core:projeto_list' %}" class="pf-btn pf-btn--ghost">Cancelar</a>
+                <button type="submit" class="pf-btn pf-btn--primary" data-submit>Criar projeto</button>
+            </div>
+        </form>
+
+    </div>
+</section>
+{% endblock %}
+
+
+{% block extra_js %}
+    <script src="{% static 'js/contabeis/projeto_form.js' %}"></script>
+{% endblock %}

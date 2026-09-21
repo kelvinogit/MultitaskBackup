@@ -52,6 +52,12 @@
         <span class="nav-icon">◫</span>
         Projetos
       </a>
+
+      <a href="{% url 'core:painel_projeto' %}"
+         class="nav-item {% if request.resolver_match.url_name == 'painel_projeto' %}is-active{% endif %}">
+        <span class="nav-icon">◫</span>
+        Projeto Painel
+      </a>
     </nav>
 
     <div class="sidebar-footer">

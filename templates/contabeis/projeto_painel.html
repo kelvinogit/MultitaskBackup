@@ -1,0 +1,166 @@
+{% extends 'contabeis/base.html' %}
+{% load static l10n %}
+
+{% block title %}Projetos{% endblock %}
+{% block page_title %}Painel de Projetos{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/contabeis/projeto_painel.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<section class="pp-panel">
+
+    <header class="pp-header">
+        <div>
+            <h2>Painel de projetos</h2>
+            <p>Cada faixa é uma situação. Dentro dela, os projetos aparecem do prazo mais próximo para o mais distante.</p>
+        </div>
+
+        <div class="pp-header-actions">
+            <label class="sr-only" for="ppSearch">Buscar projeto</label>
+            <input
+                type="search"
+                id="ppSearch"
+                class="pp-search"
+                placeholder="Buscar projeto"
+                autocomplete="off"
+            >
+            <a href="{% url 'core:projeto_create' %}" class="pp-new-btn">
+                <span aria-hidden="true">+</span> Novo projeto
+            </a>
+        </div>
+    </header>
+
+    {% if projeto %}
+
+        <!-- Faixas (o JS distribui os cartões nelas) -->
+        <div class="pp-board" id="ppBoard">
+
+            <section class="pp-lane" data-lane="late" aria-labelledby="ppLaneLate">
+                <header class="pp-lane-head">
+                    <h3 id="ppLaneLate">Atrasados</h3>
+                    <span class="pp-lane-count">0</span>
+                    <p class="pp-lane-hint">Prazo vencido e ainda não concluídos</p>
+                </header>
+                <div class="pp-track">
+                    <p class="pp-lane-empty" hidden>Nenhum projeto nesta situação.</p>
+                </div>
+            </section>
+
+            <section class="pp-lane" data-lane="pending" aria-labelledby="ppLanePending">
+                <header class="pp-lane-head">
+                    <h3 id="ppLanePending">Planejamento</h3>
+                    <span class="pp-lane-count">0</span>
+                    <p class="pp-lane-hint">Ainda não iniciados</p>
+                </header>
+                <div class="pp-track">
+                    <p class="pp-lane-empty" hidden>Nenhum projeto nesta situação.</p>
+                </div>
+            </section>
+
+            <section class="pp-lane" data-lane="progress" aria-labelledby="ppLaneProgress">
+                <header class="pp-lane-head">
+                    <h3 id="ppLaneProgress">Em andamento</h3>
+                    <span class="pp-lane-count">0</span>
+                    <p class="pp-lane-hint">Em execução dentro do prazo</p>
+                </header>
+                <div class="pp-track">
+                    <p class="pp-lane-empty" hidden>Nenhum projeto nesta situação.</p>
+                </div>
+            </section>
+
+            <section class="pp-lane" data-lane="done" aria-labelledby="ppLaneDone">
+                <header class="pp-lane-head">
+                    <h3 id="ppLaneDone">Concluídos</h3>
+                    <span class="pp-lane-count">0</span>
+                    <p class="pp-lane-hint">Entregues</p>
+                </header>
+                <div class="pp-track">
+                    <p class="pp-lane-empty" hidden>Nenhum projeto nesta situação.</p>
+                </div>
+            </section>
+
+            <!-- Só aparece se existir algum projeto pausado ou cancelado -->
+            <section class="pp-lane" data-lane="hold" data-hide-empty aria-labelledby="ppLaneHold">
+                <header class="pp-lane-head">
+                    <h3 id="ppLaneHold">Pausados</h3>
+                    <span class="pp-lane-count">0</span>
+                    <p class="pp-lane-hint">Pausados ou cancelados</p>
+                </header>
+                <div class="pp-track">
+                    <p class="pp-lane-empty" hidden>Nenhum projeto nesta situação.</p>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- Cartões: nascem aqui e o JS move cada um para a sua faixa -->
+        <div data-pool hidden>
+            {% for p in projeto %}
+            <article
+                class="pp-card"
+                data-id="{{ p.pk }}"
+                data-status="{{ p.status }}"
+                data-prazo="{{ p.prazo|date:'Y-m-d' }}"
+                data-progresso="{{ p.progresso|default:0|unlocalize }}"
+            >
+                <h4 class="pp-card-title">{{ p.nome }}</h4>
+
+                {% if p.descricao %}
+                    <p class="pp-card-desc">{{ p.descricao }}</p>
+                {% endif %}
+
+                <div class="pp-card-deadline">
+                    <span class="pp-date">{{ p.prazo|date:"d/m/Y" }}</span>
+                    <span class="pp-deadline"></span>
+                </div>
+
+                <div class="pp-progress">
+                    <div class="pp-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                        <div class="pp-progress-fill"></div>
+                    </div>
+                    <span class="pp-progress-label">{{ p.progresso|default:0|unlocalize }}%</span>
+                </div>
+
+                <footer class="pp-card-foot">
+                    <span class="pp-status">{{ p.get_status_display|default:p.status }}</span>
+
+                    <!--
+                        Integrantes: o nome tenta usuario.get_full_name, depois usuario.username
+                        e, por fim, o texto do próprio objeto (__str__).
+                        Se o campo do usuário em ParticipacaoProjeto tiver outro nome, troque "usuario".
+                    -->
+                    <ul class="pp-team" aria-label="Integrantes">
+                        {% for integrante in integrantes %}
+                            {% if integrante.projeto_id == p.pk %}
+                                {% firstof integrante.usuario.get_full_name integrante.usuario.username integrante as nome %}
+                                <li class="pp-member" data-name="{{ nome }}"></li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                    </ul>
+                </footer>
+            </article>
+            {% endfor %}
+        </div>
+
+    {% else %}
+
+        <div class="pp-empty">
+            <strong>Ainda não há projetos cadastrados.</strong>
+            <p>Cadastre um projeto para acompanhá-lo neste painel.</p>
+            <a href="{% url 'core:projeto_create' %}">Criar o primeiro projeto</a>
+        </div>
+
+    {% endif %}
+
+</section>
+{% endblock %}
+
+
+
+{% block extra_js %}
+    <script src="{% static 'js/contabeis/projeto_painel.js' %}"></script>
+{% endblock %}
