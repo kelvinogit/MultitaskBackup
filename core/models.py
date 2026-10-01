@@ -204,6 +204,11 @@ class Pontuacao(models.Model):
         return total or 0
 
 
+        
+
+        
+
+
 
     
         
