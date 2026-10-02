@@ -139,13 +139,112 @@
                                 <li class="pp-member" data-name="{{ nome }}"></li>
                             {% endif %}
                         {% endfor %}
-                        
                     </ul>
+
+                    <button
+                        type="button"
+                        class="pp-show-members-btn"
+                        data-project-id="{{ p.pk }}"
+                        data-project-name="{{ p.nome }}"
+                    >
+                        Mostrar participantes
+                    </button>
+
                 </footer>
             </article>
             {% endfor %}
         </div>
 
+         <!-- =====================================================
+     MODAL DE PARTICIPANTES
+     ===================================================== -->
+
+<div
+    class="pp-modal"
+    id="ppMembersModal"
+    hidden
+    aria-hidden="true"
+>
+    <div
+        class="pp-modal__overlay"
+        data-modal-close
+    ></div>
+
+    <div
+        class="pp-modal__content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="ppModalTitle"
+    >
+
+        <!-- CABEÇALHO -->
+
+        <header class="pp-modal__header">
+
+            <div>
+                <span class="pp-modal__eyebrow">
+                    Projeto
+                </span>
+
+                <h2
+                    class="pp-modal__title"
+                    id="ppModalTitle"
+                >
+                    Participantes
+                </h2>
+            </div>
+
+            <button
+                type="button"
+                class="pp-modal__close"
+                id="ppModalClose"
+                aria-label="Fechar modal"
+            >
+                &times;
+            </button>
+
+        </header>
+
+
+        <!-- CONTEÚDO -->
+
+        <div class="pp-modal__body">
+
+            <p class="pp-modal__description">
+                Participantes associados a este projeto.
+            </p>
+
+            <div
+                class="pp-modal__members"
+                id="ppModalMembers"
+            >
+                <!--
+                    O JS insere os participantes aqui.
+                -->
+            </div>
+
+        </div>
+
+
+        <!-- AÇÕES -->
+
+        <footer class="pp-modal__footer">
+
+            <a
+                href="{% url 'core:projeto_add_integrante' %}"
+                class="pp-modal__add-button"
+                id="ppModalAddButton"
+            >
+                <span aria-hidden="true">+</span>
+                adicionar no carai
+            </a>
+
+        </footer>
+
+    </div>
+</div>
+
+    
     {% else %}
 
         <div class="pp-empty">
@@ -157,9 +256,12 @@
     {% endif %}
 
 </section>
+
+
+
+
+
 {% endblock %}
-
-
 
 {% block extra_js %}
     <script src="{% static 'js/contabeis/projeto_painel.js' %}"></script>

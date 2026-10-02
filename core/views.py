@@ -298,14 +298,11 @@ def painel_projeto(request):
 
 @login_required
 def projeto_add_integrante(request):
-    form = ParticipacaoProjetoForm(request.POST)
+    form = ParticipacaoProjetoForm(request.POST, responsavel=request.user)
 
     if request.method == 'POST' and form.is_valid():
         form.save()
         return redirect('core:projeto_add_integrante')
-    else:
-        form = ParticipacaoProjetoForm()
-
     context = {
         'form':form
     }
@@ -388,12 +385,7 @@ def disciplina_update(request, pk):
 
 
 
-@login_required
-def calendarioDash(request):
-    tarefa = 
-    data_prazo_atividade = 
 
-    return 
 
 
 

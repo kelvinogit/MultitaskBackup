@@ -32,7 +32,7 @@ class ParticipacaoProjetoForm(forms.ModelForm):
         model = ParticipacaoProjeto
         fields =['usuario','tarefa', 'projeto']
 
-    def __init__(self, *args, usuario=None, **kwargs):
+    def __init__(self, *args, responsavel=None, **kwargs):
         super().__init__(*args, **kwargs)
-        if usuario is not None:
-            self.fields['projeto'].queryset = Projeto.objects.filter(responsavel=usuario)
+        if responsavel is not None:
+            self.fields['projeto'].queryset = Projeto.objects.filter(responsavel=responsavel)

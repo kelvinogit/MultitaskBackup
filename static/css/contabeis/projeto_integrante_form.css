@@ -1,0 +1,403 @@
+/* =========================================================
+   PROJETO INTEGRANTE - FORMULÁRIO
+   Identidade visual baseada no painel ContábilHub
+   ========================================================= */
+
+.integrante-form {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 10px 0 40px;
+    color: #17252A;
+}
+
+
+/* =========================================================
+   CABEÇALHO
+   ========================================================= */
+
+.integrante-form__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 24px;
+}
+
+.integrante-form__titulo {
+    margin: 0;
+
+    font-size: 26px;
+    font-weight: 700;
+    color: #17252A;
+}
+
+.integrante-form__subtitulo {
+    margin: 7px 0 0;
+
+    color: #647477;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.integrante-form__card {
+    background: #FFFFFF;
+
+    border: 1px solid #D8E0DE;
+    border-radius: 8px;
+
+    box-shadow: 0 2px 8px rgba(18, 60, 70, 0.05);
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   FORMULÁRIO
+   ========================================================= */
+
+.integrante-form__form {
+    padding: 30px;
+}
+
+
+/* =========================================================
+   CAMPOS
+   ========================================================= */
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+
+    margin-bottom: 24px;
+}
+
+.form-field__label {
+    margin-bottom: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    color: #24383D;
+}
+
+
+/*
+   Como {{ form.usuario }}, {{ form.tarefa }} etc.
+   são widgets gerados pelo Django, estilizamos
+   diretamente os elementos HTML.
+*/
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+
+    min-height: 44px;
+
+    padding: 10px 13px;
+
+    border: 1px solid #C9D4D1;
+    border-radius: 6px;
+
+    background: #FFFFFF;
+
+    color: #17252A;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+
+/* SELECT */
+
+.form-field select {
+    cursor: pointer;
+}
+
+
+/* HOVER */
+
+.form-field input:hover,
+.form-field select:hover,
+.form-field textarea:hover {
+    border-color: #9EB3AE;
+}
+
+
+/* FOCO */
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+    border-color: #176B55;
+
+    box-shadow:
+        0 0 0 3px rgba(23, 107, 85, 0.12);
+
+    background: #FCFEFD;
+}
+
+
+/* PLACEHOLDER */
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+    color: #9AA7A5;
+}
+
+
+/* =========================================================
+   CAMPO COM ERRO
+   ========================================================= */
+
+.form-field--erro input,
+.form-field--erro select,
+.form-field--erro textarea {
+    border-color: #C52B21;
+}
+
+.form-field--erro input:focus,
+.form-field--erro select:focus,
+.form-field--erro textarea:focus {
+    border-color: #C52B21;
+
+    box-shadow:
+        0 0 0 3px rgba(197, 43, 33, 0.10);
+}
+
+
+/* =========================================================
+   TEXTO DE AJUDA
+   ========================================================= */
+
+.form-field__ajuda {
+    margin-top: 7px;
+
+    font-size: 12px;
+    line-height: 1.4;
+
+    color: #778684;
+}
+
+
+/* =========================================================
+   ERRO INDIVIDUAL
+   ========================================================= */
+
+.form-field__erro {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    margin-top: 7px;
+
+    color: #B42318;
+
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.form-field__erro span {
+    display: block;
+}
+
+
+/* =========================================================
+   ERROS GERAIS
+   ========================================================= */
+
+.integrante-form__erros {
+    margin-bottom: 25px;
+
+    padding: 13px 16px;
+
+    background: #FFF4F2;
+
+    border: 1px solid #F1C4BE;
+    border-left: 4px solid #C52B21;
+
+    border-radius: 6px;
+
+    color: #9F2119;
+
+    font-size: 13px;
+}
+
+.integrante-form__erros p {
+    margin: 0;
+}
+
+.integrante-form__erros p + p {
+    margin-top: 5px;
+}
+
+
+/* =========================================================
+   AÇÕES
+   ========================================================= */
+
+.integrante-form__acoes {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    margin-top: 30px;
+    padding-top: 22px;
+
+    border-top: 1px solid #E1E7E5;
+}
+
+
+/* =========================================================
+   BOTÃO
+   ========================================================= */
+
+.add_participantes_button {
+    min-width: 190px;
+
+    padding: 11px 20px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: #176B55;
+    color: #FFFFFF;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.15s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* HOVER */
+
+.add_participantes_button:hover {
+    background: #125A48;
+
+    box-shadow:
+        0 3px 8px rgba(23, 107, 85, 0.20);
+
+    transform: translateY(-1px);
+}
+
+
+/* CLICK */
+
+.add_participantes_button:active {
+    transform: translateY(0);
+
+    box-shadow: none;
+}
+
+
+/* FOCO */
+
+.add_participantes_button:focus-visible {
+    outline: none;
+
+    box-shadow:
+        0 0 0 3px rgba(23, 107, 85, 0.20);
+}
+
+
+/* ESTADO DESABILITADO */
+
+.add_participantes_button:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.7;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   ESTADO DE ENVIO
+   ========================================================= */
+
+.add_participantes_button.is-loading {
+    position: relative;
+
+    cursor: wait;
+
+    background: #145B4A;
+}
+
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .integrante-form {
+        padding: 10px 15px 30px;
+    }
+
+    .integrante-form__titulo {
+        font-size: 22px;
+    }
+
+    .integrante-form__card {
+        border-radius: 7px;
+    }
+
+    .integrante-form__form {
+        padding: 22px;
+    }
+
+    .integrante-form__acoes {
+        justify-content: stretch;
+    }
+
+    .add_participantes_button {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    .integrante-form {
+        padding: 5px 10px 25px;
+    }
+
+    .integrante-form__titulo {
+        font-size: 20px;
+    }
+
+    .integrante-form__subtitulo {
+        font-size: 13px;
+    }
+
+    .integrante-form__form {
+        padding: 18px;
+    }
+
+    .form-field {
+        margin-bottom: 20px;
+    }
+}
