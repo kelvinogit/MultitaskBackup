@@ -39,8 +39,14 @@
           data-nome="{{ projeto.nome }}"
           data-status="{{ projeto.status }}"
           data-feitos="{{ projeto.feitos }}"
-          data-descricao="{{ projeto.descricao }}">Editar</button>
+          data-descricao="{{ projeto.descricao }}">Editar</button> 
+          
+          
           </div>
+          <button type="button" class="proj-delete-btn" data-delete-projeto data-delete-url="{% url 'core:projeto_delete' projeto.pk %}">Excluir</button>
+        
+          
+          
         </div>
         <div class="project-item-deadline">
           {% if projeto.prazo %}Prazo: {{ projeto.prazo|date:"d/m/Y" }}{% else %}Sem prazo definido{% endif %}

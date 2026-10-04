@@ -307,6 +307,14 @@ def projeto_add_integrante(request):
         'form':form
     }
     return render(request, get_template(request.user, 'projeto_integrante_form'), context)
+
+@login_required
+@require_POST
+def projeto_delete_integrante(request, pk):
+    integrante = get_object_or_404(ParticipacaoProjeto, pk=pk)
+    integrante.delete()
+    return JsonResponse({'ok' : True})
+
     
 @login_required
 @require_POST

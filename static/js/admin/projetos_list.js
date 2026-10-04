@@ -162,4 +162,70 @@ document.addEventListener("DOMContentLoaded", () => {
             modalError.hidden = false;
         }
     });
+
+        function getCookie(name) {
+        const match = document.cookie.match(
+            new RegExp("(^|;\\s*)" + name + "=([^;]*)")
+        );
+        return match ? decodeURIComponent(match[2]) : null;
+    }
+
+    function removeItem(item) {
+        const index = items.indexOf(item);
+        if (index !== -1) items.splice(index, 1);
+
+        item.remove();
+
+        // Era o último projeto: recarrega para mostrar o estado vazio do template
+        if (!items.length) {
+            window.location.reload();
+            return;
+        }
+
+        applyFilter();
+    }
+
+    document.querySelectorAll("[data-delete-projeto]").forEach((button) => {
+        button.addEventListener("click", async (event) => {
+            event.stopPropagation();
+
+            const item = button.closest(".project-item");
+            const url = button.dataset.deleteUrl;
+            if (!item || !url) return;
+
+            const nome =
+                item.querySelector(".project-item-name")?.textContent.trim() ||
+                "este projeto";
+
+            if (!window.confirm(`Excluir "${nome}"? Essa ação não pode ser desfeita.`)) return;
+
+            button.disabled = true;
+            const originalText = button.textContent;
+            button.textContent = "Excluindo...";
+
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken"),
+                        "X-Requested-With": "XMLHttpRequest",
+                    },
+                });
+                const data = await response.json();
+
+                if (!response.ok || !data.ok) {
+                    throw new Error("Falha ao excluir projeto");
+                }
+            } catch (err) {
+                console.error("Erro ao excluir projeto:", err);
+                button.disabled = false;
+                button.textContent = originalText;
+                window.alert("Não foi possível excluir o projeto. Tente novamente.");
+                return;
+            }
+
+            removeItem(item);
+        });
+    });
+
 });
