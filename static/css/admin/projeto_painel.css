@@ -745,3 +745,30 @@
     }
 
 }
+
+
+.delete-integrante-button {
+    background-color: #fff;
+    color: #e5484d;
+    border: 1px solid #e5484d;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.delete-integrante-button:hover {
+    background-color: #e5484d;
+    color: #fff;
+}
+
+.delete-integrante-button:active {
+    transform: scale(0.97);
+}
+
+.delete-integrante-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(229, 72, 77, 0.15);
+}
