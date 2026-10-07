@@ -35,11 +35,7 @@ class Disciplina(models.Model):
 class Atividade(models.Model):
     class Tipo(models.TextChoices):
         TRABALHO = 'trabalho', 'Trabalho'
-        PROVA = 'prova', 'Prova'
         EXERCICIO = 'exercicio', 'Exercício'
-        SEMINARIO = 'seminario', 'Seminário'
-        PROJETO = 'projeto', 'Projeto'
-        COMPLEMENTAR = 'complementar', 'Atividade complementar'
         OUTROS = 'outros', 'Outros'
 
     class Prioridade(models.TextChoices):

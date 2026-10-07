@@ -1,0 +1,213 @@
+{% extends "agro/base.html" %}
+{% load static %}
+
+{% block title %}Atividades{% endblock %}
+{% block page_title %}Atividades{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agro/atividades_list.css' %}">
+{% endblock %}
+
+{% block content %}x
+<!-- Ícones extras desta página (complementam o sprite do base.html) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2.5 20h19Z"/><path d="M12 10v4M12 17.2v.1"/></symbol>
+    <symbol id="i-seed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4 4 6 7 6 10a6 6 0 0 1-12 0c0-3 2-6 6-10Z"/><path d="M12 9v8"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6"/><path d="M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+  </defs>
+</svg>
+
+<section class="activity-panel">
+  <div class="activity-header">
+    <div>
+      <h2>Minhas atividades</h2>
+      <p class="activity-subtitle">Acompanhe prazos, entregas e o andamento de cada disciplina.</p>
+    </div>
+
+    <a class="new-activity-button" href="{% url 'core:atividade_create' %}">
+      <svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg>
+      Nova atividade
+    </a>
+  </div>
+
+  {% if atividades %}
+    <div class="activity-toolbar">
+      <label class="search-field">
+        <span class="sr-only">Buscar atividade</span>
+        <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+        <input type="search" class="activity-search"
+               placeholder="Buscar por atividade ou disciplina">
+      </label>
+
+      <div class="activity-filters" role="group" aria-label="Filtrar por status">
+        <button type="button" class="activity-filter-chip is-active" data-status="todas">
+          Todas <span class="chip-count" data-count="todas">0</span>
+        </button>
+        <button type="button" class="activity-filter-chip" data-status="pendente">
+          <svg class="icon" aria-hidden="true"><use href="#i-seed"/></svg>
+          Pendentes <span class="chip-count" data-count="pendente">0</span>
+        </button>
+        <button type="button" class="activity-filter-chip" data-status="andamento">
+          <svg class="icon" aria-hidden="true"><use href="#i-sprout"/></svg>
+          Em andamento <span class="chip-count" data-count="andamento">0</span>
+        </button>
+        <button type="button" class="activity-filter-chip" data-status="concluida">
+          <svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>
+          Concluídas <span class="chip-count" data-count="concluida">0</span>
+        </button>
+        <button type="button" class="activity-filter-chip" data-status="atrasada">
+          <svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>
+          Atrasadas <span class="chip-count" data-count="atrasada">0</span>
+        </button>
+      </div>
+    </div>
+
+    <ul class="activity-list"
+        data-detail-url-base="{% url 'core:atividade_detail' pk=0 %}"
+        data-update-url-base="{% url 'core:atividade_update' pk=0 %}"
+        data-finalize-url-base="{% url 'core:atividade_finalizar' pk=0 %}"
+        data-delete-url-base="{% url 'core:atividade_delete' pk=0 %}">
+      {% for atividade in atividades %}
+      <li class="activity-item"
+          data-id="{{ atividade.pk }}"
+          data-status="{{ atividade.status }}"
+          data-prazo="{{ atividade.prazo|date:'c' }}"
+          data-search="{{ atividade.titulo|lower }} {{ atividade.disciplina.nome|lower }}"
+          tabindex="0"
+          role="button"
+          aria-haspopup="dialog">
+
+        <div class="activity-main">
+          <span class="activity-title">{{ atividade.titulo }}</span>
+
+          <div class="activity-meta">
+            <span class="meta-item">
+              <svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>
+              {{ atividade.disciplina.nome }}
+            </span>
+            <span class="meta-item">
+              <svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg>
+              Prazo: <time class="activity-prazo">{{ atividade.prazo|date:"d/m/Y H:i" }}</time>
+            </span>
+          </div>
+        </div>
+
+        <span class="activity-due" data-due></span>
+
+        <div class="activity-actions">
+          <span class="activity-status activity-status--{{ atividade.status }}">
+            <svg class="icon" aria-hidden="true"><use href="{% if atividade.status == 'concluida' %}#i-check{% elif atividade.status == 'andamento' %}#i-sprout{% elif atividade.status == 'atrasada' %}#i-alert{% else %}#i-seed{% endif %}"/></svg>
+            {{ atividade.get_status_display }}
+          </span>
+
+          {% if atividade.status != 'concluida' %}
+          <button type="button" class="finish-button" data-finalize-activity>
+            <svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>
+            Finalizar
+          </button>
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <p class="activity-empty activity-empty-dynamic" hidden>
+      Nenhuma atividade encontrada para esse filtro.
+    </p>
+  {% else %}
+    <div class="activity-empty">
+      <svg class="icon empty-icon" aria-hidden="true"><use href="#i-sprout"/></svg>
+      <strong>Nenhuma atividade cadastrada.</strong>
+      <p>Crie sua primeira atividade para organizar seus próximos prazos.</p>
+      <a href="{% url 'core:atividade_create' %}">Cadastrar atividade</a>
+    </div>
+  {% endif %}
+</section>
+
+<div class="activity-modal-overlay" id="activityModalOverlay" hidden>
+  <div class="activity-modal" role="dialog" aria-modal="true"
+       aria-labelledby="activityModalTitle">
+
+    <button type="button" class="modal-close" id="activityModalClose"
+            aria-label="Fechar janela">
+      <svg class="icon" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
+
+    <h2 id="activityModalTitle">Editar atividade</h2>
+    <p class="modal-error" id="activityModalGeneralError" hidden></p>
+
+    <form id="activityModalForm" class="activity-form">
+      {% csrf_token %}
+
+      <div class="form-field">
+        <label for="modalTitulo">Título</label>
+        <input id="modalTitulo" name="titulo" required>
+        <span data-error-for="titulo" class="field-error"></span>
+      </div>
+
+      <div class="form-field">
+        <label for="modalDisciplina">Disciplina</label>
+        <select id="modalDisciplina" name="disciplina" required></select>
+        <span data-error-for="disciplina" class="field-error"></span>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="modalTipo">Tipo</label>
+          <select id="modalTipo" name="tipo"></select>
+        </div>
+
+        <div class="form-field">
+          <label for="modalPrioridade">Prioridade</label>
+          <select id="modalPrioridade" name="prioridade"></select>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="modalPrazo">Prazo</label>
+          <input id="modalPrazo" name="prazo" type="datetime-local" required>
+          <span data-error-for="prazo" class="field-error"></span>
+        </div>
+
+        <div class="form-field">
+          <label for="modalStatus">Status</label>
+          <select id="modalStatus" name="status"></select>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label for="modalDescricao">Descrição</label>
+        <textarea id="modalDescricao" name="descricao" rows="3"></textarea>
+      </div>
+
+      <div class="form-field">
+        <label for="modalObservacoes">Observações</label>
+        <textarea id="modalObservacoes" name="observacoes" rows="3"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="delete-button" id="activityModalDelete">
+          <svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg>
+          Excluir
+        </button>
+        <div class="modal-actions-right">
+          <button type="button" class="finish-button" id="activityModalFinalize" hidden>
+            <svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>
+            Finalizar
+          </button>
+          <button type="submit" class="save-button" id="activityModalSave">Salvar alterações</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/agro/atividades_list.js' %}"></script>
+{% endblock %}
