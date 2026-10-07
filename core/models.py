@@ -35,7 +35,11 @@ class Disciplina(models.Model):
 class Atividade(models.Model):
     class Tipo(models.TextChoices):
         TRABALHO = 'trabalho', 'Trabalho'
+        PROVA = 'prova', 'Prova'
         EXERCICIO = 'exercicio', 'Exercício'
+        SEMINARIO = 'seminario', 'Seminário'
+        PROJETO = 'projeto', 'Projeto'
+        COMPLEMENTAR = 'complementar', 'Atividade complementar'
         OUTROS = 'outros', 'Outros'
 
     class Prioridade(models.TextChoices):
@@ -198,6 +202,9 @@ class Pontuacao(models.Model):
     def total_do_usuario(cls, usuario):
         total = cls.objects.filter(usuario=usuario.aggregate(total=models.Sum('pontos')))['total']
         return total or 0
+
+
+
 
 
         

@@ -12,4 +12,4 @@ def dashboard(request):
         'curso': request.user.curso,
         **get_dashboard_context(request.user),
     }
-    return render(request, 'agro/index.html', context)
+    return render(request, 'agronomico/index.html', context)
