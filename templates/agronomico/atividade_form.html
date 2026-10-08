@@ -1,0 +1,78 @@
+{% extends "agronomico/base.html" %}
+{% load static %}
+
+{% block title %}Nova atividade{% endblock %}
+{% block page_title %}Nova atividade{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agro/atividade_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="activity-form-panel">
+  <div class="form-header">
+    <div class="form-header-text">
+      <p class="section-eyebrow">Organização acadêmica</p>
+      <h2>Adicionar atividade</h2>
+      <p>Registre prazos, relatórios e entregas de campo para manter o semestre em dia.</p>
+    </div>
+
+    <a href="{% url 'core:atividade_list' %}" class="back-link">
+      ← Voltar para atividades
+    </a>
+  </div>
+
+  {% if not form.fields.disciplina.queryset.exists %}
+    <div class="empty-discipline-notice" role="status">
+      <strong>Você ainda não possui disciplinas cadastradas.</strong>
+      <p>
+        Antes de criar uma atividade, cadastre ao menos uma disciplina,
+        como Fitotecnia, Solos ou Entomologia.
+      </p>
+      <a href="{% url 'core:disciplina_create' %}" class="notice-link">Cadastrar disciplina</a>
+    </div>
+  {% else %}
+    <form method="post" class="activity-form">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="form-error-summary" role="alert">
+          {{ form.non_field_errors|join:" " }}
+        </div>
+      {% endif %}
+
+      <div class="form-grid">
+        {% for field in form %}
+          <div class="form-field {% if field.errors %}has-error{% endif %}">
+            <label for="{{ field.id_for_label }}">
+              {{ field.label }}
+              {% if field.field.required %}
+                <span class="required-mark" aria-hidden="true">*</span>
+              {% endif %}
+            </label>
+
+            {{ field }}
+
+            {% if field.help_text %}
+              <small class="field-help">{{ field.help_text }}</small>
+            {% endif %}
+
+            {% if field.errors %}
+              <span class="field-error" role="alert">{{ field.errors|join:", " }}</span>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="form-actions">
+        <a href="{% url 'core:atividade_list' %}" class="cancel-button">Cancelar</a>
+        <button type="submit" class="submit-button">Salvar atividade</button>
+      </div>
+    </form>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/agro/atividade_form.js' %}" defer></script>
+{% endblock %}

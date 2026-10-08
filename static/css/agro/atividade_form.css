@@ -1,0 +1,481 @@
+/* ==========================================================================
+   Engenharia Agronômica — formulário de atividade
+   Caminho sugerido: static/css/agronomia/atividade_forms.css
+
+   Paleta
+   --agro-leaf    verde folha (ação principal, foco)
+   --agro-soil    marrom terra (títulos e texto forte)
+   --agro-straw   amarelo palha (destaque e avisos)
+   --agro-field   fundo verde-claro do painel
+   --agro-clay    tom de erro
+   ========================================================================== */
+
+.activity-form-panel {
+  --agro-leaf: #2f6b3a;
+  --agro-leaf-dark: #214f2a;
+  --agro-leaf-soft: #e3eddc;
+  --agro-soil: #3e2c20;
+  --agro-soil-soft: #6b5848;
+  --agro-straw: #d9a93a;
+  --agro-straw-soft: #f8edcf;
+  --agro-field: #f3f6ee;
+  --agro-surface: #ffffff;
+  --agro-line: #cfd9c4;
+  --agro-clay: #a3341f;
+  --agro-clay-soft: #fbe9e4;
+
+  --radius-panel: 14px;
+  --radius-control: 8px;
+
+  position: relative;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 0 2rem;
+  background: var(--agro-surface);
+  border: 1px solid var(--agro-line);
+  border-radius: var(--radius-panel);
+  overflow: hidden;
+  color: var(--agro-soil);
+  line-height: 1.55;
+}
+
+/* Elemento de destaque: faixa de sulcos de plantio no topo do painel */
+.activity-form-panel::before {
+  content: "";
+  display: block;
+  height: 14px;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      var(--agro-leaf) 0 10px,
+      var(--agro-leaf-dark) 10px 12px,
+      var(--agro-leaf) 12px 22px,
+      transparent 22px 26px
+    );
+  border-bottom: 3px solid var(--agro-straw);
+}
+
+/* --------------------------------------------------------------------------
+   Cabeçalho
+   -------------------------------------------------------------------------- */
+
+.activity-form-panel .form-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.75rem 2rem 1.5rem;
+  background: var(--agro-field);
+  border-bottom: 1px solid var(--agro-line);
+}
+
+.activity-form-panel .form-header-text {
+  max-width: 52ch;
+}
+
+.activity-form-panel .section-eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--agro-leaf);
+  letter-spacing: 0.01em;
+}
+
+.activity-form-panel .form-header h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.75rem;
+  line-height: 1.2;
+  font-weight: 700;
+  color: var(--agro-soil);
+}
+
+.activity-form-panel .form-header p:last-child {
+  margin: 0;
+  color: var(--agro-soil-soft);
+}
+
+.activity-form-panel .back-link {
+  flex-shrink: 0;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--agro-leaf-dark);
+  text-decoration: none;
+  background: var(--agro-surface);
+  border: 1px solid var(--agro-line);
+  border-radius: var(--radius-control);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.activity-form-panel .back-link:hover {
+  background: var(--agro-leaf-soft);
+  border-color: var(--agro-leaf);
+}
+
+/* --------------------------------------------------------------------------
+   Formulário
+   -------------------------------------------------------------------------- */
+
+.activity-form-panel .activity-form {
+  padding: 1.75rem 2rem 0;
+}
+
+.activity-form-panel .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 1.5rem;
+}
+
+.activity-form-panel .form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+/* Campos longos ocupam a linha inteira */
+.activity-form-panel .form-field:has(textarea),
+.activity-form-panel .form-field:has(input[type="text"][name*="titulo"]),
+.activity-form-panel .form-field:has(input[type="text"][name*="nome"]) {
+  grid-column: 1 / -1;
+}
+
+.activity-form-panel .form-field label {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--agro-soil);
+}
+
+.activity-form-panel .required-mark {
+  margin-left: 0.15rem;
+  color: var(--agro-clay);
+}
+
+/* Widgets renderizados pelo Django (sem classe própria) */
+.activity-form-panel .form-field input[type="text"],
+.activity-form-panel .form-field input[type="number"],
+.activity-form-panel .form-field input[type="date"],
+.activity-form-panel .form-field input[type="datetime-local"],
+.activity-form-panel .form-field input[type="time"],
+.activity-form-panel .form-field input[type="email"],
+.activity-form-panel .form-field input[type="url"],
+.activity-form-panel .form-field select,
+.activity-form-panel .form-field textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  color: var(--agro-soil);
+  background: var(--agro-field);
+  border: 1px solid var(--agro-line);
+  border-radius: var(--radius-control);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.activity-form-panel .form-field textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+.activity-form-panel .form-field select {
+  appearance: none;
+  padding-right: 2.4rem;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--agro-leaf) 50%),
+    linear-gradient(135deg, var(--agro-leaf) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 50%,
+    calc(100% - 12px) 50%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.activity-form-panel .form-field input:hover,
+.activity-form-panel .form-field select:hover,
+.activity-form-panel .form-field textarea:hover {
+  border-color: var(--agro-leaf);
+}
+
+.activity-form-panel .form-field input:focus,
+.activity-form-panel .form-field select:focus,
+.activity-form-panel .form-field textarea:focus {
+  outline: none;
+  background-color: var(--agro-surface);
+  border-color: var(--agro-leaf);
+  box-shadow: 0 0 0 3px rgba(217, 169, 58, 0.45);
+}
+
+/* Checkbox (ex.: "concluída") */
+.activity-form-panel .form-field:has(input[type="checkbox"]) {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.activity-form-panel .form-field:has(input[type="checkbox"]) label {
+  order: 2;
+  margin: 0;
+}
+
+.activity-form-panel .form-field input[type="checkbox"] {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: var(--agro-leaf);
+  cursor: pointer;
+}
+
+.activity-form-panel .field-help {
+  font-size: 0.82rem;
+  color: var(--agro-soil-soft);
+}
+
+/* --------------------------------------------------------------------------
+   Erros
+   -------------------------------------------------------------------------- */
+
+.activity-form-panel .form-field.has-error input,
+.activity-form-panel .form-field.has-error select,
+.activity-form-panel .form-field.has-error textarea {
+  background: var(--agro-clay-soft);
+  border-color: var(--agro-clay);
+}
+
+.activity-form-panel .field-error {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--agro-clay);
+}
+
+.activity-form-panel .form-error-summary {
+  margin-bottom: 1.25rem;
+  padding: 0.85rem 1rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--agro-clay);
+  background: var(--agro-clay-soft);
+  border-left: 4px solid var(--agro-clay);
+  border-radius: var(--radius-control);
+}
+
+/* --------------------------------------------------------------------------
+   Ações
+   -------------------------------------------------------------------------- */
+
+.activity-form-panel .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+  padding: 1.25rem 0 0;
+  border-top: 1px dashed var(--agro-line);
+}
+
+.activity-form-panel .cancel-button,
+.activity-form-panel .submit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.4rem;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--radius-control);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.activity-form-panel .cancel-button {
+  color: var(--agro-soil-soft);
+  background: transparent;
+  border: 1px solid var(--agro-line);
+}
+
+.activity-form-panel .cancel-button:hover {
+  color: var(--agro-soil);
+  background: var(--agro-field);
+  border-color: var(--agro-soil-soft);
+}
+
+.activity-form-panel .submit-button {
+  color: #ffffff;
+  background: var(--agro-leaf);
+  border: 1px solid var(--agro-leaf);
+}
+
+.activity-form-panel .submit-button:hover {
+  background: var(--agro-leaf-dark);
+  border-color: var(--agro-leaf-dark);
+}
+
+.activity-form-panel .submit-button:active {
+  transform: translateY(1px);
+}
+
+.activity-form-panel .back-link:focus-visible,
+.activity-form-panel .cancel-button:focus-visible,
+.activity-form-panel .submit-button:focus-visible,
+.activity-form-panel .notice-link:focus-visible {
+  outline: 3px solid var(--agro-straw);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Aviso: nenhuma disciplina cadastrada
+   -------------------------------------------------------------------------- */
+
+.activity-form-panel .empty-discipline-notice {
+  margin: 1.75rem 2rem 0;
+  padding: 1.25rem 1.5rem;
+  background: var(--agro-straw-soft);
+  border: 1px solid var(--agro-straw);
+  border-left-width: 6px;
+  border-radius: var(--radius-control);
+}
+
+.activity-form-panel .empty-discipline-notice strong {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 1.05rem;
+  color: var(--agro-soil);
+}
+
+.activity-form-panel .empty-discipline-notice p {
+  margin: 0 0 1rem;
+  max-width: 55ch;
+  color: var(--agro-soil-soft);
+}
+
+.activity-form-panel .notice-link,
+.activity-form-panel .empty-discipline-notice a {
+  display: inline-block;
+  padding: 0.6rem 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  text-decoration: none;
+  background: var(--agro-leaf);
+  border-radius: var(--radius-control);
+  transition: background-color 0.15s ease;
+}
+
+.activity-form-panel .notice-link:hover,
+.activity-form-panel .empty-discipline-notice a:hover {
+  background: var(--agro-leaf-dark);
+}
+
+/* --------------------------------------------------------------------------
+   Responsivo
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 720px) {
+  .activity-form-panel .form-header {
+    flex-direction: column;
+    padding: 1.4rem 1.25rem 1.25rem;
+  }
+
+  .activity-form-panel .activity-form {
+    padding: 1.4rem 1.25rem 0;
+  }
+
+  .activity-form-panel .empty-discipline-notice {
+    margin: 1.4rem 1.25rem 0;
+  }
+
+  .activity-form-panel .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .activity-form-panel .form-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .activity-form-panel * {
+    transition: none !important;
+  }
+}
+
+/* ==========================================================================
+   Elementos criados pelo JS (atividade_form.js)
+   ========================================================================== */
+
+.activity-form-panel .char-counter {
+  align-self: flex-end;
+  font-size: 0.8rem;
+  color: var(--agro-soil-soft);
+}
+
+.activity-form-panel .char-counter.is-near-limit {
+  font-weight: 600;
+  color: var(--agro-clay);
+}
+
+.activity-form-panel .form-field textarea {
+  overflow-y: auto;
+}
+
+/* Indicador de prazo ao lado do campo de data */
+.activity-form-panel .date-hint {
+  align-self: flex-start;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.activity-form-panel .date-hint[hidden] {
+  display: none;
+}
+
+.activity-form-panel .date-hint[data-state="ok"] {
+  color: var(--agro-leaf-dark);
+  background: var(--agro-leaf-soft);
+  border-color: var(--agro-leaf);
+}
+
+.activity-form-panel .date-hint[data-state="soon"] {
+  color: var(--agro-soil);
+  background: var(--agro-straw-soft);
+  border-color: var(--agro-straw);
+}
+
+.activity-form-panel .date-hint[data-state="late"] {
+  color: var(--agro-clay);
+  background: var(--agro-clay-soft);
+  border-color: var(--agro-clay);
+}
+
+/* Botão em carregamento */
+.activity-form-panel .submit-button.is-loading {
+  position: relative;
+  padding-left: 2.6rem;
+  cursor: progress;
+  opacity: 0.85;
+}
+
+.activity-form-panel .submit-button.is-loading::before {
+  content: "";
+  position: absolute;
+  left: 1.1rem;
+  top: 50%;
+  width: 1rem;
+  height: 1rem;
+  margin-top: -0.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: agro-spin 0.7s linear infinite;
+}
+
+@keyframes agro-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .activity-form-panel .submit-button.is-loading::before {
+    animation-duration: 2s;
+  }
+}
