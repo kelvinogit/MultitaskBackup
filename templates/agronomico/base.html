@@ -63,13 +63,13 @@
         Atividades
       </a>
 
-      <a href="#"
+      <a href="{% url 'core:disciplina_list' %}"
          class="nav-item {% if request.resolver_match.url_name == 'disciplina_list' %}is-active{% endif %}">
         <svg class="icon nav-icon"><use href="#i-book"/></svg>
         Disciplinas
       </a>
 
-      <a href="#"
+      <a href="{% url 'core:projeto_list' %}"
          class="nav-item {% if request.resolver_match.url_name == 'projeto_list' %}is-active{% endif %}">
         <svg class="icon nav-icon"><use href="#i-tractor"/></svg>
         Projetos

@@ -1,0 +1,1258 @@
+/* =========================================================
+   Listagem de projetos — tema Engenharia Agronômica
+   Local sugerido: static/css/agro/projeto_list.css
+   ========================================================= */
+
+:root {
+  --agro-green-900: #1b3a24;
+  --agro-green-700: #2d5a3a;
+  --agro-green-600: #3d7a4d;
+  --agro-green-500: #52965f;
+  --agro-green-100: #e4efe3;
+  --agro-wheat: #d9a94a;
+  --agro-wheat-soft: #f6ecd2;
+  --agro-soil: #6b4a2f;
+  --agro-soil-soft: #eadfd3;
+  --agro-cream: #faf7ef;
+  --agro-white: #ffffff;
+  --agro-text: #26332a;
+  --agro-muted: #6a766d;
+  --agro-border: #d4ddcf;
+  --agro-error: #b3402f;
+  --agro-error-bg: #fbeae6;
+  --agro-radius: 14px;
+  --agro-shadow: 0 10px 30px rgba(27, 58, 36, 0.10);
+}
+
+.proj-panel [hidden],
+.proj-modal [hidden] {
+  display: none !important;
+}
+
+.proj-panel .sr-only,
+.proj-modal .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+body.proj-modal-open {
+  overflow: hidden;
+}
+
+/* ---------- Painel ---------- */
+.proj-panel {
+  position: relative;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 2.25rem 2.25rem 1.75rem;
+  background:
+    radial-gradient(circle at top right, var(--agro-wheat-soft) 0, transparent 34%),
+    var(--agro-white);
+  border: 1px solid var(--agro-border);
+  border-radius: var(--agro-radius);
+  box-shadow: var(--agro-shadow);
+  overflow: hidden;
+}
+
+.proj-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--agro-green-700) 0 28px,
+    var(--agro-green-500) 28px 56px,
+    var(--agro-wheat) 56px 84px
+  );
+}
+
+/* ---------- Cabeçalho ---------- */
+.proj-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px dashed var(--agro-border);
+}
+
+.proj-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0 0 0.3rem;
+  font-size: 1.75rem;
+  line-height: 1.2;
+  color: var(--agro-green-900);
+}
+
+.proj-header h2::before {
+  content: "";
+  flex: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  background: linear-gradient(135deg, var(--agro-green-700), var(--agro-green-500));
+  border-radius: 0 70% 0 70%;
+  transform: rotate(-6deg);
+}
+
+.proj-header p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--agro-muted);
+}
+
+.proj-new-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 1.25rem 0.7rem 0.85rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--agro-white);
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--agro-green-700), var(--agro-green-500));
+  border-radius: 999px;
+  box-shadow: 0 6px 14px rgba(45, 90, 58, 0.28);
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+
+.proj-new-btn span {
+  display: inline-grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 1.1rem;
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+.proj-new-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(45, 90, 58, 0.34);
+}
+
+.proj-new-btn:hover span {
+  transform: rotate(90deg);
+}
+
+/* ---------- Resumo ---------- */
+.proj-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 1.25rem;
+}
+
+.proj-summary > div {
+  --tone: var(--agro-green-600);
+  --tone-soft: rgba(61, 122, 77, 0.14);
+
+  position: relative;
+  padding: 1rem 1.1rem 0.9rem;
+  background: var(--agro-cream);
+  border: 1px solid var(--agro-border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.proj-summary > div:nth-child(2) {
+  --tone: var(--agro-wheat);
+  --tone-soft: rgba(217, 169, 74, 0.22);
+}
+
+.proj-summary > div:nth-child(3) {
+  --tone: var(--agro-green-700);
+  --tone-soft: rgba(45, 90, 58, 0.16);
+}
+
+.proj-summary > div:nth-child(4) {
+  --tone: var(--agro-error);
+  --tone-soft: rgba(179, 64, 47, 0.14);
+}
+
+.proj-summary > div::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: var(--tone);
+}
+
+/* curvas de nível decorativas */
+.proj-summary > div::after {
+  content: "";
+  position: absolute;
+  top: -34px;
+  right: -34px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle at center,
+    transparent 0 8px,
+    var(--tone-soft) 8px 9px
+  );
+  pointer-events: none;
+}
+
+.proj-summary > div:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(27, 58, 36, 0.10);
+}
+
+.proj-summary dt {
+  position: relative;
+  z-index: 1;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--agro-muted);
+}
+
+.proj-summary dd {
+  position: relative;
+  z-index: 1;
+  margin: 0.25rem 0 0;
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: var(--agro-green-900);
+}
+
+.proj-summary > div:nth-child(4) dd {
+  color: var(--agro-error);
+}
+
+/* ---------- Barra de ferramentas ---------- */
+.proj-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.proj-search,
+.proj-status-filter {
+  padding: 0.72rem 1rem;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--agro-text);
+  background-color: var(--agro-cream);
+  border: 1px solid var(--agro-border);
+  border-radius: 999px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+.proj-search {
+  flex: 1 1 300px;
+  padding-left: 2.8rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233d7a4d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 1rem 50%;
+  background-size: 18px 18px;
+}
+
+.proj-search::placeholder {
+  color: #a3ada5;
+}
+
+.proj-status-filter {
+  flex: 0 0 auto;
+  min-width: 210px;
+  padding-right: 2.6rem;
+  cursor: pointer;
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--agro-green-700) 50%),
+    linear-gradient(135deg, var(--agro-green-700) 50%, transparent 50%);
+  background-position:
+    calc(100% - 20px) 55%,
+    calc(100% - 14px) 55%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.proj-search:focus,
+.proj-status-filter:focus {
+  background-color: var(--agro-white);
+  border-color: var(--agro-green-600);
+  box-shadow: 0 0 0 4px rgba(82, 150, 95, 0.15);
+}
+
+.proj-new-btn:focus-visible,
+.proj-sort:focus-visible,
+.proj-edit-btn:focus-visible,
+.proj-delete-btn:focus-visible,
+.proj-empty a:focus-visible,
+.proj-modal-close:focus-visible,
+.proj-btn-primary:focus-visible,
+.proj-btn-secondary:focus-visible,
+.proj-confirm button:focus-visible {
+  outline: 3px solid var(--agro-wheat);
+  outline-offset: 2px;
+}
+
+mark.search-hit {
+  padding: 0 0.12em;
+  color: inherit;
+  background: var(--agro-wheat-soft);
+  box-shadow: inset 0 -0.45em 0 rgba(217, 169, 74, 0.45);
+  border-radius: 2px;
+}
+
+/* ---------- Tabela ---------- */
+.proj-table-wrap {
+  overflow-x: auto;
+  background: var(--agro-white);
+  border: 1px solid var(--agro-border);
+  border-radius: 12px;
+}
+
+.proj-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+}
+
+.proj-table th {
+  padding: 0.85rem 1rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--agro-green-700);
+  background: var(--agro-cream);
+  border-bottom: 2px solid var(--agro-border);
+  white-space: nowrap;
+}
+
+.proj-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.proj-sort::after {
+  content: "↕";
+  font-size: 0.85rem;
+  opacity: 0.35;
+  transition: opacity 0.2s, color 0.2s;
+}
+
+.proj-sort:hover::after {
+  opacity: 0.8;
+}
+
+th[aria-sort="ascending"] .proj-sort::after {
+  content: "↑";
+  color: #a8741a;
+  opacity: 1;
+}
+
+th[aria-sort="descending"] .proj-sort::after {
+  content: "↓";
+  color: #a8741a;
+  opacity: 1;
+}
+
+.proj-table td {
+  padding: 1rem;
+  vertical-align: middle;
+  border-bottom: 1px dashed var(--agro-border);
+}
+
+.proj-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.col-name { width: 36%; }
+.col-progress { min-width: 190px; }
+.col-actions { width: 1%; white-space: nowrap; text-align: right; }
+
+/* ---------- Linhas ---------- */
+.proj-row {
+  --tone: var(--agro-soil);
+  animation: projRowIn 0.45s ease both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+  transition: background 0.2s, opacity 0.3s, transform 0.3s;
+}
+
+.proj-row[data-state="progress"] { --tone: var(--agro-wheat); }
+.proj-row[data-state="done"]     { --tone: var(--agro-green-600); }
+.proj-row[data-state="late"]     { --tone: var(--agro-error); }
+
+.proj-row[hidden] {
+  display: none !important;
+}
+
+.proj-row > td:first-child {
+  box-shadow: inset 4px 0 0 var(--tone);
+}
+
+.proj-row:hover {
+  background: var(--agro-cream);
+}
+
+tbody.is-ready .proj-row {
+  animation-duration: 0.25s;
+  animation-delay: 0s;
+}
+
+.proj-row.is-removing {
+  opacity: 0;
+  transform: translateX(24px);
+  pointer-events: none;
+}
+
+.proj-row.is-updated > td {
+  animation: projFlash 1.6s ease;
+}
+
+.proj-name {
+  display: block;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--agro-green-900);
+}
+
+.proj-desc {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  max-width: 480px;
+  margin-top: 0.2rem;
+  overflow: hidden;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: var(--agro-muted);
+}
+
+.proj-date {
+  display: block;
+  font-weight: 600;
+  color: var(--agro-text);
+  white-space: nowrap;
+}
+
+.proj-deadline {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.2rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--agro-muted);
+  white-space: nowrap;
+}
+
+.proj-deadline:empty {
+  display: none;
+}
+
+.proj-deadline::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  background: currentColor;
+  border-radius: 0 70% 0 70%;
+}
+
+.proj-deadline.is-ok    { color: var(--agro-green-600); }
+.proj-deadline.is-soon  { color: var(--agro-soil); }
+.proj-deadline.is-today { color: #a8741a; }
+.proj-deadline.is-late  { color: var(--agro-error); }
+.proj-deadline.is-done  { color: var(--agro-green-700); }
+
+/* ---------- Situação ---------- */
+.proj-status {
+  display: inline-block;
+  padding: 0.28rem 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--agro-soil);
+  background: var(--agro-soil-soft);
+  border: 1px solid #d7c5b3;
+  border-radius: 999px;
+}
+
+.proj-row[data-status="andamento"] .proj-status {
+  color: #8a5f12;
+  background: var(--agro-wheat-soft);
+  border-color: #ecd9a8;
+}
+
+.proj-row[data-status="concluido"] .proj-status {
+  color: var(--agro-green-700);
+  background: var(--agro-green-100);
+  border-color: #bfd9be;
+}
+
+.proj-row[data-status="atrasado"] .proj-status {
+  color: var(--agro-error);
+  background: var(--agro-error-bg);
+  border-color: #e3b3a9;
+}
+
+/* ---------- Progresso ---------- */
+.proj-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.proj-progress-track {
+  flex: 1;
+  height: 0.65rem;
+  min-width: 90px;
+  overflow: hidden;
+  background: var(--agro-green-100);
+  border-radius: 999px;
+  box-shadow: inset 0 1px 2px rgba(27, 58, 36, 0.12);
+}
+
+.proj-progress-fill {
+  position: relative;
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #c9853f, var(--agro-wheat));
+  border-radius: inherit;
+  transition: width 0.9s cubic-bezier(0.22, 0.8, 0.3, 1);
+}
+
+.proj-progress-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.22) 0 6px,
+    transparent 6px 12px
+  );
+  border-radius: inherit;
+}
+
+.proj-progress-fill.is-mid {
+  background: linear-gradient(90deg, #9fbf5e, #7fae5f);
+}
+
+.proj-progress-fill.is-high {
+  background: linear-gradient(90deg, var(--agro-green-500), var(--agro-green-600));
+}
+
+.proj-progress-fill.is-full {
+  background: linear-gradient(90deg, var(--agro-green-700), var(--agro-green-900));
+}
+
+.proj-progress-label {
+  min-width: 2.8rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--agro-green-900);
+}
+
+/* ---------- Ações ---------- */
+.proj-edit-btn,
+.proj-delete-btn {
+  padding: 0.42rem 0.85rem;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.proj-edit-btn {
+  color: var(--agro-green-700);
+  border: 1px solid var(--agro-border);
+}
+
+.proj-edit-btn:hover {
+  color: var(--agro-white);
+  background: var(--agro-green-700);
+  border-color: var(--agro-green-700);
+}
+
+.proj-delete-btn {
+  margin-left: 0.35rem;
+  color: var(--agro-error);
+  border: 1px solid #e3b3a9;
+}
+
+.proj-delete-btn:hover {
+  color: var(--agro-white);
+  background: var(--agro-error);
+  border-color: var(--agro-error);
+}
+
+/* ---------- Rodapé e estados vazios ---------- */
+.proj-footer {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--agro-muted);
+}
+
+.proj-footer strong {
+  color: var(--agro-green-900);
+}
+
+.proj-empty-dynamic {
+  margin: 0;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--agro-muted);
+  background: var(--agro-cream);
+  border-top: 2px dashed var(--agro-border);
+}
+
+.proj-empty {
+  margin-top: 1.75rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  background: var(--agro-cream);
+  border: 2px dashed var(--agro-border);
+  border-radius: var(--agro-radius);
+}
+
+.proj-empty strong {
+  display: block;
+  font-size: 1.1rem;
+  color: var(--agro-green-900);
+}
+
+.proj-empty p {
+  margin: 0.4rem 0 1.1rem;
+  font-size: 0.93rem;
+  color: var(--agro-muted);
+}
+
+.proj-empty a {
+  display: inline-block;
+  padding: 0.65rem 1.3rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--agro-white);
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--agro-green-700), var(--agro-green-500));
+  border-radius: 999px;
+  box-shadow: 0 6px 14px rgba(45, 90, 58, 0.25);
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+
+.proj-empty a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 18px rgba(45, 90, 58, 0.32);
+}
+
+/* ---------- Modal de edição ---------- */
+.proj-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.proj-modal[hidden] {
+  display: none !important;
+}
+
+.proj-modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(27, 58, 36, 0.55);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.proj-modal.is-open .proj-modal-overlay {
+  opacity: 1;
+}
+
+.proj-modal-dialog {
+  position: relative;
+  width: 100%;
+  max-width: 580px;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  background: var(--agro-white);
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(27, 58, 36, 0.35);
+  opacity: 0;
+  transform: translateY(14px) scale(0.97);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.proj-modal.is-open .proj-modal-dialog {
+  opacity: 1;
+  transform: none;
+}
+
+.proj-modal-dialog::before {
+  content: "";
+  display: block;
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--agro-green-700) 0 28px,
+    var(--agro-green-500) 28px 56px,
+    var(--agro-wheat) 56px 84px
+  );
+}
+
+.proj-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem 0.75rem;
+}
+
+.proj-modal-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--agro-green-900);
+}
+
+.proj-modal-close {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--agro-green-700);
+  background: var(--agro-green-100);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+.proj-modal-close:hover {
+  color: var(--agro-white);
+  background: var(--agro-green-700);
+  transform: rotate(90deg);
+}
+
+.proj-modal-form {
+  display: grid;
+  gap: 1rem;
+  padding: 0.5rem 1.5rem 1.5rem;
+}
+
+.proj-field-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.proj-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.proj-field label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--agro-green-900);
+  transition: color 0.2s;
+}
+
+.proj-field:focus-within label {
+  color: var(--agro-green-600);
+}
+
+.proj-field input,
+.proj-field select,
+.proj-field textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  font-size: 0.96rem;
+  color: var(--agro-text);
+  background-color: var(--agro-cream);
+  border: 1px solid var(--agro-border);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+.proj-field textarea {
+  min-height: 90px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.proj-field select {
+  appearance: none;
+  padding-right: 2.4rem;
+  cursor: pointer;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--agro-green-700) 50%),
+    linear-gradient(135deg, var(--agro-green-700) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 55%,
+    calc(100% - 12px) 55%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.proj-field input:focus,
+.proj-field select:focus,
+.proj-field textarea:focus {
+  background-color: var(--agro-white);
+  border-color: var(--agro-green-600);
+  box-shadow: 0 0 0 4px rgba(82, 150, 95, 0.15);
+}
+
+.proj-field-error {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--agro-error);
+}
+
+.proj-field-error:empty {
+  display: none;
+}
+
+.proj-field.has-error input,
+.proj-field.has-error select,
+.proj-field.has-error textarea {
+  background-color: var(--agro-error-bg);
+  border-color: var(--agro-error);
+}
+
+.proj-field.has-error label {
+  color: var(--agro-error);
+}
+
+.proj-field.is-shaking {
+  animation: projShake 0.4s ease;
+}
+
+.proj-modal-error {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--agro-error);
+  background: var(--agro-error-bg);
+  border: 1px solid #e3b3a9;
+  border-left: 4px solid var(--agro-error);
+  border-radius: 8px;
+}
+
+.proj-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.7rem;
+  margin-top: 0.25rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--agro-border);
+}
+
+.proj-btn-primary,
+.proj-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.4rem;
+  font: inherit;
+  font-size: 0.93rem;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+}
+
+.proj-btn-secondary {
+  color: var(--agro-soil);
+  background: transparent;
+  border: 1px solid var(--agro-border);
+}
+
+.proj-btn-secondary:hover {
+  background: var(--agro-wheat-soft);
+  border-color: var(--agro-wheat);
+}
+
+.proj-btn-primary {
+  color: var(--agro-white);
+  background: linear-gradient(135deg, var(--agro-green-700), var(--agro-green-500));
+  border: none;
+  box-shadow: 0 6px 14px rgba(45, 90, 58, 0.28);
+}
+
+.proj-btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(45, 90, 58, 0.34);
+}
+
+.proj-btn-primary:disabled {
+  opacity: 0.8;
+  cursor: progress;
+}
+
+.proj-btn-primary.is-loading::after,
+.proj-confirm .is-loading::after {
+  content: "";
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-top-color: var(--agro-white);
+  border-radius: 50%;
+  animation: projSpin 0.7s linear infinite;
+}
+
+/* ---------- Confirmação de exclusão (criada pelo JS) ---------- */
+.proj-confirm {
+  width: calc(100vw - 2rem);
+  max-width: 440px;
+  padding: 0;
+  overflow: hidden;
+  color: var(--agro-text);
+  background: var(--agro-white);
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(27, 58, 36, 0.35);
+}
+
+.proj-confirm[open] {
+  animation: projModalIn 0.25s ease both;
+}
+
+.proj-confirm::backdrop {
+  background: rgba(27, 58, 36, 0.55);
+  backdrop-filter: blur(3px);
+}
+
+.proj-confirm-body {
+  padding: 1.75rem 1.5rem 1.4rem;
+  text-align: center;
+  border-top: 6px solid var(--agro-error);
+}
+
+.proj-confirm-icon {
+  display: grid;
+  place-items: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  margin: 0 auto 0.9rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--agro-error);
+  background: var(--agro-error-bg);
+  border-radius: 50%;
+}
+
+.proj-confirm h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  color: var(--agro-green-900);
+}
+
+.proj-confirm-text {
+  margin: 0 0 1.2rem;
+  font-size: 0.93rem;
+  line-height: 1.55;
+  color: var(--agro-muted);
+}
+
+.proj-confirm-text strong {
+  color: var(--agro-green-900);
+}
+
+.proj-confirm-error {
+  margin: -0.4rem 0 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--agro-error);
+}
+
+.proj-confirm-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.7rem;
+}
+
+.proj-confirm-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.3rem;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.proj-confirm-cancel {
+  color: var(--agro-soil);
+  background: transparent;
+  border: 1px solid var(--agro-border);
+}
+
+.proj-confirm-cancel:hover {
+  background: var(--agro-wheat-soft);
+  border-color: var(--agro-wheat);
+}
+
+.proj-confirm-ok {
+  color: var(--agro-white);
+  background: var(--agro-error);
+  border: none;
+  box-shadow: 0 6px 14px rgba(179, 64, 47, 0.3);
+}
+
+.proj-confirm-ok:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.proj-confirm-ok:disabled {
+  opacity: 0.8;
+  cursor: progress;
+}
+
+/* ---------- Avisos (toast) ---------- */
+.proj-toast-stack {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 1100;
+  display: grid;
+  gap: 0.6rem;
+  max-width: calc(100vw - 2.5rem);
+}
+
+.proj-toast {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.8rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--agro-white);
+  background: var(--agro-green-700);
+  border-left: 5px solid var(--agro-wheat);
+  border-radius: 10px;
+  box-shadow: 0 12px 26px rgba(27, 58, 36, 0.3);
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.25s, transform 0.25s;
+}
+
+.proj-toast.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.proj-toast::before {
+  content: "✓";
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.4rem;
+  height: 1.4rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+}
+
+.proj-toast.is-error {
+  background: var(--agro-error);
+  border-left-color: #f0b8ad;
+}
+
+.proj-toast.is-error::before {
+  content: "!";
+}
+
+/* ---------- Animações ---------- */
+@keyframes projRowIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes projFlash {
+  from { background: var(--agro-wheat-soft); }
+  to   { background: transparent; }
+}
+
+@keyframes projShake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-6px); }
+  75%      { transform: translateX(6px); }
+}
+
+@keyframes projSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes projModalIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 900px) {
+  .proj-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .proj-panel {
+    padding: 1.75rem 1.1rem 1.4rem;
+  }
+
+  .proj-header h2 {
+    font-size: 1.45rem;
+  }
+
+  .proj-new-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .proj-status-filter {
+    flex: 1 1 100%;
+  }
+
+  /* tabela vira lista de cards */
+  .proj-table-wrap {
+    overflow: visible;
+    background: transparent;
+    border: none;
+  }
+
+  .proj-table,
+  .proj-table tbody {
+    display: block;
+    min-width: 0;
+  }
+
+  .proj-table thead {
+    display: none;
+  }
+
+  .proj-row {
+    display: grid;
+    gap: 0.7rem;
+    margin-bottom: 1rem;
+    padding: 1rem 1rem 1rem 1.15rem;
+    background: var(--agro-cream);
+    border: 1px solid var(--agro-border);
+    border-left: 4px solid var(--tone);
+    border-radius: 12px;
+  }
+
+  .proj-table td {
+    display: block;
+    padding: 0;
+    border: none;
+  }
+
+  .proj-row > td:first-child {
+    box-shadow: none;
+  }
+
+  .proj-table td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 0.2rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--agro-muted);
+  }
+
+  .col-name,
+  .col-actions {
+    width: auto;
+  }
+
+  .col-actions {
+    display: flex !important;
+    gap: 0.5rem;
+    text-align: left;
+  }
+
+  .proj-delete-btn {
+    margin-left: 0;
+  }
+
+  .proj-field-row {
+    grid-template-columns: 1fr;
+  }
+
+  .proj-modal-footer,
+  .proj-confirm-actions {
+    flex-direction: column-reverse;
+  }
+
+  .proj-btn-primary,
+  .proj-btn-secondary,
+  .proj-confirm-actions button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 420px) {
+  .proj-summary {
+    gap: 0.7rem;
+  }
+
+  .proj-summary dd {
+    font-size: 1.6rem;
+  }
+}

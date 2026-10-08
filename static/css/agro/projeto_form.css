@@ -1,0 +1,575 @@
+/* =========================================================
+   Formulário de projeto — tema Engenharia Agronômica
+   Local sugerido: static/css/agro/projeto_form.css
+   ========================================================= */
+
+:root {
+  --agro-green-900: #1b3a24;
+  --agro-green-700: #2d5a3a;
+  --agro-green-600: #3d7a4d;
+  --agro-green-500: #52965f;
+  --agro-green-100: #e4efe3;
+  --agro-wheat: #d9a94a;
+  --agro-wheat-soft: #f6ecd2;
+  --agro-soil: #6b4a2f;
+  --agro-soil-soft: #eadfd3;
+  --agro-cream: #faf7ef;
+  --agro-white: #ffffff;
+  --agro-text: #26332a;
+  --agro-muted: #6a766d;
+  --agro-border: #d4ddcf;
+  --agro-error: #b3402f;
+  --agro-error-bg: #fbeae6;
+  --agro-radius: 14px;
+  --agro-shadow: 0 10px 30px rgba(27, 58, 36, 0.10);
+}
+
+.pf-wrap [hidden] {
+  display: none !important;
+}
+
+/* ---------- Painel ---------- */
+.pf-wrap {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.pf-card {
+  position: relative;
+  padding: 2.25rem 2.25rem 2rem;
+  background:
+    radial-gradient(circle at top right, var(--agro-wheat-soft) 0, transparent 36%),
+    var(--agro-white);
+  border: 1px solid var(--agro-border);
+  border-radius: var(--agro-radius);
+  box-shadow: var(--agro-shadow);
+  overflow: hidden;
+  animation: pfPanelIn 0.5s ease both;
+}
+
+.pf-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--agro-green-700) 0 28px,
+    var(--agro-green-500) 28px 56px,
+    var(--agro-wheat) 56px 84px
+  );
+}
+
+/* ---------- Cabeçalho ---------- */
+.pf-card-head {
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px dashed var(--agro-border);
+}
+
+.pf-card-head h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0 0 0.35rem;
+  font-size: 1.65rem;
+  line-height: 1.2;
+  color: var(--agro-green-900);
+}
+
+/* folha decorativa */
+.pf-card-head h2::before {
+  content: "";
+  flex: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  background: linear-gradient(135deg, var(--agro-green-700), var(--agro-green-500));
+  border-radius: 0 70% 0 70%;
+  transform: rotate(-6deg);
+}
+
+.pf-card-head p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--agro-muted);
+}
+
+/* ---------- Formulário ---------- */
+.pf-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+}
+
+.pf-field--full,
+.pf-alert,
+.pf-actions {
+  grid-column: 1 / -1;
+}
+
+/* ---------- Alerta geral ---------- */
+.pf-alert {
+  position: relative;
+  padding: 0.9rem 1rem 0.9rem 3.2rem;
+  color: var(--agro-error);
+  background: var(--agro-error-bg);
+  border: 1px solid #e3b3a9;
+  border-left: 4px solid var(--agro-error);
+  border-radius: 10px;
+  animation: pfFieldIn 0.4s ease both;
+}
+
+.pf-alert::before {
+  content: "!";
+  position: absolute;
+  top: 50%;
+  left: 1rem;
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--agro-white);
+  background: var(--agro-error);
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.pf-alert p {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.pf-alert p + p {
+  margin-top: 0.25rem;
+}
+
+.pf-alert.is-shaking {
+  animation: pfShake 0.4s ease;
+}
+
+/* ---------- Campos ---------- */
+.pf-field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+  padding: 0.9rem 1rem 0.85rem;
+  background: var(--agro-cream);
+  border: 1px solid var(--agro-border);
+  border-left: 4px solid var(--agro-green-500);
+  border-radius: 10px;
+  animation: pfFieldIn 0.45s ease both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.pf-field > label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--agro-green-900);
+  transition: color 0.2s;
+}
+
+.pf-required {
+  color: var(--agro-error);
+}
+
+.pf-field.is-focused {
+  background: var(--agro-white);
+  border-color: var(--agro-green-600);
+  border-left-color: var(--agro-wheat);
+  box-shadow: 0 0 0 4px rgba(82, 150, 95, 0.15);
+}
+
+.pf-field.is-focused > label {
+  color: var(--agro-green-600);
+}
+
+.pf-field.is-filled:not(.has-error):not(.is-focused) {
+  border-left-color: var(--agro-green-700);
+}
+
+/* ---------- Controles gerados pelo Django ---------- */
+.pf-field input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+.pf-field select,
+.pf-field textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  font-size: 0.97rem;
+  color: var(--agro-text);
+  background-color: var(--agro-white);
+  border: 1px solid var(--agro-border);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+
+.pf-field textarea {
+  min-height: 110px;
+  max-height: 360px;
+  overflow-y: auto;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.pf-field input:focus,
+.pf-field select:focus,
+.pf-field textarea:focus {
+  border-color: var(--agro-green-600);
+}
+
+.pf-field input::placeholder,
+.pf-field textarea::placeholder {
+  color: #a3ada5;
+}
+
+.pf-field input[type="date"] {
+  accent-color: var(--agro-green-700);
+  cursor: pointer;
+}
+
+.pf-field select {
+  appearance: none;
+  padding-right: 2.4rem;
+  cursor: pointer;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--agro-green-700) 50%),
+    linear-gradient(135deg, var(--agro-green-700) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 55%,
+    calc(100% - 12px) 55%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+/* checkbox / radio (caso o campo "feitos" use esses widgets) */
+.pf-field ul {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pf-field ul li label {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.93rem;
+  font-weight: 500;
+  color: var(--agro-text);
+  background: var(--agro-white);
+  border: 1px solid var(--agro-border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.pf-field ul li label:hover {
+  background: var(--agro-green-100);
+  border-color: var(--agro-green-500);
+}
+
+.pf-field input[type="checkbox"],
+.pf-field input[type="radio"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--agro-green-700);
+}
+
+/* ---------- Ajuda, contador, dica e erros ---------- */
+.pf-help {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--agro-muted);
+}
+
+.pf-counter {
+  align-self: flex-end;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--agro-muted);
+  transition: color 0.2s;
+}
+
+.pf-counter.is-near {
+  color: var(--agro-soil);
+}
+
+.pf-counter.is-full {
+  color: var(--agro-error);
+}
+
+.pf-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--agro-muted);
+}
+
+.pf-hint:empty {
+  display: none;
+}
+
+.pf-hint::before {
+  content: "";
+  flex: none;
+  width: 0.55rem;
+  height: 0.55rem;
+  background: currentColor;
+  border-radius: 0 70% 0 70%;
+}
+
+.pf-hint.is-ok    { color: var(--agro-green-600); }
+.pf-hint.is-soon  { color: var(--agro-soil); }
+.pf-hint.is-today { color: #a8741a; }
+.pf-hint.is-late  { color: var(--agro-error); }
+
+/* atalhos de prazo (criados pelo JS) */
+.pf-quick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.pf-quick button {
+  padding: 0.28rem 0.7rem;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--agro-green-700);
+  background: var(--agro-green-100);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+}
+
+.pf-quick button:hover {
+  color: var(--agro-white);
+  background: var(--agro-green-700);
+}
+
+.pf-quick button:active {
+  transform: scale(0.95);
+}
+
+.pf-quick button:focus-visible,
+.pf-btn:focus-visible {
+  outline: 3px solid var(--agro-wheat);
+  outline-offset: 2px;
+}
+
+/* erro */
+.pf-error {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--agro-error);
+}
+
+.pf-field.has-error {
+  background: var(--agro-error-bg);
+  border-color: #e3b3a9;
+  border-left-color: var(--agro-error);
+}
+
+.pf-field.has-error > label {
+  color: var(--agro-error);
+}
+
+.pf-field.has-error input:not([type="checkbox"]):not([type="radio"]),
+.pf-field.has-error select,
+.pf-field.has-error textarea {
+  border-color: var(--agro-error);
+}
+
+.pf-field.has-error.is-shaking {
+  animation: pfShake 0.4s ease;
+}
+
+/* ---------- Cor do campo "Situação" (definida pelo JS) ---------- */
+.pf-field[data-tone="done"]:not(.has-error):not(.is-focused) {
+  border-left-color: var(--agro-green-700);
+}
+.pf-field[data-tone="done"] select {
+  color: var(--agro-green-900);
+  background-color: #eaf4e9;
+  border-color: var(--agro-green-500);
+}
+
+.pf-field[data-tone="doing"]:not(.has-error):not(.is-focused) {
+  border-left-color: var(--agro-wheat);
+}
+.pf-field[data-tone="doing"] select {
+  color: var(--agro-soil);
+  background-color: var(--agro-wheat-soft);
+  border-color: #e6c77f;
+}
+
+.pf-field[data-tone="todo"]:not(.has-error):not(.is-focused) {
+  border-left-color: var(--agro-soil);
+}
+.pf-field[data-tone="todo"] select {
+  color: var(--agro-soil);
+  background-color: var(--agro-soil-soft);
+  border-color: #cdb9a5;
+}
+
+.pf-field[data-tone="late"]:not(.has-error):not(.is-focused) {
+  border-left-color: var(--agro-error);
+}
+.pf-field[data-tone="late"] select {
+  color: var(--agro-error);
+  background-color: var(--agro-error-bg);
+  border-color: #e3b3a9;
+}
+
+/* ---------- Ações ---------- */
+.pf-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.4rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--agro-border);
+}
+
+.pf-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s, background 0.2s, color 0.2s;
+}
+
+.pf-btn--ghost {
+  color: var(--agro-soil);
+  background: transparent;
+  border: 1px solid var(--agro-border);
+}
+
+.pf-btn--ghost:hover {
+  background: var(--agro-wheat-soft);
+  border-color: var(--agro-wheat);
+}
+
+.pf-btn--primary {
+  color: var(--agro-white);
+  background: linear-gradient(135deg, var(--agro-green-700), var(--agro-green-500));
+  border: none;
+  box-shadow: 0 6px 14px rgba(45, 90, 58, 0.28);
+}
+
+.pf-btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(45, 90, 58, 0.34);
+}
+
+.pf-btn--primary:active {
+  transform: translateY(0);
+}
+
+.pf-btn.is-loading {
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.pf-btn.is-loading::after {
+  content: "";
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-top-color: var(--agro-white);
+  border-radius: 50%;
+  animation: pfSpin 0.7s linear infinite;
+}
+
+.pf-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  transform: scale(0);
+  animation: pfRipple 0.55s ease-out;
+  pointer-events: none;
+}
+
+.pf-btn--ghost .pf-ripple {
+  background: rgba(217, 169, 74, 0.35);
+}
+
+/* ---------- Animações ---------- */
+@keyframes pfPanelIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes pfFieldIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes pfShake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-6px); }
+  75%      { transform: translateX(6px); }
+}
+
+@keyframes pfSpin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pfRipple {
+  to { transform: scale(3); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 640px) {
+  .pf-card {
+    padding: 1.75rem 1.1rem 1.5rem;
+  }
+
+  .pf-card-head h2 {
+    font-size: 1.4rem;
+  }
+
+  .pf-form {
+    grid-template-columns: 1fr;
+  }
+
+  .pf-actions {
+    flex-direction: column-reverse;
+  }
+
+  .pf-btn {
+    width: 100%;
+  }
+}

@@ -1,0 +1,708 @@
+/* =========================================================
+   Listagem de disciplinas — tema Engenharia Agronômica
+   Local sugerido: static/css/agro/disciplinas_list.css
+   ========================================================= */
+
+:root {
+  --agro-green-900: #1b3a24;
+  --agro-green-700: #2d5a3a;
+  --agro-green-600: #3d7a4d;
+  --agro-green-500: #52965f;
+  --agro-green-100: #e4efe3;
+  --agro-wheat: #d9a94a;
+  --agro-wheat-soft: #f6ecd2;
+  --agro-soil: #6b4a2f;
+  --agro-soil-soft: #eadfd3;
+  --agro-cream: #faf7ef;
+  --agro-white: #ffffff;
+  --agro-text: #26332a;
+  --agro-muted: #6a766d;
+  --agro-border: #d4ddcf;
+  --agro-error: #b3402f;
+  --agro-error-bg: #fbeae6;
+  --agro-radius: 14px;
+  --agro-shadow: 0 10px 30px rgba(27, 58, 36, 0.10);
+}
+
+.discipline-panel [hidden] {
+  display: none !important;
+}
+
+/* ---------- Painel ---------- */
+.discipline-panel {
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2.25rem 2.25rem 2rem;
+  background:
+    radial-gradient(circle at top right, var(--agro-wheat-soft) 0, transparent 34%),
+    var(--agro-white);
+  border: 1px solid var(--agro-border);
+  border-radius: var(--agro-radius);
+  box-shadow: var(--agro-shadow);
+  overflow: hidden;
+}
+
+.discipline-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--agro-green-700) 0 28px,
+    var(--agro-green-500) 28px 56px,
+    var(--agro-wheat) 56px 84px
+  );
+}
+
+/* ---------- Cabeçalho ---------- */
+.discipline-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px dashed var(--agro-border);
+}
+
+.section-eyebrow {
+  display: inline-block;
+  margin: 0 0 0.4rem;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--agro-green-700);
+  background: var(--agro-green-100);
+  border-radius: 999px;
+}
+
+.discipline-header h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.75rem;
+  line-height: 1.2;
+  color: var(--agro-green-900);
+}
+
+.discipline-header p {
+  margin: 0;
+  color: var(--agro-muted);
+  font-size: 0.95rem;
+}
+
+.new-discipline-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 1.25rem 0.7rem 0.85rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--agro-white);
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--agro-green-700), var(--agro-green-500));
+  border-radius: 999px;
+  box-shadow: 0 6px 14px rgba(45, 90, 58, 0.28);
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+
+.new-discipline-button span {
+  display: inline-grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 1.1rem;
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+.new-discipline-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(45, 90, 58, 0.34);
+}
+
+.new-discipline-button:hover span {
+  transform: rotate(90deg);
+}
+
+.new-discipline-button:focus-visible,
+.discipline-empty a:focus-visible {
+  outline: 3px solid var(--agro-wheat);
+  outline-offset: 2px;
+}
+
+/* ---------- Barra de busca e filtros (criada pelo JS) ---------- */
+.discipline-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem 1.25rem;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.search-box {
+  position: relative;
+  flex: 1 1 320px;
+  display: flex;
+  align-items: center;
+}
+
+.search-box svg {
+  position: absolute;
+  left: 0.95rem;
+  width: 18px;
+  height: 18px;
+  color: var(--agro-green-600);
+  pointer-events: none;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 0.75rem 2.8rem;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--agro-text);
+  background: var(--agro-cream);
+  border: 1px solid var(--agro-border);
+  border-radius: 999px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.search-box input::placeholder {
+  color: #a3ada5;
+}
+
+.search-box input:focus {
+  background: var(--agro-white);
+  border-color: var(--agro-green-600);
+  box-shadow: 0 0 0 4px rgba(82, 150, 95, 0.15);
+}
+
+.search-clear {
+  position: absolute;
+  right: 0.6rem;
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  padding: 0;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--agro-green-700);
+  background: var(--agro-green-100);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.search-clear:hover {
+  background: var(--agro-green-700);
+  color: var(--agro-white);
+}
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.filter-chip {
+  padding: 0.42rem 0.9rem;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--agro-green-700);
+  background: var(--agro-cream);
+  border: 1px solid var(--agro-border);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
+}
+
+.filter-chip:hover {
+  background: var(--agro-green-100);
+  border-color: var(--agro-green-500);
+}
+
+.filter-chip.is-active {
+  color: var(--agro-white);
+  background: var(--agro-green-700);
+  border-color: var(--agro-green-700);
+}
+
+.filter-chip:active {
+  transform: scale(0.96);
+}
+
+.search-box input:focus-visible,
+.filter-chip:focus-visible,
+.search-clear:focus-visible,
+.read-more:focus-visible,
+.discipline-delete-btn:focus-visible {
+  outline: 3px solid var(--agro-wheat);
+  outline-offset: 2px;
+}
+
+.results-count {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 1.1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--agro-muted);
+}
+
+.results-count::before {
+  content: "";
+  width: 0.6rem;
+  height: 0.6rem;
+  background: var(--agro-green-500);
+  border-radius: 0 70% 0 70%;
+}
+
+/* ---------- Grade de cards ---------- */
+.discipline-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.discipline-toolbar + .results-count + .discipline-grid {
+  margin-top: 0;
+}
+
+.discipline-card {
+  --tone: var(--agro-green-600);
+  --tone-soft: rgba(61, 122, 77, 0.14);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.4rem 1.3rem 1.2rem;
+  background: var(--agro-cream);
+  border: 1px solid var(--agro-border);
+  border-radius: var(--agro-radius);
+  overflow: hidden;
+  animation: cardIn 0.5s ease both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s, background 0.25s;
+}
+
+.discipline-card:nth-child(3n + 2) {
+  --tone: var(--agro-wheat);
+  --tone-soft: rgba(217, 169, 74, 0.2);
+}
+
+.discipline-card:nth-child(3n) {
+  --tone: var(--agro-soil);
+  --tone-soft: rgba(107, 74, 47, 0.14);
+}
+
+/* barra superior colorida */
+.discipline-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 5px;
+  background: var(--tone);
+}
+
+/* curvas de nível (relevo) no canto */
+.discipline-card::after {
+  content: "";
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  background: repeating-radial-gradient(
+    circle at center,
+    transparent 0 9px,
+    var(--tone-soft) 9px 10px
+  );
+  pointer-events: none;
+}
+
+.discipline-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.discipline-card:hover {
+  transform: translateY(-5px);
+  background: var(--agro-white);
+  border-color: var(--tone);
+  box-shadow: 0 14px 28px rgba(27, 58, 36, 0.14);
+}
+
+.discipline-grid.is-ready .discipline-card {
+  animation-duration: 0.3s;
+  animation-delay: 0s;
+}
+
+.discipline-card.is-filtered-out {
+  display: none;
+}
+
+.discipline-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+/* marca em formato de folha */
+.discipline-mark {
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--agro-white);
+  background: var(--tone);
+  border-radius: 0 65% 0 65%;
+  box-shadow: 0 4px 10px rgba(27, 58, 36, 0.18);
+  transition: transform 0.3s;
+}
+
+.discipline-card:hover .discipline-mark {
+  transform: rotate(-8deg) scale(1.06);
+}
+
+.semester-tag {
+  padding: 0.25rem 0.7rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--agro-soil);
+  background: var(--agro-wheat-soft);
+  border: 1px solid #ecd9a8;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.discipline-card h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.15rem;
+  line-height: 1.3;
+  color: var(--agro-green-900);
+}
+
+.discipline-professor {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 0.75rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--agro-green-700);
+}
+
+.discipline-professor::before {
+  content: "";
+  flex: none;
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--tone);
+  border-radius: 0 70% 0 70%;
+}
+
+.discipline-description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  margin: 0 0 0.4rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--agro-text);
+}
+
+.discipline-description.is-expanded {
+  display: block;
+  overflow: visible;
+}
+
+.discipline-description.is-empty {
+  font-style: italic;
+  color: var(--agro-muted);
+}
+
+.read-more {
+  align-self: flex-start;
+  padding: 0;
+  margin-bottom: 0.6rem;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--agro-green-600);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.read-more:hover {
+  color: var(--agro-green-900);
+}
+
+mark.search-hit {
+  padding: 0 0.12em;
+  color: inherit;
+  background: var(--agro-wheat-soft);
+  box-shadow: inset 0 -0.45em 0 rgba(217, 169, 74, 0.45);
+  border-radius: 2px;
+}
+
+/* ---------- Botão de excluir ---------- */
+.discipline-delete-btn {
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 0.45rem 0.95rem;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--agro-error);
+  background: transparent;
+  border: 1px solid #e3b3a9;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.discipline-description + .discipline-delete-btn,
+.read-more + .discipline-delete-btn {
+  margin-top: auto;
+}
+
+.discipline-card .discipline-description {
+  margin-bottom: 1rem;
+}
+
+.discipline-delete-btn:hover {
+  color: var(--agro-white);
+  background: var(--agro-error);
+  border-color: var(--agro-error);
+}
+
+/* ---------- Estados vazios ---------- */
+.discipline-empty,
+.no-results {
+  margin-top: 1.75rem;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  background: var(--agro-cream);
+  border: 2px dashed var(--agro-border);
+  border-radius: var(--agro-radius);
+}
+
+.no-results {
+  margin-top: 0;
+}
+
+.discipline-empty strong,
+.no-results strong {
+  display: block;
+  font-size: 1.1rem;
+  color: var(--agro-green-900);
+}
+
+.discipline-empty p,
+.no-results p {
+  margin: 0.4rem 0 1.1rem;
+  color: var(--agro-muted);
+  font-size: 0.93rem;
+}
+
+.discipline-empty a,
+.reset-filters {
+  display: inline-block;
+  padding: 0.65rem 1.3rem;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--agro-white);
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--agro-green-700), var(--agro-green-500));
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(45, 90, 58, 0.25);
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+
+.discipline-empty a:hover,
+.reset-filters:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 18px rgba(45, 90, 58, 0.32);
+}
+
+/* ---------- Modal de exclusão (criado pelo JS) ---------- */
+.delete-dialog {
+  width: calc(100vw - 2rem);
+  max-width: 440px;
+  padding: 0;
+  overflow: hidden;
+  color: var(--agro-text);
+  background: var(--agro-white);
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 24px 60px rgba(27, 58, 36, 0.35);
+}
+
+.delete-dialog[open] {
+  animation: modalIn 0.25s ease both;
+}
+
+.delete-dialog::backdrop {
+  background: rgba(27, 58, 36, 0.55);
+  backdrop-filter: blur(3px);
+}
+
+.delete-dialog-form {
+  padding: 1.75rem 1.5rem 1.4rem;
+  text-align: center;
+  border-top: 6px solid var(--agro-error);
+}
+
+.delete-dialog-icon {
+  display: grid;
+  place-items: center;
+  width: 3.2rem;
+  height: 3.2rem;
+  margin: 0 auto 0.9rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--agro-error);
+  background: var(--agro-error-bg);
+  border-radius: 50%;
+}
+
+.delete-dialog h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+  color: var(--agro-green-900);
+}
+
+.delete-dialog-text {
+  margin: 0 0 1.4rem;
+  font-size: 0.93rem;
+  line-height: 1.55;
+  color: var(--agro-muted);
+}
+
+.delete-dialog-text strong {
+  color: var(--agro-green-900);
+}
+
+.delete-dialog-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.7rem;
+}
+
+.dialog-cancel,
+.dialog-confirm {
+  padding: 0.7rem 1.3rem;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+
+.dialog-cancel {
+  color: var(--agro-soil);
+  background: transparent;
+  border: 1px solid var(--agro-border);
+}
+
+.dialog-cancel:hover {
+  background: var(--agro-wheat-soft);
+  border-color: var(--agro-wheat);
+}
+
+.dialog-confirm {
+  color: var(--agro-white);
+  background: var(--agro-error);
+  border: none;
+  box-shadow: 0 6px 14px rgba(179, 64, 47, 0.3);
+}
+
+.dialog-confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 18px rgba(179, 64, 47, 0.38);
+}
+
+.dialog-confirm:disabled {
+  opacity: 0.75;
+  cursor: progress;
+  transform: none;
+}
+
+.dialog-cancel:focus-visible,
+.dialog-confirm:focus-visible {
+  outline: 3px solid var(--agro-wheat);
+  outline-offset: 2px;
+}
+
+/* ---------- Animações ---------- */
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 640px) {
+  .discipline-panel {
+    padding: 1.75rem 1.1rem 1.5rem;
+  }
+
+  .discipline-header h2 {
+    font-size: 1.45rem;
+  }
+
+  .new-discipline-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .discipline-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .delete-dialog-actions {
+    flex-direction: column-reverse;
+  }
+
+  .dialog-cancel,
+  .dialog-confirm {
+    width: 100%;
+  }
+}

@@ -1,0 +1,415 @@
+/* =========================================================
+   Formulário de disciplina — tema Engenharia Agronômica
+   Local sugerido: static/css/agro/disciplina_form.css
+   ========================================================= */
+
+:root {
+  --agro-green-900: #1b3a24;
+  --agro-green-700: #2d5a3a;
+  --agro-green-600: #3d7a4d;
+  --agro-green-500: #52965f;
+  --agro-green-100: #e4efe3;
+  --agro-wheat: #d9a94a;
+  --agro-wheat-soft: #f6ecd2;
+  --agro-soil: #6b4a2f;
+  --agro-cream: #faf7ef;
+  --agro-white: #ffffff;
+  --agro-text: #26332a;
+  --agro-muted: #6a766d;
+  --agro-border: #d4ddcf;
+  --agro-error: #b3402f;
+  --agro-error-bg: #fbeae6;
+  --agro-radius: 14px;
+  --agro-shadow: 0 10px 30px rgba(27, 58, 36, 0.10);
+}
+
+/* ---------- Painel ---------- */
+.discipline-form-panel {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2.25rem 2.25rem 2rem;
+  background:
+    radial-gradient(circle at top right, var(--agro-wheat-soft) 0, transparent 38%),
+    var(--agro-white);
+  border: 1px solid var(--agro-border);
+  border-radius: var(--agro-radius);
+  box-shadow: var(--agro-shadow);
+  overflow: hidden;
+  animation: panelIn 0.5s ease both;
+}
+
+/* faixa superior estilo "linhas de plantio" */
+.discipline-form-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--agro-green-700) 0 28px,
+    var(--agro-green-500) 28px 56px,
+    var(--agro-wheat) 56px 84px
+  );
+}
+
+/* ---------- Cabeçalho ---------- */
+.form-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px dashed var(--agro-border);
+}
+
+.section-eyebrow {
+  display: inline-block;
+  margin: 0 0 0.4rem;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--agro-green-700);
+  background: var(--agro-green-100);
+  border-radius: 999px;
+}
+
+.form-header h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.65rem;
+  line-height: 1.2;
+  color: var(--agro-green-900);
+}
+
+.form-header p {
+  margin: 0;
+  color: var(--agro-muted);
+  font-size: 0.95rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.9rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--agro-green-700);
+  text-decoration: none;
+  border: 1px solid var(--agro-border);
+  border-radius: 999px;
+  background: var(--agro-cream);
+  transition: background 0.2s, color 0.2s, transform 0.2s, border-color 0.2s;
+}
+
+.back-link:hover {
+  background: var(--agro-green-700);
+  border-color: var(--agro-green-700);
+  color: var(--agro-white);
+  transform: translateX(-3px);
+}
+
+/* ---------- Formulário ---------- */
+.discipline-form {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.form-field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.9rem 1rem 0.85rem;
+  background: var(--agro-cream);
+  border: 1px solid var(--agro-border);
+  border-left: 4px solid var(--agro-green-500);
+  border-radius: 10px;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.form-field label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--agro-green-900);
+  letter-spacing: 0.01em;
+}
+
+.form-field.is-focused {
+  background: var(--agro-white);
+  border-color: var(--agro-green-600);
+  border-left-color: var(--agro-wheat);
+  box-shadow: 0 0 0 4px rgba(82, 150, 95, 0.15);
+}
+
+.form-field.is-focused label {
+  color: var(--agro-green-600);
+}
+
+.form-field.is-filled:not(.has-error) {
+  border-left-color: var(--agro-green-700);
+}
+
+/* ---------- Inputs gerados pelo Django ---------- */
+.discipline-form input[type="text"],
+.discipline-form input[type="number"],
+.discipline-form input[type="email"],
+.discipline-form input[type="date"],
+.discipline-form input[type="time"],
+.discipline-form select,
+.discipline-form textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  font: inherit;
+  font-size: 0.97rem;
+  color: var(--agro-text);
+  background: var(--agro-white);
+  border: 1px solid var(--agro-border);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.discipline-form textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.discipline-form select {
+  appearance: none;
+  padding-right: 2.4rem;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--agro-green-700) 50%),
+    linear-gradient(135deg, var(--agro-green-700) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 55%,
+    calc(100% - 12px) 55%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.discipline-form input:focus,
+.discipline-form select:focus,
+.discipline-form textarea:focus {
+  border-color: var(--agro-green-600);
+}
+
+.discipline-form input::placeholder,
+.discipline-form textarea::placeholder {
+  color: #a3ada5;
+}
+
+.discipline-form input[type="checkbox"],
+.discipline-form input[type="radio"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--agro-green-700);
+}
+
+/* ---------- Ajuda, contador e erros ---------- */
+.field-help {
+  font-size: 0.8rem;
+  color: var(--agro-muted);
+}
+
+.char-counter {
+  align-self: flex-end;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--agro-muted);
+  transition: color 0.2s;
+}
+
+.char-counter.is-near-limit {
+  color: var(--agro-soil);
+}
+
+.char-counter.is-at-limit {
+  color: var(--agro-error);
+}
+
+.form-field.has-error {
+  background: var(--agro-error-bg);
+  border-color: #e3b3a9;
+  border-left-color: var(--agro-error);
+}
+
+.form-field.has-error input,
+.form-field.has-error select,
+.form-field.has-error textarea {
+  border-color: var(--agro-error);
+}
+
+.field-error {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--agro-error);
+}
+
+.form-field.has-error.is-shaking {
+  animation: shake 0.4s ease;
+}
+
+/* ---------- Ações ---------- */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--agro-border);
+}
+
+.cancel-button,
+.submit-button {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.2s, background 0.2s, color 0.2s;
+}
+
+.cancel-button {
+  color: var(--agro-soil);
+  background: transparent;
+  border: 1px solid var(--agro-border);
+}
+
+.cancel-button:hover {
+  background: var(--agro-wheat-soft);
+  border-color: var(--agro-wheat);
+}
+
+.submit-button {
+  color: var(--agro-white);
+  background: linear-gradient(135deg, var(--agro-green-700), var(--agro-green-500));
+  border: none;
+  box-shadow: 0 6px 14px rgba(45, 90, 58, 0.28);
+}
+
+.submit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(45, 90, 58, 0.34);
+}
+
+.submit-button:active {
+  transform: translateY(0);
+}
+
+.submit-button:focus-visible,
+.cancel-button:focus-visible,
+.back-link:focus-visible {
+  outline: 3px solid var(--agro-wheat);
+  outline-offset: 2px;
+}
+
+.submit-button.is-loading {
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.submit-button.is-loading::after {
+  content: "";
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-top-color: var(--agro-white);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* efeito ripple (criado via JS) */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.45);
+  transform: scale(0);
+  animation: ripple 0.55s ease-out;
+  pointer-events: none;
+}
+
+/* ---------- Entrada escalonada dos campos ---------- */
+.form-field {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.form-field.is-visible {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease,
+    border-color 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
+}
+
+/* se o JS não carregar, os campos continuam visíveis */
+.no-js .form-field {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Animações ---------- */
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-6px); }
+  75%      { transform: translateX(6px); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ripple {
+  to { transform: scale(3); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .form-field { opacity: 1; transform: none; }
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 600px) {
+  .discipline-form-panel {
+    padding: 1.75rem 1.1rem 1.5rem;
+  }
+
+  .form-header h2 {
+    font-size: 1.4rem;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .cancel-button,
+  .submit-button {
+    width: 100%;
+  }
+}
