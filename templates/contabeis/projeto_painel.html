@@ -128,15 +128,23 @@
                     <span class="pp-status">{{ p.get_status_display|default:p.status }}</span>
 
                     <!--
-                        Integrantes: o nome tenta usuario.get_full_name, depois usuario.username
-                        e, por fim, o texto do próprio objeto (__str__).
-                        Se o campo do usuário em ParticipacaoProjeto tiver outro nome, troque "usuario".
+                        Integrantes: cada item é uma linha de ParticipacaoProjeto.
+                        O nome vem de integrante.nome; se esse campo tiver outro nome no seu
+                        model, troque "nome" abaixo. Sem nome, usa o texto do objeto (__str__).
+
+                        data-id = pk do ParticipacaoProjeto.
+                        data-delete-url = URL que apaga essa linha (usada pelo botão de remover no modal).
                     -->
                     <ul class="pp-team" aria-label="Integrantes">
                         {% for integrante in integrantes %}
                             {% if integrante.projeto_id == p.pk %}
-                                {% firstof integrante.usuario.get_full_name integrante.usuario.username integrante as nome %}
-                                <li class="pp-member" data-name="{{ nome }}"></li>
+                                {% firstof integrante.nome integrante as nome %}
+                                <li
+                                    class="pp-member"
+                                    data-name="{{ nome }}"
+                                    data-id="{{ integrante.pk }}"
+                                    data-delete-url="{% url 'core:projeto_delete_integrante' integrante.pk %}"
+                                ></li>
                             {% endif %}
                         {% endfor %}
                     </ul>
@@ -157,6 +165,8 @@
 
          <!-- =====================================================
      MODAL DE PARTICIPANTES
+     A URL de exclusão de cada integrante vem do próprio <li class="pp-member">
+     (data-delete-url); o modal só exibe a lista.
      ===================================================== -->
 
 <div

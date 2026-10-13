@@ -75,7 +75,7 @@
         Projetos
       </a>
 
-      <a href="#"
+      <a href="{% url 'core:painel_projeto' %}"
          class="nav-item {% if request.resolver_match.url_name == 'painel_projeto' %}is-active{% endif %}">
         <svg class="icon nav-icon"><use href="#i-chart"/></svg>
         Projeto Painel

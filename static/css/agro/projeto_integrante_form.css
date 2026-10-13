@@ -1,0 +1,305 @@
+/* ==========================================================================
+   Formulário de participante — tema Engenharia Agronômica
+   Arquivo: static/css/agro/projeto_integrante_form.css
+   Todas as variáveis ficam no escopo de .integrante-form para não
+   vazar para o restante do app.
+   ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Bitter:wght@600;700&family=Source+Sans+3:wght@400;500;600&display=swap");
+
+.integrante-form {
+    /* Paleta */
+    --campo-900: #1c3a28;   /* verde de lavoura madura */
+    --campo-700: #2f5d3a;
+    --campo-500: #5f8a3c;   /* folha */
+    --campo-100: #e4edd8;
+    --solo-800: #4a3426;    /* terra úmida */
+    --solo-500: #8a6a4f;
+    --trigo-500: #d4a62f;   /* espiga */
+    --trigo-100: #f6ecc9;
+    --superficie: #fbfcf7;
+    --fundo: #eef2e6;
+    --texto: #23301f;
+    --texto-suave: #5c6a55;
+    --borda: #c9d5b8;
+    --erro: #a63d2a;
+    --erro-fundo: #fbe9e4;
+
+    /* Tipografia */
+    --fonte-titulo: "Bitter", Georgia, serif;
+    --fonte-corpo: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 2rem 1rem 3rem;
+    font-family: var(--fonte-corpo);
+    color: var(--texto);
+}
+
+.integrante-form *,
+.integrante-form *::before,
+.integrante-form *::after {
+    box-sizing: border-box;
+}
+
+/* ---------- Cabeçalho ---------- */
+
+.integrante-form__header {
+    margin-bottom: 1.5rem;
+    padding-left: 1rem;
+    border-left: 4px solid var(--trigo-500);
+}
+
+.integrante-form__titulo {
+    margin: 0 0 0.35rem;
+    font-family: var(--fonte-titulo);
+    font-size: clamp(1.6rem, 4vw, 2.1rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--campo-900);
+}
+
+.integrante-form__subtitulo {
+    margin: 0;
+    max-width: 52ch;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--texto-suave);
+}
+
+/* ---------- Card (elemento de destaque: sulcos de plantio) ---------- */
+
+.integrante-form__card {
+    position: relative;
+    overflow: hidden;
+    background: var(--superficie);
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    box-shadow: 0 1px 0 var(--borda), 0 12px 28px -18px rgba(28, 58, 40, 0.45);
+}
+
+/* Faixa superior que lembra linhas de plantio vistas de cima */
+.integrante-form__card::before {
+    content: "";
+    display: block;
+    height: 22px;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            transparent 0 10px,
+            rgba(244, 236, 201, 0.16) 10px 12px
+        ),
+        linear-gradient(180deg, var(--solo-800) 0%, #5d4331 100%);
+    border-bottom: 3px solid var(--campo-500);
+}
+
+.integrante-form__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.35rem;
+    padding: 1.75rem 1.75rem 1.5rem;
+}
+
+/* ---------- Campos ---------- */
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.form-field__label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--campo-900);
+}
+
+.integrante-form__form input[type="text"],
+.integrante-form__form input[type="email"],
+.integrante-form__form input[type="number"],
+.integrante-form__form input[type="date"],
+.integrante-form__form select,
+.integrante-form__form textarea {
+    width: 100%;
+    min-height: 46px;
+    padding: 0.65rem 0.85rem;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--texto);
+    background-color: #fff;
+    border: 1.5px solid var(--borda);
+    border-radius: 6px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.integrante-form__form select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 2.5rem;
+    cursor: pointer;
+    background-image:
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'><path d='M1 1.5l6 6 6-6' fill='none' stroke='%232f5d3a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 0.95rem center;
+}
+
+.integrante-form__form input:hover,
+.integrante-form__form select:hover,
+.integrante-form__form textarea:hover {
+    border-color: var(--campo-500);
+}
+
+.integrante-form__form input:focus,
+.integrante-form__form select:focus,
+.integrante-form__form textarea:focus {
+    outline: none;
+    border-color: var(--campo-700);
+    box-shadow: 0 0 0 3px var(--campo-100), 0 0 0 4px var(--campo-500);
+}
+
+/* Campo já preenchido (classe aplicada pelo JS) */
+.form-field.is-filled select,
+.form-field.is-filled input {
+    background-color: #f7faf1;
+}
+
+.form-field__ajuda {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: var(--texto-suave);
+}
+
+/* ---------- Erros ---------- */
+
+.integrante-form__erros {
+    padding: 0.85rem 1rem;
+    color: var(--erro);
+    background: var(--erro-fundo);
+    border-left: 4px solid var(--erro);
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+.integrante-form__erros p {
+    margin: 0;
+}
+
+.integrante-form__erros p + p {
+    margin-top: 0.35rem;
+}
+
+.form-field__erro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--erro);
+}
+
+.form-field.has-error select,
+.form-field.has-error input,
+.form-field.has-error textarea {
+    border-color: var(--erro);
+    background-color: var(--erro-fundo);
+}
+
+.form-field.has-error select:focus,
+.form-field.has-error input:focus,
+.form-field.has-error textarea:focus {
+    box-shadow: 0 0 0 3px var(--erro-fundo), 0 0 0 4px var(--erro);
+}
+
+/* ---------- Ações ---------- */
+
+.integrante-form__acoes {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px dashed var(--borda);
+}
+
+.add_participantes_button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    min-height: 46px;
+    padding: 0.7rem 1.6rem;
+    font-family: var(--fonte-corpo);
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background: var(--campo-700);
+    border: none;
+    border-bottom: 3px solid var(--campo-900);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.1s ease, border-color 0.15s ease;
+}
+
+.add_participantes_button:hover {
+    background: var(--campo-500);
+    border-bottom-color: var(--campo-700);
+}
+
+.add_participantes_button:active {
+    transform: translateY(2px);
+    border-bottom-width: 1px;
+}
+
+.add_participantes_button:focus-visible {
+    outline: 3px solid var(--trigo-500);
+    outline-offset: 2px;
+}
+
+.add_participantes_button[disabled] {
+    cursor: progress;
+    opacity: 0.85;
+    background: var(--solo-500);
+    border-bottom-color: var(--solo-800);
+}
+
+/* Indicador de envio (brotinho girando) */
+.add_participantes_button.is-loading::before {
+    content: "";
+    width: 1em;
+    height: 1em;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: integrante-spin 0.7s linear infinite;
+}
+
+@keyframes integrante-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ---------- Responsivo ---------- */
+
+@media (max-width: 520px) {
+    .integrante-form {
+        padding: 1.25rem 0.75rem 2rem;
+    }
+
+    .integrante-form__form {
+        padding: 1.25rem 1rem 1.1rem;
+    }
+
+    .integrante-form__acoes {
+        justify-content: stretch;
+    }
+
+    .add_participantes_button {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .integrante-form *,
+    .integrante-form *::before {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}

@@ -1,0 +1,760 @@
+/* ==========================================================================
+   Painel de projetos — tema Engenharia Agronômica
+   Arquivo: static/css/agro/projeto_painel.css
+   Cada faixa (lane) é uma situação, como um talhão da lavoura:
+   atrasado = barro/argila, planejamento = trigo, andamento = folha,
+   concluído = mata fechada, pausado = terra seca.
+   ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Bitter:wght@600;700&family=Source+Sans+3:wght@400;500;600&display=swap");
+
+.pp-panel {
+    /* Paleta (mesma do formulário de participante) */
+    --campo-900: #1c3a28;
+    --campo-700: #2f5d3a;
+    --campo-500: #5f8a3c;
+    --campo-100: #e4edd8;
+    --solo-800: #4a3426;
+    --solo-500: #8a6a4f;
+    --trigo-500: #d4a62f;
+    --trigo-100: #f6ecc9;
+    --superficie: #fbfcf7;
+    --texto: #23301f;
+    --texto-suave: #5c6a55;
+    --borda: #c9d5b8;
+    --erro: #a63d2a;
+
+    --fonte-titulo: "Bitter", Georgia, serif;
+    --fonte-corpo: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem 1rem 3rem;
+    font-family: var(--fonte-corpo);
+    color: var(--texto);
+}
+
+.pp-panel *,
+.pp-panel *::before,
+.pp-panel *::after {
+    box-sizing: border-box;
+}
+
+.pp-panel .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ---------- Cores por situação (usadas por faixa e por cartão) ---------- */
+
+.pp-panel [data-lane="late"]     { --lane: var(--erro);       --lane-ink: #7d2b1d; }
+.pp-panel [data-lane="pending"]  { --lane: var(--trigo-500);  --lane-ink: #6e5409; }
+.pp-panel [data-lane="progress"] { --lane: var(--campo-500);  --lane-ink: #2f5d3a; }
+.pp-panel [data-lane="done"]     { --lane: var(--campo-900);  --lane-ink: #1c3a28; }
+.pp-panel [data-lane="hold"]     { --lane: var(--solo-500);   --lane-ink: #4a3426; }
+
+/* ---------- Cabeçalho ---------- */
+
+.pp-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.pp-header > div:first-child {
+    padding-left: 1rem;
+    border-left: 4px solid var(--trigo-500);
+}
+
+.pp-header h2 {
+    margin: 0 0 0.35rem;
+    font-family: var(--fonte-titulo);
+    font-size: clamp(1.6rem, 4vw, 2.1rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--campo-900);
+}
+
+.pp-header p {
+    margin: 0;
+    max-width: 58ch;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--texto-suave);
+}
+
+.pp-header-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.pp-search {
+    width: min(280px, 100%);
+    min-height: 44px;
+    padding: 0.6rem 0.85rem 0.6rem 2.5rem;
+    font-family: inherit;
+    font-size: 1rem;
+    color: var(--texto);
+    background-color: #fff;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%232f5d3a' stroke-width='2.2' stroke-linecap='round'><circle cx='11' cy='11' r='7'/><path d='M20 20l-3.5-3.5'/></svg>");
+    background-repeat: no-repeat;
+    background-position: 0.8rem center;
+    border: 1.5px solid var(--borda);
+    border-radius: 6px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pp-search:hover {
+    border-color: var(--campo-500);
+}
+
+.pp-search:focus {
+    outline: none;
+    border-color: var(--campo-700);
+    box-shadow: 0 0 0 3px var(--campo-100), 0 0 0 4px var(--campo-500);
+}
+
+.pp-new-btn,
+.pp-modal__add-button,
+.pp-empty a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.65rem 1.25rem;
+    font-family: var(--fonte-corpo);
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: #fff;
+    background: var(--campo-700);
+    border-bottom: 3px solid var(--campo-900);
+    border-radius: 6px;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.pp-new-btn:hover,
+.pp-modal__add-button:hover,
+.pp-empty a:hover {
+    background: var(--campo-500);
+}
+
+.pp-new-btn:active,
+.pp-modal__add-button:active,
+.pp-empty a:active {
+    transform: translateY(2px);
+    border-bottom-width: 1px;
+}
+
+.pp-new-btn:focus-visible,
+.pp-modal__add-button:focus-visible,
+.pp-empty a:focus-visible {
+    outline: 3px solid var(--trigo-500);
+    outline-offset: 2px;
+}
+
+/* ---------- Quadro e faixas ---------- */
+
+.pp-board {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.pp-lane {
+    display: grid;
+    grid-template-columns: 210px minmax(0, 1fr);
+    overflow: hidden;
+    background: var(--superficie);
+    border: 1px solid var(--borda);
+    border-left: 6px solid var(--lane, var(--campo-500));
+    border-radius: 10px;
+}
+
+.pp-lane[hidden] {
+    display: none;
+}
+
+.pp-lane-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+        "titulo contagem"
+        "dica   dica";
+    align-content: start;
+    gap: 0.4rem 0.5rem;
+    padding: 1.1rem 1rem;
+    background: var(--trigo-100);
+    background: color-mix(in srgb, var(--lane, var(--campo-500)) 9%, var(--superficie));
+    border-right: 1px dashed var(--borda);
+}
+
+.pp-lane-head h3 {
+    grid-area: titulo;
+    margin: 0;
+    font-family: var(--fonte-titulo);
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--lane-ink, var(--campo-900));
+}
+
+.pp-lane-count {
+    grid-area: contagem;
+    min-width: 28px;
+    padding: 0.1rem 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    color: #fff;
+    background: var(--lane, var(--campo-700));
+    border-radius: 999px;
+}
+
+.pp-lane-hint {
+    grid-area: dica;
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--texto-suave);
+}
+
+.pp-track {
+    display: flex;
+    align-items: stretch;
+    gap: 0.9rem;
+    padding: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-color: var(--borda) transparent;
+}
+
+.pp-lane-empty {
+    flex: 1;
+    align-self: center;
+    margin: 0;
+    padding: 1.25rem;
+    font-size: 0.95rem;
+    text-align: center;
+    color: var(--texto-suave);
+    border: 1.5px dashed var(--borda);
+    border-radius: 8px;
+}
+
+.pp-lane-empty[hidden] {
+    display: none;
+}
+
+/* ---------- Cartão de projeto ---------- */
+
+.pp-card {
+    display: flex;
+    flex: 0 0 272px;
+    flex-direction: column;
+    gap: 0.7rem;
+    padding: 1rem;
+    scroll-snap-align: start;
+    background: #fff;
+    border: 1px solid var(--borda);
+    border-top: 4px solid var(--lane, var(--campo-500));
+    border-radius: 8px;
+    box-shadow: 0 10px 22px -18px rgba(28, 58, 40, 0.55);
+}
+
+.pp-card[hidden] {
+    display: none;
+}
+
+.pp-card-title {
+    margin: 0;
+    font-family: var(--fonte-titulo);
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--campo-900);
+}
+
+.pp-card-desc {
+    display: -webkit-box;
+    margin: 0;
+    overflow: hidden;
+    font-size: 0.925rem;
+    line-height: 1.45;
+    color: var(--texto-suave);
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.pp-card-deadline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 0.75rem;
+    font-size: 0.9rem;
+}
+
+.pp-date {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--texto);
+}
+
+.pp-deadline {
+    color: var(--texto-suave);
+}
+
+.pp-deadline.is-soon  { color: #7a5d0c; font-weight: 600; }
+.pp-deadline.is-today { color: #7a5d0c; font-weight: 700; }
+.pp-deadline.is-late  { color: var(--erro); font-weight: 600; }
+
+/* ---------- Progresso (régua de lavoura: marcas a cada 10%) ---------- */
+
+.pp-progress {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.pp-progress-track {
+    position: relative;
+    flex: 1;
+    height: 12px;
+    overflow: hidden;
+    background: var(--campo-100);
+    border-radius: 3px;
+}
+
+.pp-progress-fill {
+    width: 0;
+    height: 100%;
+    background: var(--lane, var(--campo-500));
+    border-radius: 3px 0 0 3px;
+    transition: width 0.9s cubic-bezier(0.22, 0.8, 0.3, 1);
+}
+
+.pp-progress-track::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+        90deg,
+        transparent 0,
+        transparent calc(10% - 1px),
+        rgba(251, 252, 247, 0.85) calc(10% - 1px),
+        rgba(251, 252, 247, 0.85) 10%
+    );
+    pointer-events: none;
+}
+
+.pp-progress-label {
+    min-width: 3ch;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    color: var(--texto);
+}
+
+/* ---------- Rodapé do cartão ---------- */
+
+.pp-card-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7rem;
+    margin-top: auto;
+    padding-top: 0.8rem;
+    border-top: 1px dashed var(--borda);
+}
+
+.pp-status {
+    padding: 0.2rem 0.65rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--lane-ink, var(--campo-900));
+    background: var(--campo-100);
+    background: color-mix(in srgb, var(--lane, var(--campo-500)) 16%, #fff);
+    border-radius: 999px;
+}
+
+.pp-team {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pp-member {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    margin-left: -8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fff;
+    background: var(--campo-700);
+    border: 2px solid #fff;
+    border-radius: 50%;
+}
+
+.pp-member:first-child {
+    margin-left: 0;
+}
+
+.pp-member[hidden] {
+    display: none;
+}
+
+.pp-member[data-tone="1"] { background: var(--solo-500); }
+.pp-member[data-tone="2"] { background: #8a6a12; }
+.pp-member[data-tone="3"] { background: #4d7430; }
+
+.pp-member--more {
+    color: var(--texto);
+    background: var(--campo-100);
+}
+
+.pp-member-none {
+    font-size: 0.85rem;
+    color: var(--texto-suave);
+}
+
+.pp-show-members-btn {
+    flex: 1 1 100%;
+    min-height: 40px;
+    padding: 0.5rem 1rem;
+    font-family: var(--fonte-corpo);
+    font-size: 0.925rem;
+    font-weight: 600;
+    color: var(--campo-700);
+    background: transparent;
+    border: 1.5px solid var(--campo-700);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.pp-show-members-btn:hover {
+    color: #fff;
+    background: var(--campo-700);
+}
+
+.pp-show-members-btn:focus-visible {
+    outline: 3px solid var(--trigo-500);
+    outline-offset: 2px;
+}
+
+/* ---------- Modal de participantes ---------- */
+
+html.pp-modal-open {
+    overflow: hidden;
+}
+
+.pp-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+}
+
+.pp-modal[hidden] {
+    display: none;
+}
+
+.pp-modal__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(28, 58, 40, 0.6);
+    backdrop-filter: blur(2px);
+}
+
+.pp-modal__content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: min(480px, 100%);
+    max-height: 85vh;
+    overflow: hidden;
+    background: var(--superficie);
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    box-shadow: 0 24px 48px -20px rgba(28, 58, 40, 0.7);
+    animation: pp-modal-in 0.2s ease-out;
+}
+
+/* Mesma faixa de sulcos do card do formulário */
+.pp-modal__content::before {
+    content: "";
+    flex: none;
+    height: 16px;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            transparent 0 10px,
+            rgba(244, 236, 201, 0.16) 10px 12px
+        ),
+        linear-gradient(180deg, var(--solo-800) 0%, #5d4331 100%);
+    border-bottom: 3px solid var(--campo-500);
+}
+
+@keyframes pp-modal-in {
+    from { opacity: 0; transform: translateY(10px) scale(0.98); }
+    to   { opacity: 1; transform: none; }
+}
+
+.pp-modal__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem 0.5rem;
+}
+
+.pp-modal__eyebrow {
+    display: block;
+    margin-bottom: 0.15rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--solo-500);
+}
+
+.pp-modal__title {
+    margin: 0;
+    font-family: var(--fonte-titulo);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--campo-900);
+}
+
+.pp-modal__close {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: var(--campo-700);
+    background: transparent;
+    border: 1.5px solid var(--borda);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.pp-modal__close:hover {
+    background: var(--campo-100);
+    border-color: var(--campo-500);
+}
+
+.pp-modal__close:focus-visible {
+    outline: 3px solid var(--trigo-500);
+    outline-offset: 2px;
+}
+
+.pp-modal__body {
+    flex: 1;
+    padding: 0.5rem 1.5rem 1rem;
+    overflow-y: auto;
+}
+
+.pp-modal__description {
+    margin: 0 0 1rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--texto-suave);
+}
+
+.pp-modal__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pp-modal__member {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.6rem 0.8rem;
+    background: #fff;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+}
+
+.pp-modal__avatar {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff;
+    background: var(--campo-700);
+    border-radius: 50%;
+}
+
+.pp-modal__avatar[data-tone="1"] { background: var(--solo-500); }
+.pp-modal__avatar[data-tone="2"] { background: #8a6a12; }
+.pp-modal__avatar[data-tone="3"] { background: #4d7430; }
+
+.pp-modal__name {
+    flex: 1;
+    font-weight: 500;
+    color: var(--texto);
+    overflow-wrap: anywhere;
+}
+
+.pp-modal__empty {
+    margin: 0;
+    padding: 1.25rem;
+    text-align: center;
+    color: var(--texto-suave);
+    border: 1.5px dashed var(--borda);
+    border-radius: 8px;
+}
+
+.pp-modal__footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem 1.5rem 1.25rem;
+    border-top: 1px dashed var(--borda);
+}
+
+/* ---------- Estado vazio (nenhum projeto) ---------- */
+
+.pp-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 3rem 1.5rem;
+    text-align: center;
+    background: var(--superficie);
+    border: 2px dashed var(--borda);
+    border-radius: 10px;
+}
+
+.pp-empty strong {
+    font-family: var(--fonte-titulo);
+    font-size: 1.25rem;
+    color: var(--campo-900);
+}
+
+.pp-empty p {
+    margin: 0 0 0.75rem;
+    color: var(--texto-suave);
+}
+
+/* ---------- Responsivo ---------- */
+
+@media (max-width: 800px) {
+    .pp-lane {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .pp-lane-head {
+        border-right: none;
+        border-bottom: 1px dashed var(--borda);
+    }
+
+    .pp-card {
+        flex-basis: min(272px, 82vw);
+    }
+}
+
+@media (max-width: 520px) {
+    .pp-panel {
+        padding: 1.25rem 0.75rem 2rem;
+    }
+
+    .pp-header-actions,
+    .pp-search,
+    .pp-new-btn {
+        width: 100%;
+    }
+
+    .pp-modal__header,
+    .pp-modal__body,
+    .pp-modal__footer {
+        padding-left: 1.1rem;
+        padding-right: 1.1rem;
+    }
+
+    .pp-modal__add-button {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pp-panel *,
+    .pp-panel *::before {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ---------- Remover participante (modal) ---------- */
+
+.pp-modal__remove {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    color: var(--erro);
+    background: transparent;
+    border: 1.5px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.pp-modal__remove:hover {
+    background: #fbe9e4;
+    border-color: var(--erro);
+}
+
+.pp-modal__remove:focus-visible {
+    outline: 3px solid var(--trigo-500);
+    outline-offset: 2px;
+}
+
+.pp-modal__remove[disabled] {
+    cursor: progress;
+    opacity: 0.45;
+}
+
+.pp-modal__error {
+    margin: 0 0 0.75rem;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.9rem;
+    color: var(--erro);
+    background: #fbe9e4;
+    border-left: 4px solid var(--erro);
+    border-radius: 4px;
+}

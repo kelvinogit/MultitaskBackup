@@ -116,6 +116,28 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
+    /*
+    Lê o token CSRF do cookie do Django
+    (necessário em POST feito via fetch).
+    */
+
+    function getCookie(name) {
+
+        const match = document.cookie
+            .split("; ")
+            .find((cookie) =>
+                cookie.startsWith(`${name}=`)
+            );
+
+        return match
+            ? decodeURIComponent(
+                match.split("=").slice(1).join("=")
+            )
+            : "";
+
+    }
+
+
     /* =====================================================
        CLASSIFICAÇÃO DO STATUS
        ===================================================== */
@@ -236,8 +258,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
+        /*
+        Ignora o indicador +N (que também
+        possui a classe .pp-member), para que
+        buildTeam possa ser chamado de novo
+        depois de remover um participante.
+        */
+
         const members = Array.from(
-            team.querySelectorAll(".pp-member")
+            team.querySelectorAll(
+                ".pp-member:not(.pp-member--more)"
+            )
         );
 
 
@@ -263,11 +294,24 @@ document.addEventListener("DOMContentLoaded", () => {
             diretamente no card.
             */
 
-            if (index >= MAX_MEMBERS) {
-                member.hidden = true;
-            }
+            member.hidden =
+                index >= MAX_MEMBERS;
 
         });
+
+
+        /*
+        Remove o +N antigo, se existir.
+        Evita criar o +N duas vezes caso
+        buildTeam seja chamado novamente.
+        */
+
+        const existingMore =
+            team.querySelector(".pp-member--more");
+
+        if (existingMore) {
+            existingMore.remove();
+        }
 
 
         /*
@@ -276,19 +320,6 @@ document.addEventListener("DOMContentLoaded", () => {
         */
 
         if (members.length > MAX_MEMBERS) {
-
-            /*
-            Evita criar o +N duas vezes caso
-            buildTeam seja chamado novamente.
-            */
-
-            const existingMore =
-                team.querySelector(".pp-member--more");
-
-            if (existingMore) {
-                existingMore.remove();
-            }
-
 
             const extra =
                 members.slice(MAX_MEMBERS);
@@ -711,6 +742,172 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =====================================================
+       MENSAGEM DE ERRO DENTRO DO MODAL
+       ===================================================== */
+
+    function showModalError(message) {
+
+        if (!modalMembers) {
+            return;
+        }
+
+
+        const old =
+            modalMembers.querySelector(
+                ".pp-modal__error"
+            );
+
+
+        if (old) {
+            old.remove();
+        }
+
+
+        if (!message) {
+            return;
+        }
+
+
+        const error =
+            document.createElement("p");
+
+
+        error.className =
+            "pp-modal__error";
+
+
+        error.setAttribute(
+            "role",
+            "alert"
+        );
+
+
+        error.textContent =
+            message;
+
+
+        modalMembers.insertBefore(
+            error,
+            modalMembers.firstChild
+        );
+
+    }
+
+
+    /* =====================================================
+       REMOVER PARTICIPANTE
+       Apaga a linha de ParticipacaoProjeto pela URL
+       do próprio integrante (data-delete-url).
+       ===================================================== */
+
+    function deleteMember(card, member, button) {
+
+        const url =
+            member.dataset.deleteUrl;
+
+        const name =
+            member.dataset.name ||
+            "este participante";
+
+
+        if (!url) {
+
+            showModalError(
+                "Não foi possível identificar este participante."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !window.confirm(
+                `Remover ${name} deste projeto?`
+            )
+        ) {
+            return;
+        }
+
+
+        button.disabled =
+            true;
+
+
+        showModalError("");
+
+
+        fetch(url, {
+
+            method: "POST",
+
+            credentials: "same-origin",
+
+            headers: {
+
+                "X-CSRFToken":
+                    getCookie("csrftoken"),
+
+                "X-Requested-With":
+                    "XMLHttpRequest",
+
+                "Accept":
+                    "application/json",
+
+            },
+
+        })
+
+            .then((response) => {
+
+                if (!response.ok) {
+                    throw new Error(
+                        `http ${response.status}`
+                    );
+                }
+
+                return response.json();
+
+            })
+
+            .then((data) => {
+
+                if (!data || !data.ok) {
+                    throw new Error(
+                        "resposta inesperada"
+                    );
+                }
+
+
+                /*
+                Atualiza o card (avatares e +N)
+                e a lista do modal.
+                */
+
+                member.remove();
+
+                buildTeam(card);
+
+                openMembersModal(card);
+
+            })
+
+            .catch(() => {
+
+                button.disabled =
+                    false;
+
+                showModalError(
+                    "Não foi possível remover o participante. " +
+                    "Atualize a página e tente novamente."
+                );
+
+            });
+
+    }
+
+
+    /* =====================================================
        ABRIR MODAL
        ===================================================== */
 
@@ -899,6 +1096,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                     /*
+                    Botão remover (lixeira)
+                    */
+
+                    const removeButton =
+                        document.createElement(
+                            "button"
+                        );
+
+
+                    removeButton.type =
+                        "button";
+
+
+                    removeButton.className =
+                        "pp-modal__remove";
+
+
+                    removeButton.title =
+                        "Remover do projeto";
+
+
+                    removeButton.setAttribute(
+                        "aria-label",
+                        `Remover ${name} do projeto`
+                    );
+
+
+                    removeButton.innerHTML =
+                        '<svg width="16" height="16" viewBox="0 0 24 24" ' +
+                        'fill="none" stroke="currentColor" stroke-width="2" ' +
+                        'stroke-linecap="round" stroke-linejoin="round" ' +
+                        'aria-hidden="true">' +
+                        '<path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v5M14 11v5"/>' +
+                        '</svg>';
+
+
+                    removeButton.addEventListener(
+                        "click",
+                        () => {
+
+                            deleteMember(
+                                card,
+                                member,
+                                removeButton
+                            );
+
+                        }
+                    );
+
+
+                    /*
                     Monta participante
                     */
 
@@ -909,6 +1157,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     item.appendChild(
                         information
+                    );
+
+
+                    item.appendChild(
+                        removeButton
                     );
 
 
