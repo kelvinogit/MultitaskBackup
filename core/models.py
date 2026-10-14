@@ -175,30 +175,7 @@ class ParticipacaoProjeto(models.Model):
      def __str__(self):
          return f'{self.usuario} em {self.projeto}'
 
-class Pontuacao(models.Model):
-    """
-    Framework genérico de gamificação. Usado de forma mais intensa
-    pelo módulo Contábil, mas disponível para qualquer área.
-    """
-    usuario = models.ForeignKey(
-        'accounts.User',
-        on_delete=models.CASCADE,
-        related_name='pontuacoes'
-        )
-    acao = models.CharField(max_length=150)
-    pontos = models.IntegerField()
-    data = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        ordering = ['-data']
-
-    def __str__(self):
-        return f'{self.usuario} · {self.acao} ({self.pontos:+d})'
-
-    @classmethod
-    def total_do_usuario(cls, usuario):
-        total = cls.objects.filter(usuario=usuario.aggregate(total=models.Sum('pontos')))['total']
-        return total or 0
 
 
 

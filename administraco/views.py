@@ -2,7 +2,7 @@ from django.db.models import Sum
 from django.shortcuts import render
 
 from core.decorators import area_obrigatoria, autenticacao_obrigatoria
-from core.models import Pontuacao, Projeto
+from core.models import Projeto
 from core.views import get_dashboard_context
 
 
