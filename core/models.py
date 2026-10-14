@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinValueValidator, MaxValueValidator
+from decimal import Decimal
 
 # Create your models here.
 
@@ -24,6 +25,14 @@ class Disciplina(models.Model):
         on_delete=models.CASCADE,
         related_name='disciplinas',
     )
+    
+    media_final = models.DecimalField(
+    max_digits=4,
+    decimal_places=2,
+    default= Decimal('7.00'),
+    validators=[MinValueValidator(Decimal('0')), MaxValueValidator(Decimal('10'))],
+    verbose_name='Meta final (nota requerida)',
+)
 
     class Meta:
         ordering = ['nome']
