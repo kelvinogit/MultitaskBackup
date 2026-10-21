@@ -12,8 +12,8 @@ class Curso(models.Model):
     class Meta: 
        ordering = ['nome']
 
-       def __str__(self):
-           return self.nome
+    def __str__(self):
+        return self.nome
 
 class Disciplina(models.Model):
     nome = models.CharField(max_length=150)

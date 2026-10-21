@@ -636,3 +636,4 @@ function getCookie(nome) {
 
     return cookieValue;
 }
+
