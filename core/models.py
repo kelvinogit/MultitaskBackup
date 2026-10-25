@@ -175,25 +175,12 @@ class ParticipacaoProjeto(models.Model):
 
 
 class Avaliacao(models.Model):
-
-    disciplina = models.ForeignKey(
+    disciplina_id = models.ForeignKey(
         Disciplina,
         on_delete=models.CASCADE,
-        related_name='avaliacoes',
+        null=True,
+        related_name='disciplinas_notas',
     )
-    atividade = models.OneToOneField(
-        Atividade,
-        on_delete=models.SET_NULL,
-        null=True, blank=True,
-        related_name='avaliacao',
-    )
-    projeto = models.OneToOneField(
-        Projeto,
-        on_delete=models.SET_NULL,
-        null=True, blank=True,
-        related_name='avaliacao',
-    )
-
     nome = models.CharField(max_length=150) 
     nota = models.DecimalField(
         max_digits=4, decimal_places=2,
@@ -206,11 +193,11 @@ class Avaliacao(models.Model):
         default=Decimal('1.00'),
         validators=[MinValueValidator(Decimal('0.01'))],
     )
-    data = models.DateField(null=True, blank=True)  # data da prova/entrega
+    data = models.DateField(null=True, blank=True) 
 
     class Meta:
         ordering = ['data', 'nome']
-        unique_together = ('disciplina', 'nome')
+        unique_together = ('disciplina_id', 'nome')
 
     def __str__(self):
         return f'{self.nome} - {self.disciplina}'
@@ -219,10 +206,6 @@ class Avaliacao(models.Model):
     def lancada(self):
         return self.nota is not None
 
-    def clean(self):
-        from django.core.exceptions import ValidationError
-        if self.atividade and self.atividade.disciplina_id != self.disciplina_id:
-            raise ValidationError('A atividade pertence a outra disciplina.')
 
 
 
