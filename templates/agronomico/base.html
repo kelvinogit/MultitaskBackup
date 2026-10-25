@@ -51,7 +51,7 @@
     </div>
 
     <nav class="sidebar-nav" aria-label="Navegação principal">
-      <a href="#"
+      <a href="{% url 'agronomico:dashboard' %}"
          class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}is-active{% endif %}">
         <svg class="icon nav-icon"><use href="#i-field"/></svg>
         Dashboard
@@ -67,6 +67,12 @@
          class="nav-item {% if request.resolver_match.url_name == 'disciplina_list' %}is-active{% endif %}">
         <svg class="icon nav-icon"><use href="#i-book"/></svg>
         Disciplinas
+      </a>
+
+      <a href="{% url 'core:notas_list' %}"
+         class="nav-item {% if request.resolver_match.url_name == 'notas_list' %}is-active{% endif %}">
+        <svg class="icon nav-icon"><use href="#i-chart"/></svg>
+        Notas
       </a>
 
       <a href="{% url 'core:projeto_list' %}"

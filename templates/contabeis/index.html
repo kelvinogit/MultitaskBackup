@@ -1,8 +1,195 @@
 {% extends "contabeis/base.html" %}
+{% load static %}
 
-{% block title %}Dashboard{% endblock %}
-{% block page_title %}Dashboard{% endblock %}
+{% block title %}Painel Contábil{% endblock %}
+{% block page_title %}Painel Contábil{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/contabeis/index.css' %}">
+{% endblock %}
 
 {% block content %}
-  <p>Dashboard de Ciências Contábeis em construção.</p>
+<div class="accounting-dashboard">
+  <section class="accounting-hero">
+    <span class="accounting-hero-icon" aria-hidden="true">📒</span>
+    <div>
+      <h2>Painel Contábil</h2>
+      <p>Balanço acadêmico do semestre: notas, obrigações e execução de projetos.</p>
+    </div>
+  </section>
+
+  <section class="accounting-kpis" aria-label="Indicadores acadêmicos">
+    <article class="accounting-card accounting-kpi">
+      <span class="accounting-kpi-label">Média geral</span>
+      <strong class="accounting-kpi-value">{{ media_geral }}</strong>
+      <span class="accounting-kpi-support">Média das disciplinas com nota</span>
+    </article>
+    <article class="accounting-card accounting-kpi">
+      <span class="accounting-kpi-label">Índice de solvência</span>
+      <strong class="accounting-kpi-value">{{ indice_solvencia }}</strong>
+      <span class="accounting-kpi-support">{{ indice_solvencia_resumo }}</span>
+    </article>
+    <article class="accounting-card accounting-kpi">
+      <span class="accounting-kpi-label">Passivo circulante</span>
+      <strong class="accounting-kpi-value">{{ passivo_circulante|length }}</strong>
+      <span class="accounting-kpi-support">Atividades vencidas ou com prazo em até 7 dias</span>
+    </article>
+    <article class="accounting-card accounting-kpi">
+      <span class="accounting-kpi-label">Execução dos projetos</span>
+      <strong class="accounting-kpi-value">{{ execucao_media }}%</strong>
+      <span class="accounting-kpi-support">{{ projetos_ativos_count }} projeto(s) em andamento</span>
+    </article>
+  </section>
+
+  <section class="accounting-card accounting-section">
+    <div class="accounting-section-heading">
+      <div>
+        <span class="accounting-eyebrow">Desempenho acadêmico</span>
+        <h2>Balancete de notas</h2>
+      </div>
+      <span class="accounting-count">{{ disciplinas_comparaveis }} comparável(is)</span>
+    </div>
+
+    <div class="accounting-table-wrap">
+      <table class="accounting-table">
+        <thead>
+          <tr>
+            <th scope="col">Disciplina</th>
+            <th scope="col">Corte (meta)</th>
+            <th scope="col">Média (realizado)</th>
+            <th scope="col">Saldo</th>
+            <th scope="col">Situação</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in balancete %}
+            <tr>
+              <th scope="row">
+                <span class="accounting-discipline-name">{{ item.disciplina.nome }}</span>
+                {% if item.motivo_indisponivel %}
+                  <small class="accounting-missing-reason">{{ item.motivo_indisponivel }}</small>
+                {% endif %}
+              </th>
+              <td>{{ item.corte_texto }}</td>
+              <td>{{ item.media_texto }}</td>
+              <td class="accounting-value--{{ item.saldo_classe }}">{{ item.saldo_texto }}</td>
+              <td><span class="accounting-badge accounting-badge--{{ item.classe_situacao }}">{{ item.situacao }}</span></td>
+            </tr>
+          {% empty %}
+            <tr><td class="accounting-empty-cell" colspan="5">Nenhuma disciplina cadastrada.</td></tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th scope="row">Total das disciplinas comparáveis</th>
+            <td>{{ total_cortes }}</td>
+            <td>{{ total_medias }}</td>
+            <td class="accounting-value--{{ saldo_total_classe }}">{{ saldo_total }}</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <p class="accounting-note">Saldo = média − nota de corte. O índice de solvência compara apenas disciplinas com média e corte cadastrados.</p>
+  </section>
+
+  <div class="accounting-columns">
+    <section class="accounting-card accounting-section">
+      <div class="accounting-section-heading">
+        <div>
+          <span class="accounting-eyebrow">Obrigações acadêmicas</span>
+          <h2>Balanço de atividades</h2>
+        </div>
+        <span class="accounting-count">{{ total_atividades }} no total</span>
+      </div>
+
+      <div class="accounting-activity-group">
+        <h3><span>Ativo — concluídas</span><span>{{ atividades_concluidas|length }}</span></h3>
+        {% for atividade in atividades_concluidas %}
+          <article class="accounting-activity accounting-activity--complete">
+            <span class="accounting-activity-mark" aria-hidden="true">✓</span>
+            <div class="accounting-activity-info">
+              <strong>{{ atividade.titulo }}</strong>
+              <small>{% if atividade.disciplina %}{{ atividade.disciplina.nome }}{% else %}Sem disciplina{% endif %}</small>
+            </div>
+            <time>{{ atividade.prazo_texto }}</time>
+          </article>
+        {% empty %}
+          <p class="accounting-empty">Nenhuma atividade concluída.</p>
+        {% endfor %}
+      </div>
+
+      <div class="accounting-activity-group">
+        <h3><span>Passivo circulante</span><span>{{ passivo_circulante|length }}</span></h3>
+        {% for atividade in passivo_circulante %}
+          <article class="accounting-activity{% if atividade.atrasada_dashboard %} accounting-activity--late{% endif %}">
+            <span class="accounting-activity-mark" aria-hidden="true">!</span>
+            <div class="accounting-activity-info">
+              <strong>{{ atividade.titulo }}</strong>
+              <small>{% if atividade.disciplina %}{{ atividade.disciplina.nome }}{% else %}Sem disciplina{% endif %} · {{ atividade.get_status_display }}</small>
+            </div>
+            <time>
+              {% if atividade.atrasada_dashboard %}<span class="accounting-late-indicator">Atrasada · </span>{% endif %}{{ atividade.prazo_texto }}
+            </time>
+          </article>
+        {% empty %}
+          <p class="accounting-empty">Nenhuma atividade no passivo circulante.</p>
+        {% endfor %}
+      </div>
+
+      <div class="accounting-activity-group">
+        <h3><span>Passivo não circulante</span><span>{{ passivo_nao_circulante|length }}</span></h3>
+        {% for atividade in passivo_nao_circulante %}
+          <article class="accounting-activity">
+            <span class="accounting-activity-mark accounting-activity-mark--future" aria-hidden="true">○</span>
+            <div class="accounting-activity-info">
+              <strong>{{ atividade.titulo }}</strong>
+              <small>{% if atividade.disciplina %}{{ atividade.disciplina.nome }}{% else %}Sem disciplina{% endif %} · {{ atividade.get_status_display }}</small>
+            </div>
+            <time>{{ atividade.prazo_texto }}</time>
+          </article>
+        {% empty %}
+          <p class="accounting-empty">Nenhuma atividade no passivo não circulante.</p>
+        {% endfor %}
+      </div>
+      <p class="accounting-note">Atividades são exibidas conforme o status atual. O prazo vencido recebe indicação de atraso.</p>
+    </section>
+
+    <section class="accounting-card accounting-section">
+      <div class="accounting-section-heading">
+        <div>
+          <span class="accounting-eyebrow">Execução orçamentária</span>
+          <h2>Execução de projetos</h2>
+        </div>
+        <a class="accounting-link" href="{% url 'core:projeto_list' %}">Ver projetos</a>
+      </div>
+
+      <div class="accounting-project-list">
+        {% for projeto in projetos_dashboard %}
+          <article class="accounting-project">
+            <div class="accounting-project-heading">
+              <strong>{{ projeto.nome }}</strong>
+              <div class="accounting-avatars" aria-label="Equipe do projeto {{ projeto.nome }}">
+                {% for participante in projeto.participantes_dashboard %}
+                  <span class="accounting-avatar" title="{{ participante.nome }}">{{ participante.iniciais }}</span>
+                {% empty %}
+                  <span class="accounting-no-team">Sem equipe</span>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="accounting-progress-track" role="img" aria-label="{{ projeto.progresso }}% executado">
+              <span style="width: {{ projeto.progresso }}%"></span>
+            </div>
+            <div class="accounting-project-totals">
+              <span>Executado <strong>{{ projeto.progresso }}%</strong></span>
+              <span>A executar <strong>{{ projeto.a_executar }}%</strong></span>
+            </div>
+          </article>
+        {% empty %}
+          <p class="accounting-empty">Nenhum projeto cadastrado.</p>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+</div>
 {% endblock %}

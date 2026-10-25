@@ -1,11 +1,21 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Curso, Atividade, Projeto, Disciplina, ParticipacaoProjeto
+from django.urls import reverse
+from .models import Curso, Atividade, Projeto, Disciplina, ParticipacaoProjeto, Avaliacao
 from django.contrib.auth.decorators import login_required
 from . decorators import autenticacao_obrigatoria
-from .forms import DisciplinaForm, AtividadesForm, ProjetoForm, ParticipacaoProjetoForm
+from .forms import (
+    DisciplinaForm,
+    AtividadesForm,
+    ProjetoForm,
+    ParticipacaoProjetoForm,
+    AvaliacaoForm,
+    LancarNotaForm,
+)
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.utils import timezone
+from decimal import Decimal, ROUND_HALF_UP
+from django.db.models import Avg
 
 
 
@@ -63,7 +73,6 @@ def get_dashboard_context (usuario):
         'concluidas': atividades.filter(status=Atividade.Status.CONCLUIDA).count(),
         'atrasadas': atividades.filter(status=Atividade.Status.ATRASADA).count(),
     }
-
     contagem['total'] = sum(contagem.values())
 
     proximas_atividades = (
@@ -76,6 +85,18 @@ def get_dashboard_context (usuario):
         'contagem_atividades':contagem,
         'proximas_atividades': proximas_atividades,
     }
+
+
+def recalcular_media_final(disciplina):
+    media = disciplina.disciplinas_notas.filter(
+        nota__isnull=False,
+    ).aggregate(media=Avg('nota'))['media']
+    disciplina.media_final = (
+        media.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+        if media is not None else None
+    )
+    disciplina.save(update_fields=['media_final'])
+    return disciplina.media_final
 
 @autenticacao_obrigatoria()
 def dashboard(request):
@@ -180,7 +201,7 @@ def atividade_update(request, pk):
             'atividade': {
                 'id': atividade.pk,
                 'titulo': atividade.titulo,
-                'disciplina_nome': atividade.disciplina.nome,
+                'disciplina_nome': atividade.disciplina.nome if atividade.disciplina else '',
                 'prazo_exibicao': prazo_local.strftime('%d/%m/%Y %H:%M') if prazo_local else '',
                 'status': atividade.status,
                 'status_display': atividade.get_status_display(),
@@ -210,6 +231,29 @@ def atividade_finalizar(request, pk):
             'status': atividade.status,
             'status_display': atividade.get_status_display(),
         },
+    })
+
+
+@login_required
+@require_POST
+def atividade_alternar_conclusao(request, pk):
+    atividade = get_object_or_404(Atividade, pk=pk, usuario=request.user)
+    atividade.status = (
+        Atividade.Status.PENDENTE
+        if atividade.status == Atividade.Status.CONCLUIDA
+        else Atividade.Status.CONCLUIDA
+    )
+    atividade.save(update_fields=['status'])
+
+    atividades = Atividade.objects.filter(usuario=request.user)
+    total = atividades.count()
+    concluidas = atividades.filter(status=Atividade.Status.CONCLUIDA).count()
+    return JsonResponse({
+        'ok': True,
+        'finalizada': atividade.status == Atividade.Status.CONCLUIDA,
+        'concluidas': concluidas,
+        'total': total,
+        'percentual': round(concluidas * 100 / total) if total else 0,
     })
 
 
@@ -268,9 +312,7 @@ def projeto_update(request, pk):
                 'ok': False, "erros":form.errors})
 
     projeto = form.save()
-    progresso = Projeto.definir_progresso(projeto)
-
-    projeto.save(update_fields=["progresso"])
+    progresso = projeto.progresso
 
     return JsonResponse(
         {
@@ -286,6 +328,35 @@ def projeto_update(request, pk):
             },
         }
     )
+
+
+@login_required
+@require_POST
+def projeto_atualizar_progresso(request, pk):
+    projeto = get_object_or_404(Projeto, pk=pk, responsavel=request.user)
+    try:
+        progresso = int(request.POST.get('progresso', ''))
+    except (TypeError, ValueError):
+        return JsonResponse({'ok': False, 'error': 'Informe um percentual válido.'}, status=400)
+
+    if not 0 <= progresso <= 100:
+        return JsonResponse({'ok': False, 'error': 'O progresso deve estar entre 0 e 100.'}, status=400)
+
+    projeto.progresso = progresso
+    projeto.save(update_fields=['progresso'])
+
+    projetos_ativos = (
+        Projeto.objects
+        .filter(responsavel=request.user)
+        .exclude(status=Projeto.Status.CONCLUIDO)
+    )
+    media_progresso = projetos_ativos.aggregate(media=Avg('progresso'))['media'] or 0
+    return JsonResponse({
+        'ok': True,
+        'progresso': projeto.progresso,
+        'media_progresso': round(media_progresso),
+        'projetos_ativos': projetos_ativos.count(),
+    })
 
 @login_required
 def painel_projeto(request):
@@ -311,9 +382,52 @@ def projeto_add_integrante(request):
 @login_required
 @require_POST
 def projeto_delete_integrante(request, pk):
-    integrante = get_object_or_404(ParticipacaoProjeto, pk=pk)
+    integrante = get_object_or_404(
+        ParticipacaoProjeto,
+        pk=pk,
+        projeto__responsavel=request.user,
+    )
     integrante.delete()
     return JsonResponse({'ok' : True})
+
+
+@login_required
+@require_POST
+def projeto_add_integrante_dashboard(request, pk):
+    projeto = get_object_or_404(Projeto, pk=pk, responsavel=request.user)
+    prefix = f'integrante-{projeto.pk}'
+    form = ParticipacaoProjetoForm(
+        request.POST,
+        responsavel=request.user,
+        prefix=prefix,
+    )
+
+    if form.is_valid() and form.cleaned_data['projeto'].pk == projeto.pk:
+        integrante = form.save()
+        iniciais = ''.join(
+            parte[0] for parte in integrante.usuario.split()[:2] if parte
+        ).upper()
+        return JsonResponse({
+            'ok': True,
+            'integrante': {
+                'id': integrante.pk,
+                'nome': integrante.usuario,
+                'iniciais': iniciais or integrante.usuario[:1].upper(),
+                'tarefa': integrante.tarefa,
+                'delete_url': reverse(
+                    'core:projeto_delete_integrante',
+                    kwargs={'pk': integrante.pk},
+                ),
+            },
+        })
+
+    if form.is_valid():
+        form.add_error('projeto', 'Selecione o projeto correto para adicionar o integrante.')
+
+    return JsonResponse({
+        'ok': False,
+        'errors': form.errors.get_json_data(),
+    }, status=400)
 
     
 @login_required
@@ -389,6 +503,118 @@ def disciplina_update(request, pk):
         })
 
     return JsonResponse({'ok': False, 'errors': form.errors}, status=400)
+
+@login_required
+def notas_amostragen(request):
+    disciplinas = (
+        Disciplina.objects
+        .filter(usuario=request.user)
+        .prefetch_related('disciplinas_notas')
+    )
+    disciplinas_notas = []
+
+    for disciplina in disciplinas:
+        avaliacoes = list(disciplina.disciplinas_notas.all())
+        lancadas = [avaliacao for avaliacao in avaliacoes if avaliacao.nota is not None]
+        pendentes = [avaliacao for avaliacao in avaliacoes if avaliacao.nota is None]
+
+        peso_total = sum((avaliacao.peso for avaliacao in lancadas), Decimal('0'))
+        if peso_total:
+            media_atual = (
+                sum(
+                    (avaliacao.nota * avaliacao.peso for avaliacao in lancadas),
+                    Decimal('0'),
+                ) / peso_total
+            ).quantize(Decimal('0.01'))
+        else:
+            media_atual = None
+
+        nota_necessaria = disciplina.nota_necessaria
+        if nota_necessaria is not None and nota_necessaria > Decimal('10'):
+            situacao = 'Meta inviável'
+        elif (
+            media_atual is not None
+            and nota_necessaria is not None
+            and media_atual >= nota_necessaria
+        ):
+            situacao = 'Meta atingida'
+        else:
+            situacao = 'Em andamento'
+
+        disciplinas_notas.append({
+            'disciplina': disciplina,
+            'avaliacoes': avaliacoes,
+            'avaliacao_form': AvaliacaoForm(
+                disciplina=disciplina,
+                prefix=f'avaliacao-{disciplina.pk}',
+            ),
+            'media_atual': media_atual,
+            'tem_media': media_atual is not None,
+            'quantidade_lancadas': len(lancadas),
+            'quantidade_pendentes': len(pendentes),
+            'situacao': situacao,
+        })
+
+    return render(request, get_template(request.user, 'lancamento_notas'), {
+        'disciplinas_notas': disciplinas_notas,
+    })
+
+
+@login_required
+@require_POST
+def avaliacao_create(request, disciplina_pk):
+    disciplina = get_object_or_404(
+        Disciplina,
+        pk=disciplina_pk,
+        usuario=request.user,
+    )
+    form = AvaliacaoForm(
+        request.POST,
+        disciplina=disciplina,
+        prefix=f'avaliacao-{disciplina.pk}',
+    )
+
+    if form.is_valid():
+        avaliacao = form.save()
+        recalcular_media_final(disciplina)
+        return JsonResponse({
+            'ok': True,
+            'avaliacao': {
+                'id': avaliacao.pk,
+                'nome': avaliacao.nome,
+            },
+        })
+
+    return JsonResponse({
+        'ok': False,
+        'errors': form.errors.get_json_data(),
+    }, status=400)
+
+
+@login_required
+@require_POST
+def avaliacao_lancar_nota(request, avaliacao_pk):
+    avaliacao = get_object_or_404(
+        Avaliacao.objects.select_related('disciplina_id'),
+        pk=avaliacao_pk,
+        disciplina_id__usuario=request.user,
+        nota__isnull=True,
+    )
+    form = LancarNotaForm(request.POST, instance=avaliacao)
+
+    if form.is_valid():
+        avaliacao = form.save()
+        recalcular_media_final(avaliacao.disciplina_id)
+        return JsonResponse({
+            'ok': True,
+            'nota': str(avaliacao.nota),
+        })
+
+    return JsonResponse({
+        'ok': False,
+        'errors': form.errors.get_json_data(),
+    }, status=400)
+
 
 
 

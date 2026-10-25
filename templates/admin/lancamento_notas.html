@@ -1,0 +1,166 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block page_title %}Notas{% endblock %}
+{% block page_context %}Notas por disciplina{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'admin/css/lancamento_notas.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="panel notes-page">
+  <div class="notes-page-header">
+    <h2 class="panel-title">Notas por disciplina</h2>
+  </div>
+
+  {% if disciplinas_notas %}
+    <div class="notes-list">
+      {% for item in disciplinas_notas %}
+        <article class="notes-card">
+          <div class="notes-card-info">
+            <h3>{{ item.disciplina.nome }}</h3>
+            <p class="notes-card-meta">
+              {{ item.disciplina.professor|default:"Professor não informado" }}
+              {% if item.disciplina.semestre %} · {{ item.disciplina.semestre }}{% endif %}
+            </p>
+            <p class="notes-summary">
+              Média atual:
+              {% if item.tem_media %}
+                <strong>{{ item.media_atual }}</strong>
+              {% else %}
+                <strong>Ainda não possui nenhuma nota.</strong>
+              {% endif %}
+            </p>
+          </div>
+
+          <button type="button" class="notes-view-button"
+                  data-modal-target="notes-modal-{{ item.disciplina.pk }}">
+            Visualizar notas
+          </button>
+        </article>
+
+        <div class="notes-modal" id="notes-modal-{{ item.disciplina.pk }}"
+             hidden aria-hidden="true">
+          <section class="notes-modal-content" role="dialog" aria-modal="true"
+                   aria-labelledby="notes-title-{{ item.disciplina.pk }}">
+            <button type="button" class="notes-modal-close" aria-label="Fechar">&times;</button>
+            <h3 id="notes-title-{{ item.disciplina.pk }}">{{ item.disciplina.nome }} — avaliações</h3>
+            <p class="notes-modal-summary">
+              {% if item.tem_media %}
+                Média atual: <strong>{{ item.media_atual }}</strong>
+              {% else %}
+                Ainda não possui nenhuma nota.
+              {% endif %}
+            </p>
+            <p class="notes-modal-counts">
+              {{ item.quantidade_lancadas }} lançada(s) ·
+              {{ item.quantidade_pendentes }} pendente(s) · {{ item.situacao }}
+            </p>
+
+            {% if item.avaliacoes %}
+              <div class="notes-table-wrap">
+                <table>
+                  <thead>
+                    <tr><th>Avaliação</th><th>Peso</th><th>Data</th><th>Nota</th></tr>
+                  </thead>
+                  <tbody>
+                    {% for avaliacao in item.avaliacoes %}
+                      <tr>
+                        <td>{{ avaliacao.nome }}</td>
+                        <td>{{ avaliacao.peso }}</td>
+                        <td>{{ avaliacao.data|default:"Não informada" }}</td>
+                        <td>
+                          {% if avaliacao.lancada %}
+                            {{ avaliacao.nota }}
+                          {% else %}
+                            <span>Pendente</span>
+                            <button type="button" class="notes-view-button notes-grade-button"
+                                    data-modal-target="notes-grade-modal-{{ avaliacao.pk }}">
+                              Adicionar nota
+                            </button>
+                          {% endif %}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            {% else %}
+              <p class="notes-empty">Ainda não há avaliações cadastradas para esta disciplina.</p>
+            {% endif %}
+
+            <button type="button" class="notes-add-button"
+                    data-modal-target="notes-create-modal-{{ item.disciplina.pk }}">
+              Inserir nota
+            </button>
+          </section>
+        </div>
+
+        <div class="notes-modal notes-create-modal"
+             id="notes-create-modal-{{ item.disciplina.pk }}"
+             hidden aria-hidden="true">
+          <section class="notes-modal-content" role="dialog" aria-modal="true"
+                   aria-labelledby="notes-create-title-{{ item.disciplina.pk }}">
+            <button type="button" class="notes-modal-close" aria-label="Fechar">&times;</button>
+            <h3 id="notes-create-title-{{ item.disciplina.pk }}">
+              Inserir avaliação — {{ item.disciplina.nome }}
+            </h3>
+            <p class="notes-form-errors" role="alert" hidden></p>
+
+            <form class="notes-create-form" method="post"
+                  action="{% url 'core:avaliacao_create' disciplina_pk=item.disciplina.pk %}">
+              {% csrf_token %}
+              {% for field in item.avaliacao_form %}
+                <div class="notes-form-field">
+                  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                  {{ field }}
+                  {% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}
+                  <span class="notes-field-error" data-error-for="{{ field.name }}"></span>
+                </div>
+              {% endfor %}
+              <button type="submit" class="notes-add-button">Salvar avaliação</button>
+            </form>
+          </section>
+        </div>
+
+        {% for avaliacao in item.avaliacoes %}
+          {% if not avaliacao.lancada %}
+            <div class="notes-modal notes-create-modal notes-grade-modal"
+                 id="notes-grade-modal-{{ avaliacao.pk }}"
+                 hidden aria-hidden="true">
+              <section class="notes-modal-content" role="dialog" aria-modal="true"
+                       aria-labelledby="notes-grade-title-{{ avaliacao.pk }}">
+                <button type="button" class="notes-modal-close" aria-label="Fechar">&times;</button>
+                <h3 id="notes-grade-title-{{ avaliacao.pk }}">
+                  Adicionar nota — {{ avaliacao.nome }}
+                </h3>
+                <p class="notes-form-errors" role="alert" hidden></p>
+
+                <form class="notes-grade-form" method="post"
+                      action="{% url 'core:avaliacao_lancar_nota' avaliacao_pk=avaliacao.pk %}">
+                  {% csrf_token %}
+                  <div class="notes-form-field">
+                    <label for="nota-avaliacao-{{ avaliacao.pk }}">Nota (0 a 10)</label>
+                    <input id="nota-avaliacao-{{ avaliacao.pk }}" name="nota"
+                           type="number" min="0" max="10" step="0.01" required>
+                    <span class="notes-field-error" data-error-for="nota"></span>
+                  </div>
+                  <button type="submit" class="notes-add-button">Salvar nota</button>
+                </form>
+              </section>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="notes-empty">Você ainda não cadastrou nenhuma disciplina.</p>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'admin/js/lancamento_notas.js' %}" defer></script>
+{% endblock %}
+

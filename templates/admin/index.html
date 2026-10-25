@@ -9,119 +9,166 @@
 {% endblock %}
 
 {% block content %}
-<!-- KPI summary row -->
-<section class="kpi-row" aria-label="Resumo de atividades">
-
+<section class="kpi-row" aria-label="Indicadores acadêmicos">
   <article class="kpi-card">
-        <span class="kpi-dot kpi-dot--pending"></span>
-        <div class="kpi-text">
-          <span class="kpi-label">Atividades Pendentes</span>
-          <span class="kpi-value" data-count="{{ contagem.pendentes }}">{{ contagem.pendentes }}</span>
-        </div>
-      </article>
-      <article class="kpi-card">
-        <span class="kpi-dot kpi-dot--progress"></span>
-        <div class="kpi-text">
-          <span class="kpi-label">Em Andamento</span>
-          <span class="kpi-value" data-count="{{ contagem.andamento }}">{{ contagem.andamento }}</span>
-        </div>
-      </article>
-      <article class="kpi-card">
-        <span class="kpi-dot kpi-dot--done"></span>
-        <div class="kpi-text">
-          <span class="kpi-label">Concluídas</span>
-          <span class="kpi-value" data-count="{{ contagem.concluidas }}">{{ contagem.concluidas }}</span>
-        </div>
-      </article>
-      <article class="kpi-card">
-        <span class="kpi-dot kpi-dot--late"></span>
-        <div class="kpi-text">
-          <span class="kpi-label">Atrasadas</span>
-          <span class="kpi-value" data-count="{{ contagem.atrasadas }}">{{ contagem.atrasadas }}</span>
-        </div>
-      </article>
-    </section>
-
-<section class="mid-row">
-  <article class="panel panel--prazos">
-        <h2 class="panel-title">Próximos Prazos</h2>
-        <ul class="prazos-list">
-          {% for atividade in proximas_atividades %}
-          <li class="prazo-item">
-            <div class="prazo-info">
-              <span class="prazo-name">{{ atividade.titulo }}</span>
-              <span class="prazo-date">{{ atividade.prazo|date:"d/m/Y" }}</span>
-            </div>
-            <span class="tag tag--disciplina">{{ atividade.disciplina.nome }}</span>
-          </li>
-          {% empty %}
-          <li class="prazo-item">
-            <div class="prazo-info">
-              <span class="prazo-name">Nenhuma atividade pendente</span>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
-        <a href="{% url 'core:atividade_list' %}" class="panel-link">Ver todas as atividades</a>
-      </article>
-
-      <article class="panel panel--resumo">
-        <h2 class="panel-title">Resumo de Atividades</h2>
-        <div class="resumo-body">
-          <div class="resumo-chart">
-            <canvas id="resumoChart" width="150" height="150"></canvas>
-            <div class="resumo-chart-center">
-              <span class="resumo-chart-value" id="resumoTotalValue">{{ contagem.total }}</span>
-              <span class="resumo-chart-label">Total</span>
-            </div>
-          </div>
-          <ul class="resumo-legend">
-            <li><span class="legend-dot" style="background:#f5a524"></span>Pendentes <strong>{{ contagem.pendentes }}</strong></li>
-            <li><span class="legend-dot" style="background:#8b5cf6"></span>Em andamento <strong>{{ contagem.andamento }}</strong></li>
-            <li><span class="legend-dot" style="background:#22a06b"></span>Concluídas <strong>{{ contagem.concluidas }}</strong></li>
-            <li><span class="legend-dot" style="background:#e5484d"></span>Atrasadas <strong>{{ contagem.atrasadas }}</strong></li>
-          </ul>
-        </div>
-      </article>
+    <span class="kpi-dot kpi-dot--done"></span>
+    <div class="kpi-text">
+      <span class="kpi-label">Média geral</span>
+      <span class="kpi-value">{{ media_geral }}</span>
+      <span class="kpi-support">de 10,0</span>
+    </div>
+  </article>
+  <article class="kpi-card">
+    <span class="kpi-dot kpi-dot--late"></span>
+    <div class="kpi-text">
+      <span class="kpi-label">Disciplinas em risco</span>
+      <span class="kpi-value" id="kpiDisciplinasRisco">{{ disciplinas_em_risco }}</span>
+      <span class="kpi-support">de {{ total_disciplinas }} disciplinas</span>
+    </div>
+  </article>
+  <article class="kpi-card">
+    <span class="kpi-dot kpi-dot--pending"></span>
+    <div class="kpi-text">
+      <span class="kpi-label">Atividades concluídas</span>
+      <span class="kpi-value" id="kpiAtividadesPercentual">{{ percentual_conclusao }}%</span>
+      <span class="kpi-support" id="kpiAtividadesContagem">{{ atividades_concluidas }} de {{ total_atividades }}</span>
+    </div>
+  </article>
+  <article class="kpi-card">
+    <span class="kpi-dot kpi-dot--progress"></span>
+    <div class="kpi-text">
+      <span class="kpi-label">Progresso dos projetos</span>
+      <span class="kpi-value" id="kpiProgressoProjetos">{{ progresso_medio }}%</span>
+      <span class="kpi-support" id="kpiProjetosAtivos">{{ projetos_ativos_count }} projetos ativos</span>
+    </div>
+  </article>
 </section>
 
-<section class="bottom-row">
-   <article class="panel panel--pontuacao">
-        <h2 class="panel-title">Pontuação Atual</h2>
-        <div class="pontuacao-body">
-          <span class="pontuacao-value">{{ pontuacao_total }}</span>
-          <span class="pontuacao-label">pontos</span>
-        </div>
-        <div class="pontuacao-nivel">
-          <span class="nivel-icon" aria-hidden="true">🏆</span>
-          <div>
-            <span class="nivel-caption">Nível</span>
-            <span class="nivel-value">
-              {% if pontuacao_total >= 500 %}Ouro
-              {% elif pontuacao_total >= 200 %}Prata
-              {% else %}Bronze
-              {% endif %}
-            </span>
+<section class="mid-row academic-mid-row">
+  <article class="panel">
+    <h2 class="panel-title">Média vs. nota de corte por disciplina</h2>
+    <div class="discipline-comparison-list">
+      {% for item in disciplinas_dashboard %}
+        <div class="discipline-comparison">
+          <div class="discipline-comparison-heading">
+            <div>
+              <strong>{{ item.disciplina.nome }}</strong>
+              <span class="discipline-comparison-values">
+                Média {{ item.media_texto }} / corte {{ item.corte_texto }}
+              </span>
+            </div>
+            <span class="grade-badge grade-badge--{{ item.status_nota }}">{{ item.status_label }}</span>
+          </div>
+          <div class="grade-track" role="img" aria-label="Média {{ item.media_texto }} de 10; corte {{ item.corte_texto }}">
+            <span class="grade-fill grade-fill--{{ item.status_nota }}" style="width: {{ item.media_percentual }}%"></span>
+            {% if item.tem_corte %}
+              <span class="grade-cut-line" style="left: {{ item.corte_percentual }}%"></span>
+            {% endif %}
           </div>
         </div>
-      </article>
+      {% empty %}
+        <p class="dashboard-empty">Nenhuma disciplina cadastrada.</p>
+      {% endfor %}
+    </div>
+    <p class="panel-note">A barra indica a média atual; a linha marca a nota de corte (escala de 0 a 10).</p>
+  </article>
 
-      <article class="panel panel--destaque">
-        <h2 class="panel-title">Indicadores em Destaque</h2>
-        <div class="destaque-body">
-          <div class="destaque-stat">
-            <span class="destaque-value">{{ taxa_conclusao }}%</span>
-            <span class="destaque-label">Taxa de conclusão</span>
-          </div>
-          <div class="destaque-stat">
-            <span class="destaque-value">{{ projetos_ativos_count }}</span>
-            <span class="destaque-label">Projetos ativos</span>
-          </div>
+  <article class="panel">
+    <h2 class="panel-title">Atividades</h2>
+    <div class="resumo-body">
+      <div class="resumo-chart">
+        <canvas id="resumoChart" width="150" height="150"></canvas>
+        <div class="resumo-chart-center">
+          <span class="resumo-chart-value" id="activityCompletionLabel">{{ percentual_conclusao }}%</span>
+          <span class="resumo-chart-label">concluídas</span>
         </div>
-      </article>
+      </div>
+      <ul class="resumo-legend">
+        <li><span class="legend-dot legend-dot--done"></span>Finalizadas <strong id="activityDoneCount">{{ atividades_concluidas }}</strong></li>
+        <li><span class="legend-dot legend-dot--pending"></span>Pendentes <strong id="activityPendingCount">{{ atividades_pendentes }}</strong></li>
+      </ul>
+    </div>
+    <ul class="dashboard-activity-list" id="dashboardActivityList">
+      {% for atividade in atividades_dashboard %}
+        <li class="dashboard-activity{% if atividade.status == 'concluida' %} is-complete{% endif %}"
+            data-toggle-url="{% url 'core:atividade_alternar_conclusao' pk=atividade.pk %}">
+          <label class="dashboard-activity-main">
+            <input type="checkbox" class="dashboard-activity-checkbox"
+                   {% if atividade.status == 'concluida' %}checked{% endif %}
+                   aria-label="Marcar {{ atividade.titulo }} como finalizada">
+            <span class="dashboard-activity-title">{{ atividade.titulo }}</span>
+          </label>
+          <div class="dashboard-activity-meta">
+            <small>{% if atividade.disciplina %}{{ atividade.disciplina.nome }}{% else %}Sem disciplina{% endif %}</small>
+            <time>{{ atividade.prazo|date:"d/m" }}</time>
+          </div>
+          <small class="activity-form-feedback" aria-live="polite"></small>
+        </li>
+      {% empty %}
+        <li class="dashboard-empty">Nenhuma atividade cadastrada.</li>
+      {% endfor %}
+    </ul>
+    <a href="{% url 'core:atividade_list' %}" class="panel-link">Ver todas as atividades</a>
+  </article>
 </section>
 
-{{ contagem|json_script:"resumo-data" }}
+<section class="panel dashboard-projects-panel">
+  <div class="dashboard-section-heading">
+    <h2 class="panel-title">Projetos</h2>
+    <a href="{% url 'core:projeto_list' %}" class="panel-link">Ver projetos</a>
+  </div>
+  <div class="dashboard-project-list">
+    {% for item in projetos_dashboard %}
+      <article class="dashboard-project" data-project-id="{{ item.projeto.pk }}">
+        <div class="dashboard-project-heading">
+          <strong>{{ item.projeto.nome }}</strong>
+          <span class="project-progress-value">{{ item.projeto.progresso }}%</span>
+        </div>
+        <div class="project-progress-track">
+          <span class="project-progress-fill project-progress-fill--{{ item.faixa_progresso }}"
+                data-progress-fill style="width: {{ item.projeto.progresso }}%"></span>
+        </div>
+        <form class="project-progress-form" action="{{ item.url_progresso }}" method="post">
+          {% csrf_token %}
+          <label for="project-progress-{{ item.projeto.pk }}">Atualizar progresso</label>
+          <input id="project-progress-{{ item.projeto.pk }}" name="progresso"
+                 type="range" min="0" max="100" value="{{ item.projeto.progresso }}">
+          <button type="submit" class="dashboard-small-button">Salvar</button>
+          <span class="project-form-feedback" aria-live="polite"></span>
+        </form>
+
+        <div class="dashboard-project-members">
+          <div class="dashboard-member-list" aria-label="Integrantes de {{ item.projeto.nome }}">
+            {% for integrante in item.participantes %}
+              <span class="dashboard-member" data-member-id="{{ integrante.id }}">
+                <span class="dashboard-member-avatar" title="{{ integrante.nome }}">{{ integrante.iniciais }}</span>
+                <button type="button" class="dashboard-member-remove"
+                        data-delete-url="{{ integrante.delete_url }}"
+                        aria-label="Remover {{ integrante.nome }}">×</button>
+              </span>
+            {% empty %}
+              <span class="dashboard-empty-members">Sem integrantes</span>
+            {% endfor %}
+          </div>
+          <form class="dashboard-member-form" action="{{ item.url_integrantes }}" method="post">
+            {% csrf_token %}
+            {{ item.formulario_integrante.projeto }}
+            <label class="visually-hidden" for="{{ item.formulario_integrante.usuario.id_for_label }}">Nome do integrante</label>
+            {{ item.formulario_integrante.usuario }}
+            {{ item.formulario_integrante.tarefa }}
+            <button type="submit" class="dashboard-small-button">Adicionar integrante</button>
+            <span class="project-form-feedback" aria-live="polite"></span>
+          </form>
+        </div>
+      </article>
+    {% empty %}
+      <p class="dashboard-empty">Nenhum projeto cadastrado.</p>
+    {% endfor %}
+  </div>
+</section>
+
+{{ atividades_concluidas|json_script:"activity-done-data" }}
+{{ atividades_pendentes|json_script:"activity-pending-data" }}
 {% endblock %}
 
 {% block extra_js %}

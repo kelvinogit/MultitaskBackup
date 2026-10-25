@@ -1,0 +1,260 @@
+.notes-page-header {
+  margin-bottom: 18px;
+}
+
+.notes-page-header .panel-title {
+  margin: 0;
+}
+
+.notes-list {
+  display: grid;
+  gap: 14px;
+}
+
+.notes-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--card);
+}
+
+.notes-card h3 {
+  margin: 0;
+  color: var(--ink-900);
+}
+
+.notes-card-meta,
+.notes-summary {
+  margin: 6px 0 0;
+  color: var(--ink-600);
+  font-size: .86rem;
+}
+
+.notes-summary strong {
+  color: var(--ink-900);
+}
+
+.notes-view-button,
+.notes-add-button {
+  border: 0;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  background: var(--green-accent);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: .84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s ease, transform .1s ease, box-shadow .15s ease;
+}
+
+.notes-view-button:hover,
+.notes-add-button:not(:disabled):hover {
+  background: var(--green-700);
+  box-shadow: 0 4px 12px rgba(15, 51, 39, .14);
+}
+
+.notes-grade-button {
+  margin-left: 8px;
+  padding: 7px 10px;
+  font-size: .76rem;
+}
+
+.notes-view-button:active,
+.notes-add-button:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+.notes-view-button:focus-visible,
+.notes-modal-close:focus-visible,
+.notes-add-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(47, 122, 83, .2);
+}
+
+.notes-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(15, 51, 39, .5);
+  backdrop-filter: blur(3px);
+}
+
+.notes-modal[hidden] {
+  display: none;
+}
+
+.notes-modal-content {
+  position: relative;
+  width: min(100%, 760px);
+  max-height: 85vh;
+  overflow: auto;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--card);
+  box-shadow: 0 20px 50px rgba(15, 51, 39, .2);
+}
+
+.notes-modal-content h3 {
+  margin: 0 42px 14px 0;
+  color: var(--ink-900);
+}
+
+.notes-modal-summary,
+.notes-modal-counts {
+  color: var(--ink-600);
+  font-size: .88rem;
+}
+
+.notes-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ink-600);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.notes-table-wrap {
+  overflow-x: auto;
+  margin: 18px 0;
+}
+
+.notes-table-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.notes-table-wrap th,
+.notes-table-wrap td {
+  padding: 11px 10px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.notes-table-wrap th {
+  color: var(--ink-600);
+  font-size: .78rem;
+  font-weight: 600;
+}
+
+.notes-table-wrap td {
+  color: var(--ink-900);
+  font-size: .86rem;
+}
+
+.notes-empty {
+  padding: 28px 12px;
+  color: var(--ink-600);
+  text-align: center;
+}
+
+.notes-add-button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.notes-create-modal {
+  z-index: 1110;
+}
+
+.notes-create-form,
+.notes-grade-form {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.notes-form-field {
+  display: grid;
+  gap: 6px;
+}
+
+.notes-form-field label {
+  color: var(--ink-900);
+  font-size: .84rem;
+  font-weight: 600;
+}
+
+.notes-form-field input,
+.notes-form-field textarea,
+.notes-form-field select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  background: #fff;
+  color: var(--ink-900);
+  font: inherit;
+}
+
+.notes-form-field input:focus,
+.notes-form-field textarea:focus,
+.notes-form-field select:focus {
+  border-color: var(--green-accent);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(47, 122, 83, .12);
+}
+
+.notes-form-field small {
+  color: var(--ink-600);
+  font-size: .76rem;
+}
+
+.notes-field-error,
+.notes-form-errors {
+  color: #b42318;
+  font-size: .8rem;
+}
+
+.notes-form-errors:not([hidden]) {
+  margin: 12px 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: #fff5f5;
+}
+
+.notes-create-form .notes-add-button,
+.notes-grade-form .notes-add-button {
+  justify-self: start;
+}
+
+@media (max-width: 600px) {
+  .notes-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .notes-modal {
+    align-items: end;
+    padding: 12px;
+  }
+
+  .notes-modal-content {
+    max-height: 90vh;
+    padding: 22px 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notes-view-button,
+  .notes-add-button {
+    transition: none;
+  }
+}

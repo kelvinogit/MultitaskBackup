@@ -1,9 +1,156 @@
 
 {% extends "agronomico/base.html" %}
+{% load static %}
 
-{% block title %}Dashboard{% endblock %}
-{% block page_title %}Dashboard{% endblock %}
+{% block title %}Painel Agronômico{% endblock %}
+{% block page_title %}Painel Agronômico{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/agro/index.css' %}">
+{% endblock %}
 
 {% block content %}
-  <p>Dashboard de Engenharia Agronimica em construção.</p>
+<div class="agro-dashboard">
+  <section class="dashboard-hero">
+    <span class="dashboard-hero-icon" aria-hidden="true">🌾</span>
+    <div>
+      <h2>Painel Agronômico</h2>
+      <p>Acompanhe suas notas, atividades concluídas e projetos.</p>
+    </div>
+  </section>
+
+  <section class="dashboard-kpis" aria-label="Resumo acadêmico">
+    <article class="dashboard-card dashboard-kpi">
+      <span class="dashboard-kpi-label">Média geral</span>
+      <strong class="dashboard-kpi-value">{{ media_geral }}</strong>
+      <span class="dashboard-kpi-support">de 10,0</span>
+    </article>
+    <article class="dashboard-card dashboard-kpi">
+      <span class="dashboard-kpi-label">Disciplinas em risco</span>
+      <strong class="dashboard-kpi-value">{{ disciplinas_em_risco }}</strong>
+      <span class="dashboard-kpi-support">de {{ total_disciplinas }} disciplinas</span>
+    </article>
+    <article class="dashboard-card dashboard-kpi">
+      <span class="dashboard-kpi-label">Atividades concluídas</span>
+      <strong class="dashboard-kpi-value">{{ percentual_conclusao }}%</strong>
+      <span class="dashboard-kpi-support">{{ atividades_concluidas_count }} de {{ total_atividades }}</span>
+    </article>
+    <article class="dashboard-card dashboard-kpi">
+      <span class="dashboard-kpi-label">Progresso dos projetos</span>
+      <strong class="dashboard-kpi-value">{{ progresso_medio }}%</strong>
+      <span class="dashboard-kpi-support">{{ projetos_ativos_count }} projetos ativos</span>
+    </article>
+  </section>
+
+  <div class="dashboard-columns">
+    <section class="dashboard-card dashboard-section">
+      <div class="dashboard-section-heading">
+        <div>
+          <span class="dashboard-eyebrow">Desempenho acadêmico</span>
+          <h2>Média vs. nota de corte</h2>
+        </div>
+        <span class="dashboard-section-count">{{ total_disciplinas }}</span>
+      </div>
+
+      <div class="dashboard-discipline-list">
+        {% for item in disciplinas_dashboard %}
+          <article class="dashboard-discipline">
+            <div class="dashboard-row-heading">
+              <div class="dashboard-discipline-info">
+                <strong>{{ item.disciplina.nome }}</strong>
+                <span>Média {{ item.media_texto }} <span aria-hidden="true">/</span> corte {{ item.corte_texto }}</span>
+              </div>
+              <span class="dashboard-badge dashboard-badge--{{ item.status_nota }}">{{ item.status_label }}</span>
+            </div>
+            <div class="dashboard-grade-track" role="img" aria-label="Média {{ item.media_texto }} de 10; corte {{ item.corte_texto }}">
+              <span class="dashboard-grade-fill dashboard-grade-fill--{{ item.status_nota }}" style="width: {{ item.media_percentual }}%"></span>
+              {% if item.tem_corte %}<span class="dashboard-grade-cut" style="left: {{ item.corte_percentual }}%"></span>{% endif %}
+            </div>
+          </article>
+        {% empty %}
+          <p class="dashboard-empty">Nenhuma disciplina cadastrada.</p>
+        {% endfor %}
+      </div>
+      <p class="dashboard-note">A barra mostra sua média; a linha indica a nota de corte, em uma escala de 0 a 10.</p>
+    </section>
+
+    <section class="dashboard-card dashboard-section">
+      <div class="dashboard-section-heading">
+        <div>
+          <span class="dashboard-eyebrow">Rotina acadêmica</span>
+          <h2>Atividades concluídas</h2>
+        </div>
+      </div>
+
+      <div class="dashboard-activity-summary">
+        <div class="dashboard-donut" data-completed="{{ atividades_concluidas_count }}" data-total="{{ total_atividades }}" role="img" aria-label="{{ percentual_conclusao }}% das atividades concluídas">
+          <div class="dashboard-donut-center">
+            <strong>{{ percentual_conclusao }}%</strong>
+            <span>concluídas</span>
+          </div>
+        </div>
+        <div class="dashboard-activity-legend">
+          <span><i class="legend-dot legend-dot--done"></i>Concluídas <strong>{{ atividades_concluidas_count }}</strong></span>
+          <span><i class="legend-dot legend-dot--pending"></i>Restantes <strong>{{ atividades_pendentes_count }}</strong></span>
+        </div>
+      </div>
+
+      <div class="dashboard-completed-list">
+        {% for atividade in atividades_concluidas %}
+          <article class="dashboard-completed-activity">
+            <span class="completed-check" aria-hidden="true">✓</span>
+            <div class="completed-activity-info">
+              <strong>{{ atividade.titulo }}</strong>
+              <span>{% if atividade.disciplina %}{{ atividade.disciplina.nome }}{% else %}Sem disciplina{% endif %}</span>
+            </div>
+            <time>{{ atividade.prazo|date:"d/m" }}</time>
+          </article>
+        {% empty %}
+          <p class="dashboard-empty">Nenhuma atividade concluída ainda.</p>
+        {% endfor %}
+      </div>
+    </section>
+  </div>
+
+  <section class="dashboard-card dashboard-section dashboard-projects-section">
+    <div class="dashboard-section-heading">
+      <div>
+        <span class="dashboard-eyebrow">Prática e pesquisa</span>
+        <h2>Projetos e experimentos</h2>
+      </div>
+      <a class="dashboard-link" href="{% url 'core:projeto_list' %}">Ver projetos</a>
+    </div>
+
+    <div class="dashboard-project-list">
+      {% for item in projetos_dashboard %}
+        <article class="dashboard-project">
+          <div class="dashboard-row-heading">
+            <strong>{{ item.projeto.nome }}</strong>
+            <div class="dashboard-project-meta">
+              <div class="dashboard-avatars" aria-label="Integrantes de {{ item.projeto.nome }}">
+                {% for participante in item.participantes %}
+                  <span class="dashboard-avatar" title="{{ participante.nome }}">{{ participante.iniciais }}</span>
+                {% empty %}
+                  <span class="dashboard-no-members">Sem integrantes</span>
+                {% endfor %}
+              </div>
+              <strong>{{ item.projeto.progresso }}%</strong>
+            </div>
+          </div>
+          <div class="dashboard-project-track">
+            <span class="dashboard-project-fill dashboard-project-fill--{{ item.faixa_progresso }}" style="width: {{ item.projeto.progresso }}%"></span>
+          </div>
+          <p class="dashboard-project-phase">{{ item.fase }}</p>
+        </article>
+      {% empty %}
+        <p class="dashboard-empty">Nenhum projeto cadastrado.</p>
+      {% endfor %}
+    </div>
+    <p class="dashboard-note">Fases estimadas pelo progresso: semeadura, emergência, vegetativo, florescimento, maturação e colheita.</p>
+  </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/agro/index.js' %}" defer></script>
 {% endblock %}

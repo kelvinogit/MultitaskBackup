@@ -29,10 +29,17 @@ class Disciplina(models.Model):
     media_final = models.DecimalField(
     max_digits=4,
     decimal_places=2,
-    default= Decimal('7.00'),
+    null=True,
     validators=[MinValueValidator(Decimal('0')), MaxValueValidator(Decimal('10'))],
-    verbose_name='Meta final (nota requerida)',
 )
+    nota_necessaria = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(Decimal('0'))],
+        verbose_name='Nota necessária',
+    )
 
     class Meta:
         ordering = ['nome']
@@ -65,6 +72,8 @@ class Atividade(models.Model):
     disciplina = models.ForeignKey(
         Disciplina,
         on_delete=models.CASCADE,
+        null=True,
+        blank=True,
         related_name='atividades',
     )
 
@@ -123,7 +132,8 @@ class Projeto(models.Model):
     status = models.CharField(max_length=15, choices=Status.choices, default=Status.PLANEJAMENTO)
     progresso = models.PositiveSmallIntegerField(
         default=0,
-        editable=False,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        help_text='Percentual de progresso (0 a 100)',
 
     )
 
