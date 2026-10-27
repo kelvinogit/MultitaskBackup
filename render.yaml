@@ -1,14 +1,17 @@
+# Exported from Render on 2026-10-27T17:06:42Z
+version: "1"
 services:
-  - type: web
-    name: multitaskbackup
-    runtime: python
-    plan: free
-    buildCommand: "./build.sh"
-    startCommand: "python -m gunicorn MultiWorking.asgi:application -k uvicorn.workers.UvicornWorker"
-    envVars:
-      - key: DB_URL
-        sync: false
-      - key: SECRET_KEY
-        generateValue: true
-      - key: DEBUG
-        value: "false"
+- type: web
+  name: multitaskbackup
+  runtime: python
+  repo: https://github.com/kelvinogit/MultitaskBackup
+  plan: free
+  envVars:
+  - key: DEBUG
+    sync: false
+  - key: SECRET_KEY
+    sync: false
+  region: oregon
+  buildCommand: ./build.sh
+  startCommand: python -m gunicorn MultiWorking.asgi:application -k uvicorn.workers.UvicornWorker
+  autoDeployTrigger: commit
