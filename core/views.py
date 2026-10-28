@@ -290,6 +290,7 @@ def projeto_create(request):
         if form.is_valid():
             projeto = form.save(commit=False)
             projeto.responsavel = request.user
+            projeto.definir_progresso()
             projeto.save()
             return redirect('core:projeto_list')
     else:
@@ -311,7 +312,9 @@ def projeto_update(request, pk):
         return JsonResponse({
                 'ok': False, "erros":form.errors})
 
-    projeto = form.save()
+    projeto = form.save(commit=False)
+    projeto.definir_progresso()
+    projeto.save()
     progresso = projeto.progresso
 
     return JsonResponse(

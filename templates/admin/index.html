@@ -119,7 +119,9 @@
   </div>
   <div class="dashboard-project-list">
     {% for item in projetos_dashboard %}
-      <article class="dashboard-project" data-project-id="{{ item.projeto.pk }}">
+      <article class="dashboard-project"
+               data-project-id="{{ item.projeto.pk }}"
+               data-status="{{ item.projeto.status }}">
         <div class="dashboard-project-heading">
           <strong>{{ item.projeto.nome }}</strong>
           <span class="project-progress-value">{{ item.projeto.progresso }}%</span>

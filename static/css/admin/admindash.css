@@ -390,6 +390,7 @@
 .project-progress-fill--alto { background: var(--status-done); }
 .project-progress-fill--medio { background: #2f5fd0; }
 .project-progress-fill--baixo { background: var(--status-pending); }
+.dashboard-project[data-status="atrasado"] .project-progress-fill { background: var(--status-late); }
 
 .project-progress-form,
 .dashboard-member-form {
