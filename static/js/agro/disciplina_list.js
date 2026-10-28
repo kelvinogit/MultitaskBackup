@@ -356,7 +356,7 @@
 
   /* =======================================================
      MODAL DE CONFIRMAÇÃO DE EXCLUSÃO
-     O envio é um POST de formulário comum (sem fetch).
+     A exclusão é enviada via fetch para manter a página na lista.
      ======================================================= */
   function initDeleteModal(panel) {
     const buttons = panel.querySelectorAll("[data-delete-disciplina]");
@@ -389,19 +389,61 @@
     const confirmBtn = dialog.querySelector(".dialog-confirm");
 
     const supportsDialog = typeof dialog.showModal === "function";
+    let selectedCard = null;
+
+    async function submitDelete() {
+      if (!form.action || !selectedCard) return;
+
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = "Excluindo...";
+
+      try {
+        const response = await fetch(form.action, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": tokenInput.value || getCsrfToken(),
+            "Accept": "application/json",
+          },
+        });
+        const data = await response.json();
+
+        if (!response.ok || !data.ok) {
+          throw new Error("Falha ao excluir disciplina");
+        }
+
+        const card = selectedCard;
+        selectedCard = null;
+        if (dialog.open) dialog.close();
+        card.remove();
+
+        const grid = panel.querySelector(".discipline-grid");
+        if (grid && !grid.querySelector(".discipline-card")) {
+          window.location.reload();
+        }
+      } catch (error) {
+        console.error("Erro ao excluir disciplina:", error);
+        window.alert("Não foi possível excluir a disciplina. Tente novamente.");
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = "Sim, excluir";
+      }
+    }
 
     function openFor(btn) {
       const url = btn.dataset.deleteUrl;
       const nome = btn.dataset.nome || "esta disciplina";
       if (!url) return;
 
+      selectedCard = btn.closest(".discipline-card");
+      if (!selectedCard) return;
+
       // Fallback para navegadores sem <dialog>
       if (!supportsDialog) {
         if (window.confirm(`Excluir "${nome}"? Essa ação não pode ser desfeita.`)) {
           form.action = url;
           tokenInput.value = getCsrfToken();
-          document.body.appendChild(form);
-          form.submit();
+          submitDelete();
+        } else {
+          selectedCard = null;
         }
         return;
       }
@@ -428,10 +470,10 @@
       if (e.target === dialog) dialog.close();
     });
 
-    // Feedback visual ao confirmar (o POST segue normalmente)
-    form.addEventListener("submit", () => {
-      confirmBtn.disabled = true;
-      confirmBtn.textContent = "Excluindo...";
+    // Evita a navegação para o JSON retornado pela view.
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      submitDelete();
     });
 
     // Voltar pelo botão do navegador: restaura o estado
