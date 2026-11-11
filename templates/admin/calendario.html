@@ -1,0 +1,47 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block title %}Calendário | Administra+{% endblock %}
+{% block page_title %}Calendário{% endblock %}
+{% block page_context %}Agenda acadêmica{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin/calendario.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="calendar-page" data-calendar>
+  <header class="calendar-intro">
+    <div>
+      <h2>Agenda acadêmica</h2>
+      <p>Visualize os prazos das suas atividades e projetos.</p>
+    </div>
+    <div class="calendar-legend" aria-label="Tipos de evento">
+      <span><i class="legend-dot legend-dot--atividade"></i>Atividade</span>
+      <span><i class="legend-dot legend-dot--projeto"></i>Projeto</span>
+    </div>
+  </header>
+
+  <div class="calendar-toolbar" aria-label="Controles do calendário">
+    <div class="calendar-navigation">
+      <button type="button" class="calendar-nav-button" data-calendar-step="-1" aria-label="Período anterior">‹</button>
+      <button type="button" class="calendar-today-button" data-calendar-today>Hoje</button>
+      <button type="button" class="calendar-nav-button" data-calendar-step="1" aria-label="Próximo período">›</button>
+      <h3 class="calendar-period" data-calendar-period aria-live="polite"></h3>
+    </div>
+    <div class="calendar-view-switch" role="group" aria-label="Visualização">
+      <button type="button" data-calendar-view="month" aria-pressed="true">Mês</button>
+      <button type="button" data-calendar-view="week" aria-pressed="false">Semana</button>
+      <button type="button" data-calendar-view="day" aria-pressed="false">Dia</button>
+    </div>
+  </div>
+
+  <div class="calendar-grid" data-calendar-grid aria-live="polite"></div>
+  <p class="calendar-empty" data-calendar-empty hidden>Nenhuma atividade ou projeto com prazo neste período.</p>
+</section>
+{{ eventos_calendario|json_script:"calendar-events" }}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/admin/calendario.js' %}"></script>
+{% endblock %}

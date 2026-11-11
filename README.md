@@ -12,6 +12,7 @@ Entre com seu e-mail e senha. O curso vinculado à conta direciona para a área 
 - **Atividades:** cadastro, prazo, prioridade e status. Uma atividade pode ser associada a uma disciplina.
 - **Notas:** cadastro de avaliações por disciplina, com peso e data. Uma avaliação pode ficar pendente até que a nota seja lançada.
 - **Projetos:** cadastro e acompanhamento de status e progresso, com lista de integrantes e suas tarefas.
+- **Calendário:** visualização mensal, semanal e diária dos prazos das atividades e projetos do usuário, disponível nos módulos de Administração, Engenharia Agronômica e Ciências Contábeis. A agenda é somente para consulta; atividades aparecem pela data de prazo e projetos com prazo informado aparecem pela data definida no cadastro. A consulta é compartilhada pelo `core`, enquanto cada módulo usa seu próprio template e arquivos estáticos.
 
 Cada usuário consulta seus próprios registros. As telas variam por curso, mas usam esses módulos compartilhados.
 

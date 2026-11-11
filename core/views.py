@@ -98,6 +98,65 @@ def recalcular_media_final(disciplina):
     disciplina.save(update_fields=['media_final'])
     return disciplina.media_final
 
+
+@login_required
+def calendario(request):
+    """Exibe os prazos de atividades e projetos do usuário autenticado."""
+    eventos = []
+
+    atividades = (
+        Atividade.objects
+        .filter(usuario=request.user)
+        .select_related('disciplina')
+        .order_by('prazo', 'titulo')
+    )
+    for atividade in atividades:
+        prazo_local = (
+            timezone.localtime(atividade.prazo)
+            if timezone.is_aware(atividade.prazo)
+            else atividade.prazo
+        )
+        eventos.append({
+            'tipo': 'atividade',
+            'titulo': atividade.titulo,
+            'data': prazo_local.date().isoformat(),
+            'horario': prazo_local.strftime('%H:%M'),
+            'status': atividade.get_status_display(),
+            'status_codigo': atividade.status,
+            'detalhe': ' · '.join(filter(None, [
+                atividade.get_tipo_display(),
+                atividade.disciplina.nome if atividade.disciplina else '',
+            ])),
+        })
+
+    projetos = (
+        Projeto.objects
+        .filter(responsavel=request.user, prazo__isnull=False)
+        .order_by('prazo', 'nome')
+    )
+    for projeto in projetos:
+        prazo_local = (
+            timezone.localtime(projeto.prazo)
+            if timezone.is_aware(projeto.prazo)
+            else projeto.prazo
+        )
+        eventos.append({
+            'tipo': 'projeto',
+            'titulo': projeto.nome,
+            'data': prazo_local.date().isoformat(),
+            'horario': prazo_local.strftime('%H:%M'),
+            'status': projeto.get_status_display(),
+            'status_codigo': projeto.status,
+            'detalhe': f'Progresso: {projeto.progresso}%',
+        })
+
+    eventos.sort(key=lambda evento: (evento['data'], evento['horario'], evento['titulo']))
+    return render(
+        request,
+        get_template(request.user, 'calendario'),
+        {'eventos_calendario': eventos},
+    )
+
 @autenticacao_obrigatoria()
 def dashboard(request):
     curso = request.user.curso
