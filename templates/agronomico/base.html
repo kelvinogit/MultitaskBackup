@@ -57,6 +57,12 @@
         Dashboard
       </a>
 
+      <a href="{% url 'core:calendario' %}"
+         class="nav-item {% if request.resolver_match.url_name == 'calendario' %}is-active{% endif %}">
+        <svg class="icon nav-icon"><use href="#i-chart"/></svg>
+        Calendário
+      </a>
+
       <a href="{% url 'core:atividade_list' %}"
          class="nav-item {% if request.resolver_match.url_name == 'atividade_list' %}is-active{% endif %}">
         <svg class="icon nav-icon"><use href="#i-check"/></svg>
